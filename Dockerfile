@@ -1,4 +1,4 @@
-FROM node:18-bullseye
+FROM node:20-bullseye
 
 # Gerekli sistem paketlerini kur (FFmpeg ve yt-dlp için Python)
 RUN apt-get update && apt-get install -y ffmpeg python3 curl
