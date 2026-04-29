@@ -3,6 +3,7 @@ import path from 'path';
 import fs from 'fs';
 import { exec } from 'child_process';
 import { promisify } from 'util';
+import os from 'os';
 
 const execAsync = promisify(exec);
 
@@ -20,23 +21,16 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: 'Girdiğiniz bağlantı geçersiz. Lütfen kontrol edip tekrar deneyiniz.' }, { status: 400 });
         }
 
-        const ytDlpPath = path.join(process.cwd(), 'bin', 'yt-dlp.exe');
+        const isWindows = os.platform() === 'win32';
+        // Linux/Render ortamında Docker içindeki yt-dlp komutunu direkt çalıştır
+        const ytDlpPath = isWindows ? path.join(process.cwd(), 'bin', 'yt-dlp.exe') : 'yt-dlp';
 
-        if (!fs.existsSync(ytDlpPath)) {
+        if (isWindows && !fs.existsSync(ytDlpPath)) {
             throw new Error(`yt-dlp bulunamadı baba: ${ytDlpPath}`);
         }
 
-        // Videoyu indirme, sadece JSON olarak bilgilerini ver (-j veya --dump-json)
-        const args = [
-            `"${ytDlpPath}"`,
-            `"${url}"`,
-            `--dump-json`,
-            `--no-warnings`,
-            `--add-header "referer:youtube.com"`,
-            `--add-header "user-agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"`
-        ];
-
-        const command = args.join(' ');
+        // Basit bir test: Sadece videonun meta verilerini (json) çek
+        const command = `"${ytDlpPath}" "${url}" --dump-json --no-warnings --add-header "referer:youtube.com" --add-header "user-agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"`;
 
         const { stdout } = await execAsync(command);
 

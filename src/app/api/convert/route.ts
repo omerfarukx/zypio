@@ -61,9 +61,11 @@ export async function POST(req: Request) {
 
     console.log(`[${taskId}] İndirme işlemi başladı: ${url} -> ${format}`);
 
-    const ytDlpPath = path.join(process.cwd(), 'bin', 'yt-dlp.exe');
+    const isWindows = os.platform() === 'win32';
+    // Linux/Render ortamında Docker içindeki yt-dlp komutunu direkt çalıştır
+    const ytDlpPath = isWindows ? path.join(process.cwd(), 'bin', 'yt-dlp.exe') : 'yt-dlp';
 
-    if (!fs.existsSync(ytDlpPath)) {
+    if (isWindows && !fs.existsSync(ytDlpPath)) {
       throw new Error(`yt-dlp bulunamadı baba: ${ytDlpPath}`);
     }
 
