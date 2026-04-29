@@ -8,8 +8,8 @@ RUN apt-get update && apt-get install -y curl ffmpeg
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
 RUN apt-get install -y nodejs
 
-# yt-dlp'yi Python üzerinden kur (en garantili yöntem)
-RUN pip install --no-cache-dir yt-dlp
+# yt-dlp'yi Python üzerinden kur ve GÜNCELLE
+RUN pip install --no-cache-dir -U yt-dlp
 
 # Bağımlılıkları kopyala ve yükle
 COPY package*.json ./

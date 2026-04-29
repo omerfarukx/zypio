@@ -30,7 +30,7 @@ export async function POST(req: Request) {
         }
 
         // Basit bir test: Sadece videonun meta verilerini (json) çek
-        const command = `"${ytDlpPath}" "${url}" --dump-json --no-warnings --add-header "referer:youtube.com" --add-header "user-agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"`;
+        const command = `"${ytDlpPath}" "${url}" --dump-json --no-warnings --no-check-certificates`;
 
         const { stdout } = await execAsync(command);
 
