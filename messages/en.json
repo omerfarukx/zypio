@@ -1,0 +1,113 @@
+{
+  "Index": {
+    "title": "Free Video and File Converter",
+    "description": "Convert your videos and files at high speed, securely, and ad-free. Convert all your files to any format you want safely, unlimitedly and completely free of charge.",
+    "systemStatus": "System Running at 100% Performance"
+  },
+  "Header": {
+    "tools": "Tools",
+    "youtube": "YouTube Downloader",
+    "youtubeDesc": "Convert to MP4/MP3",
+    "tiktok": "TikTok Downloader",
+    "tiktokDesc": "Download without watermark",
+    "facebook": "Facebook Downloader",
+    "facebookDesc": "Download FB videos in HD",
+    "features": "Features",
+    "faq": "FAQ"
+  },
+  "HowItWorks": {
+    "title": "How It Works?",
+    "subtitle": "Save any media to your device in highest quality in just 3 simple steps.",
+    "step1Title": "1. Copy the Link",
+    "step1Desc": "Copy the link (URL) of the video or audio you want to download.",
+    "step2Title": "2. Paste it Here",
+    "step2Desc": "Paste the link into the search box above and click 'Analyze'.",
+    "step3Title": "3. Select Format & Download",
+    "step3Desc": "Choose your desired quality (MP4/MP3) and download instantly."
+  },
+  "Features": {
+    "title": "Why Choose Us?",
+    "subtitle": "We provide the best conversion experience with our constantly evolving infrastructure.",
+    "f1Title": "High Speed",
+    "f1Desc": "Thanks to our dedicated servers, we process your videos in seconds.",
+    "f2Title": "Multi-Platform",
+    "f2Desc": "We support YouTube, TikTok, Facebook, Instagram and 1000+ sites under one roof.",
+    "f3Title": "Secure & Private",
+    "f3Desc": "Your downloaded files are never stored permanently. 100% DMCA compliant and safe.",
+    "f4Title": "Unlimited Usage",
+    "f4Desc": "No quotas, no registration required, and no hidden fees. Use as much as you want.",
+    "f5Title": "Wide Format Support",
+    "f5Desc": "Convert your videos to MP4, 3GP or extract audio as MP3, WAV files.",
+    "f6Title": "Highest Quality",
+    "f6Desc": "Download videos up to 4K resolution and audio files in lossless 320kbps quality."
+  },
+  "Testimonials": {
+    "title": "What Our Users Say?",
+    "subtitle": "Thousands of people choose Zypio Convert every day. Here are some of their reviews.",
+    "r1Role": "Content Creator",
+    "r1Text": "The fastest converter on the market. It's amazing how it downloads 1080p without quality loss. Ads are not annoying at all.",
+    "r2Role": "Student",
+    "r2Text": "I convert lecture videos to mp3 and listen on the go. It takes seconds to download to my phone. Highly recommended.",
+    "r3Role": "Video Editor",
+    "r3Text": "I use it to download TikTok videos without watermarks. No quality drop and very clean interface. Became my favorite tool."
+  },
+  "Stats": {
+    "stat1Title": "1M+",
+    "stat1Desc": "Successful Conversions",
+    "stat2Title": "< 15s",
+    "stat2Desc": "Average Process Time",
+    "stat3Title": "99.9%",
+    "stat3Desc": "System Uptime"
+  },
+  "FAQ": {
+    "title": "Frequently Asked Questions",
+    "subtitle": "Find answers to your questions here.",
+    "q1": "Is the system completely free?",
+    "a1": "Yes, all core features of Zypio Convert are 100% free. No registration is required and there are no hidden fees.",
+    "q2": "Are my downloaded files stored on the server?",
+    "a2": "No. For your security and copyright (DMCA) compliance, processed files are permanently deleted from our servers within 1 hour.",
+    "q3": "Which formats do you support?",
+    "a3": "We support MP4 (1080p, 720p, 480p, 360p) for video, and MP3 (320kbps, 128kbps) for audio.",
+    "q4": "Can I download TikTok videos without watermark?",
+    "a4": "Yes, when you paste a TikTok link, our system automatically provides the video without any watermark (logo).",
+    "q5": "Does it work on mobile devices (iOS/Android)?",
+    "a5": "Zypio Convert is completely web-based. It works flawlessly on all smartphones and tablets without needing to install any app."
+  },
+  "Footer": {
+    "desc": "Convert your videos and files securely and ad-free at high speed. We support hundreds of platforms with one click.",
+    "tools": "Tools",
+    "legal": "Legal",
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy",
+    "dmca": "DMCA Notice",
+    "contact": "Contact",
+    "rights": "All rights reserved."
+  },
+  "PlatformSummary": {
+    "title": "Supported Platforms",
+    "subtitle": "Our system can download files from hundreds of different sources. Check out our dedicated tools for popular services below."
+  },
+  "Converter": {
+    "placeholder": "Paste video link here (YouTube, TikTok, Facebook...)",
+    "analyze": "Analyze",
+    "source": "Source:",
+    "downloadNow": "Download Now",
+    "converting": "Converting...",
+    "convertAnother": "Convert another video",
+    "preparing": "Preparing your file...",
+    "pleaseWait": "Please wait, your video is being processed in highest quality.",
+    "sponsored": "Sponsored Link",
+    "adSpace": "Ad Space (300x250)",
+    "free": "100% Free",
+    "noReg": "No Registration",
+    "fast": "Super Fast",
+    "videoOpt": "Video (MP4)",
+    "audioOpt": "Audio (MP3)",
+    "q1080": "🎬 1080p (Highest Quality)",
+    "q720": "🎬 720p (High Quality)",
+    "q480": "🎬 480p (Standard Quality)",
+    "q360": "🎬 360p (Data Saver)",
+    "q320k": "🎵 320kbps (Highest Audio Quality)",
+    "q128k": "🎵 128kbps (Standard Audio Quality)"
+  }
+}

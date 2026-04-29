@@ -1,0 +1,113 @@
+{
+  "Index": {
+    "title": "Ücretsiz Video ve Dosya Dönüştürücü",
+    "description": "Video ve dosyalarınızı yüksek hızda, güvenle ve reklamsız dönüştürün. Tüm dosyalarınızı güvenli, sınırsız ve tamamen ücretsiz şekilde dilediğiniz formata çevirin.",
+    "systemStatus": "Sistem %100 Performansla Çalışıyor"
+  },
+  "Header": {
+    "tools": "Araçlar",
+    "youtube": "YouTube İndirici",
+    "youtubeDesc": "Videoları MP4/MP3 yapın",
+    "tiktok": "TikTok İndirici",
+    "tiktokDesc": "Filigransız videolar indirin",
+    "facebook": "Facebook İndirici",
+    "facebookDesc": "FB videolarını HD indirin",
+    "features": "Özellikler",
+    "faq": "SSS"
+  },
+  "HowItWorks": {
+    "title": "Nasıl Kullanılır?",
+    "subtitle": "Sadece 3 basit adımda dilediğiniz medyayı en yüksek kalitede cihazınıza kaydedin.",
+    "step1Title": "1. Linki Kopyalayın",
+    "step1Desc": "İndirmek istediğiniz videonun veya sesin bağlantısını (URL) kopyalayın.",
+    "step2Title": "2. Buraya Yapıştırın",
+    "step2Desc": "Yukarıdaki arama kutusuna linki yapıştırın ve 'Analiz Et' butonuna tıklayın.",
+    "step3Title": "3. Formatı Seçip İndirin",
+    "step3Desc": "İstediğiniz kaliteyi (MP4/MP3) seçin ve cihazınıza anında indirin."
+  },
+  "Features": {
+    "title": "Neden Bizi Tercih Etmelisiniz?",
+    "subtitle": "En iyi dönüştürme deneyimini sunmak için sürekli gelişen altyapımızla hizmetinizdeyiz.",
+    "f1Title": "Yüksek Hız",
+    "f1Desc": "Özel sunucularımız sayesinde videolarınızı saniyeler içinde işler ve indirmeye hazır hale getiririz.",
+    "f2Title": "Çoklu Platform",
+    "f2Desc": "YouTube, TikTok, Facebook, Instagram ve 1000'den fazla siteyi tek bir çatı altında destekliyoruz.",
+    "f3Title": "Güvenli ve Gizli",
+    "f3Desc": "İndirdiğiniz dosyalar sunucularımızda asla kalıcı olarak saklanmaz. %100 DMCA uyumlu ve güvenli.",
+    "f4Title": "Limitsiz Kullanım",
+    "f4Desc": "Herhangi bir kota, kayıt zorunluluğu veya gizli ücret yoktur. Dilediğiniz kadar kullanabilirsiniz.",
+    "f5Title": "Geniş Format Desteği",
+    "f5Desc": "Videolarınızı MP4, 3GP gibi formatlara veya MP3, WAV gibi ses dosyalarına dönüştürebilirsiniz.",
+    "f6Title": "En Yüksek Kalite",
+    "f6Desc": "Videolarınızı 4K'ya kadar, ses dosyalarınızı ise 320kbps kalitesinde kayıpsız olarak indirebilirsiniz."
+  },
+  "Testimonials": {
+    "title": "Kullanıcılarımız Ne Diyor?",
+    "subtitle": "Her gün binlerce kişi Zypio Convert'i tercih ediyor. İşte onlardan bazılarının yorumları.",
+    "r1Role": "İçerik Üreticisi",
+    "r1Text": "Piyasadaki en hızlı dönüştürücü. Özellikle 1080p kalitesini bozmadan indirmesi harika. Reklamlar da rahatsız etmiyor.",
+    "r2Role": "Öğrenci",
+    "r2Text": "Ders videolarını mp3'e çevirip yolda dinliyorum. Telefonuma indirmesi sadece saniyeler sürüyor. Kesinlikle tavsiye ederim.",
+    "r3Role": "Video Editörü",
+    "r3Text": "Filigransız TikTok videoları indirmek için kullanıyorum. Kalite düşüşü yok ve arayüzü çok sade. Favori aracım oldu."
+  },
+  "Stats": {
+    "stat1Title": "1M+",
+    "stat1Desc": "Başarılı Dönüştürme",
+    "stat2Title": "< 15sn",
+    "stat2Desc": "Ortalama İşlem Süresi",
+    "stat3Title": "%99.9",
+    "stat3Desc": "Sistem Erişilebilirliği"
+  },
+  "FAQ": {
+    "title": "Sıkça Sorulan Sorular",
+    "subtitle": "Aklınıza takılan soruların cevaplarını burada bulabilirsiniz.",
+    "q1": "Sistem tamamen ücretsiz mi?",
+    "a1": "Evet, Zypio Convert'in tüm temel özellikleri %100 ücretsizdir. Hiçbir kayıt işlemi gerekmez ve gizli ücretlendirme yoktur.",
+    "q2": "İndirdiğim dosyalar sunucuda saklanıyor mu?",
+    "a2": "Hayır. Güvenliğiniz ve telif hakları (DMCA) gereği, işlenen dosyalar maksimum 1 saat içinde sunucularımızdan kalıcı olarak silinir.",
+    "q3": "Hangi formatları destekliyorsunuz?",
+    "a3": "Video için MP4 (1080p, 720p, 480p, 360p), ses için ise MP3 (320kbps, 128kbps) formatlarını destekliyoruz.",
+    "q4": "TikTok videolarını filigransız indirebilir miyim?",
+    "a4": "Evet, TikTok linklerini yapıştırdığınızda sistemimiz videoyu otomatik olarak filigransız (logosuz) şekilde indirmenizi sağlar.",
+    "q5": "Mobil cihazlarda (iOS/Android) çalışır mı?",
+    "a5": "Zypio Convert tamamen web tabanlıdır. Herhangi bir uygulama kurmanıza gerek kalmadan tüm akıllı telefonlarda ve tabletlerde sorunsuz çalışır."
+  },
+  "Footer": {
+    "desc": "Video ve dosyalarınızı yüksek hızda, güvenle ve reklamsız dönüştürün. Yüzlerce platformu tek tıkla destekliyoruz.",
+    "tools": "Araçlar",
+    "legal": "Yasal",
+    "terms": "Kullanım Koşulları",
+    "privacy": "Gizlilik Politikası",
+    "dmca": "DMCA İhlal Bildirimi",
+    "contact": "İletişim",
+    "rights": "Tüm hakları saklıdır."
+  },
+  "PlatformSummary": {
+    "title": "Desteklenen Platformlar",
+    "subtitle": "Sistemimiz yüzlerce farklı kaynaktan dosya indirebilir. Sık kullanılan popüler servisler için özel araçlarımıza aşağıdan göz atın."
+  },
+  "Converter": {
+    "placeholder": "Video linkini buraya yapıştırın (YouTube, TikTok, Facebook...)",
+    "analyze": "Analiz Et",
+    "source": "Kaynak:",
+    "downloadNow": "Hemen İndir",
+    "converting": "Dönüştürülüyor...",
+    "convertAnother": "Farklı bir video dönüştür",
+    "preparing": "Dosyanız Hazırlanıyor...",
+    "pleaseWait": "Lütfen bekleyin, videomuz en yüksek kalitede sunucularımızda işleniyor.",
+    "sponsored": "Sponsorlu Bağlantı",
+    "adSpace": "Reklam Alanı (300x250)",
+    "free": "100% Ücretsiz",
+    "noReg": "Kayıt Yok",
+    "fast": "Süper Hızlı",
+    "videoOpt": "Video (MP4)",
+    "audioOpt": "Ses (MP3)",
+    "q1080": "🎬 1080p (En Yüksek Kalite)",
+    "q720": "🎬 720p (Yüksek Kalite)",
+    "q480": "🎬 480p (Standart Kalite)",
+    "q360": "🎬 360p (Düşük Veri Tüketimi)",
+    "q320k": "🎵 320kbps (En Yüksek Ses Kalitesi)",
+    "q128k": "🎵 128kbps (Standart Ses Kalitesi)"
+  }
+}
