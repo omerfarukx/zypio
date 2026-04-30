@@ -13,11 +13,14 @@ export function ConverterForm() {
   const [isProcessing, setIsProcessing] = useState(false)
   const [progress, setProgress] = useState<number>(0)
   const [error, setError] = useState("")
+  const [videoInfo, setVideoInfo] = useState<{ title: string, thumbnail: string } | null>(null)
+  const [showAdLayer, setShowAdLayer] = useState(false) // Reklam/İndirme overlay'i
 
   // URL değiştiğinde platformu otomatik tanı
   useEffect(() => {
     if (!url) {
       setPlatform("unknown")
+      setVideoInfo(null)
       return
     }
 
@@ -26,16 +29,18 @@ export function ConverterForm() {
       setFormat("720") // Varsayılan 720p
     } else if (url.includes("instagram.com")) {
       setPlatform("instagram")
-      setFormat("hd") // Instagram için HD
+      setFormat("720") // Instagram için HD
     } else if (url.includes("tiktok.com")) {
       setPlatform("tiktok")
       setFormat("watermark_free") // TikTok için filigransız
     } else {
       setPlatform("unknown")
+      setVideoInfo(null)
     }
   }, [url])
 
-  const handleDownload = async (e: React.FormEvent) => {
+  // Yeni Adım 1: Analiz Et (Video bilgilerini getir)
+  const handleGetInfo = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!url || platform === "unknown") {
       setError("Lütfen desteklenen bir platformdan geçerli bir URL giriniz (YouTube, Instagram, TikTok).")
@@ -44,7 +49,41 @@ export function ConverterForm() {
 
     setIsProcessing(true)
     setError("")
+    setVideoInfo(null)
+
+    try {
+      const response = await fetch('/api/info', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url, platform })
+      })
+
+      const data = await response.json()
+
+      if (!response.ok || data.error) {
+        throw new Error(data.error || "Video bilgileri alınamadı.")
+      }
+
+      setVideoInfo({
+        title: data.title,
+        thumbnail: data.thumbnail
+      })
+
+    } catch (err: any) {
+      setError(err.message)
+    } finally {
+      setIsProcessing(false)
+    }
+  }
+
+  // Yeni Adım 2: Format seçip İndir'e basınca (Mevcut mantık + Reklam Overlay)
+  const handleDownload = async () => {
+    if (!url || platform === "unknown") return
+
+    setIsProcessing(true)
+    setError("")
     setProgress(0)
+    setShowAdLayer(true) // Reklam ekranını tetikle
 
     try {
       // API çağrısı
@@ -92,7 +131,7 @@ export function ConverterForm() {
         if (pData.success === 1 && pData.download_url) {
           setProgress(100)
           window.location.href = pData.download_url
-          setIsProcessing(false)
+          setTimeout(() => { setIsProcessing(false); setShowAdLayer(false); }, 1500)
           break
         }
 
@@ -101,116 +140,203 @@ export function ConverterForm() {
     } catch (err: any) {
       setError("İndirme bağlantısı alınırken koptuk: " + err.message)
       setIsProcessing(false)
+      setShowAdLayer(false)
     }
   }
 
   return (
     <div className="w-full max-w-2xl mx-auto relative z-20">
+
+      {/* REKLAM VE İNDİRME EKRANI (Overlay) */}
+      <AnimatePresence>
+        {showAdLayer && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4"
+          >
+            <div className="bg-[#1C1C1E] border border-white/10 rounded-3xl p-8 max-w-lg w-full text-center relative overflow-hidden">
+              <div className="absolute top-0 left-0 w-full h-1 bg-white/5">
+                <motion.div
+                  className="h-full bg-blue-500"
+                  initial={{ width: 0 }}
+                  animate={{ width: `${progress}%` }}
+                  transition={{ ease: "linear" }}
+                />
+              </div>
+
+              {progress === 100 ? (
+                <div className="w-16 h-16 bg-green-500/20 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <Download className="w-8 h-8" />
+                </div>
+              ) : (
+                <Loader2 className="w-12 h-12 animate-spin text-blue-500 mx-auto mb-6" />
+              )}
+
+              <h3 className="text-2xl font-bold text-white mb-2">
+                {progress === 100 ? "İndirme Başlıyor!" : "Video Hazırlanıyor..."}
+              </h3>
+              <p className="text-gray-400 mb-8">
+                {progress === 100 ? "Dosyanız kaydediliyor..." : `Lütfen bekleyin... ${Math.round(progress)}%`}
+              </p>
+
+              {/* SAHTE REKLAM ALANI (AdSense buraya eklenecek) */}
+              <div className="w-full h-[250px] bg-[#0F0F13] border border-dashed border-white/20 rounded-2xl flex flex-col items-center justify-center text-gray-600 relative overflow-hidden group">
+                <span className="text-xs uppercase tracking-widest mb-2 font-bold opacity-50">Sponsorlu</span>
+                <span className="text-lg font-medium group-hover:text-blue-400 transition-colors">Reklam Alanı</span>
+                <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/5 to-purple-500/5 pointer-events-none"></div>
+              </div>
+
+              {/* Çarpı (Kapat) butonu - Kullanıcı takılırsa çıksın diye */}
+              {progress === 100 && (
+                <button onClick={() => setShowAdLayer(false)} className="mt-6 text-sm text-gray-500 hover:text-white underline underline-offset-4">
+                  Kapat
+                </button>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         className="bg-[#1C1C1E] rounded-3xl p-6 sm:p-8 border border-white/5 shadow-2xl"
       >
-        <form onSubmit={handleDownload} className="flex flex-col gap-6">
+        <form onSubmit={!videoInfo ? handleGetInfo : (e) => e.preventDefault()} className="flex flex-col gap-6">
 
-          <div className="flex flex-col sm:flex-row gap-4 items-start">
-            <div className="relative w-full flex-1">
-              <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
-                <Link2 className="w-5 h-5 text-gray-500" />
-              </div>
-              <Input
-                type="url"
-                placeholder="Video URL'sini buraya yapıştır..."
-                className="pl-12 bg-[#0F0F13] border-white/10 text-white h-14 rounded-2xl text-lg focus-visible:ring-blue-500"
-                value={url}
-                onChange={(e) => setUrl(e.target.value)}
-                required
-                disabled={isProcessing}
-              />
-
-              {/* Platform Tanıma Göstergesi */}
-              <AnimatePresence>
-                {platform !== "unknown" && (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.8 }}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wider bg-white/10 text-white"
-                  >
-                    {platform}
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-
-            <Button
-              type="submit"
-              disabled={isProcessing || !url || platform === "unknown"}
-              className="sm:w-auto w-full h-14 px-8 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-medium text-lg group transition-all"
-            >
-              {isProcessing ? (
-                <Loader2 className="w-6 h-6 animate-spin" />
-              ) : (
-                <>
-                  İndir
-                  <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-                </>
-              )}
-            </Button>
-          </div>
-
-          {/* Dinamik Çözünürlük Seçenekleri */}
-          <AnimatePresence>
-            {platform === "youtube" && !isProcessing && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                exit={{ opacity: 0, height: 0 }}
-                className="flex items-center justify-center gap-3"
-              >
-                <span className="text-sm text-gray-400 font-medium">Kalite Seçin:</span>
-                <div className="flex bg-[#0F0F13] p-1 rounded-xl border border-white/5">
-                  {["360", "720", "1080"].map((q) => (
-                    <button
-                      key={q}
-                      type="button"
-                      onClick={() => setFormat(q)}
-                      className={`px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${format === q
-                        ? "bg-blue-500 text-white shadow-lg"
-                        : "text-gray-400 hover:text-white hover:bg-white/5"
-                        }`}
-                    >
-                      {q}p
-                    </button>
-                  ))}
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          {/* İlerleme Çubuğu */}
-          <AnimatePresence>
-            {isProcessing && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="w-full bg-[#0F0F13] rounded-xl p-4 border border-white/5"
-              >
-                <div className="flex justify-between text-sm mb-2">
-                  <span className="text-gray-400 font-medium">Video hazırlanıyor...</span>
-                  <span className="text-blue-400 font-bold">{Math.round(progress)}%</span>
-                </div>
-                <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
-                  <motion.div
-                    className="h-full bg-blue-500"
-                    initial={{ width: 0 }}
-                    animate={{ width: `${progress}%` }}
-                    transition={{ ease: "linear" }}
+          {/* 1. ADIM: LİNK GİRME EKRANI */}
+          {!videoInfo ? (
+            <>
+              <div className="flex flex-col sm:flex-row gap-4 items-start">
+                <div className="relative w-full flex-1">
+                  <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                    <Link2 className="w-5 h-5 text-gray-500" />
+                  </div>
+                  <Input
+                    type="url"
+                    placeholder="Video URL'sini buraya yapıştır..."
+                    className="pl-12 bg-[#0F0F13] border-white/10 text-white h-14 rounded-2xl text-lg focus-visible:ring-blue-500"
+                    value={url}
+                    onChange={(e) => setUrl(e.target.value)}
+                    required
+                    disabled={isProcessing}
                   />
+
+                  {/* Platform Tanıma Göstergesi */}
+                  <AnimatePresence>
+                    {platform !== "unknown" && (
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.8 }}
+                        className="absolute right-4 top-1/2 -translate-y-1/2 px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wider bg-white/10 text-white"
+                      >
+                        {platform}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+
+                <Button
+                  type="submit"
+                  disabled={isProcessing || !url || platform === "unknown"}
+                  className="sm:w-auto w-full h-14 px-8 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-medium text-lg group transition-all"
+                >
+                  {isProcessing ? (
+                    <Loader2 className="w-6 h-6 animate-spin" />
+                  ) : (
+                    <>
+                      Analiz Et
+                      <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                    </>
+                  )}
+                </Button>
+              </div>
+              <div className="flex items-center justify-center gap-6 text-sm text-gray-500">
+                <span className="flex items-center gap-2"><div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>Ücretsiz</span>
+                <span className="flex items-center gap-2"><div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>Hızlı</span>
+                <span className="flex items-center gap-2"><div className="w-1.5 h-1.5 rounded-full bg-purple-500"></div>Sınırsız</span>
+              </div>
+            </>
+          ) : (
+            /* 2. ADIM: VİDEO ÖNİZLEME VE İNDİRME EKRANI */
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="flex flex-col md:flex-row gap-6 bg-[#0F0F13] p-5 rounded-2xl border border-white/10"
+            >
+              {/* Thumbnail */}
+              <div className="w-full md:w-48 aspect-video rounded-xl overflow-hidden bg-black relative flex-shrink-0 border border-white/5">
+                <img
+                  src={`/api/proxy-image?url=${encodeURIComponent(videoInfo.thumbnail)}`}
+                  alt={videoInfo.title}
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.currentTarget.src = "https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=600";
+                    e.currentTarget.onerror = null;
+                  }}
+                />
+              </div>
+
+              {/* Bilgiler ve Butonlar */}
+              <div className="flex flex-col justify-between flex-1 min-w-0">
+                <div className="mb-4">
+                  <h3 className="text-lg font-semibold text-white truncate leading-snug mb-1" title={videoInfo.title}>
+                    {videoInfo.title}
+                  </h3>
+                  <p className="text-sm text-gray-500 capitalize">
+                    Platform: <span className="text-blue-400 font-medium">{platform}</span>
+                  </p>
+                </div>
+
+                <div className="flex flex-col gap-3">
+                  {/* Dropdown ile Format/Kalite Seçimi */}
+                  <select
+                    className="w-full bg-[#1C1C1E] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all font-medium text-sm appearance-none cursor-pointer"
+                    value={format}
+                    onChange={(e) => setFormat(e.target.value)}
+                    disabled={isProcessing}
+                  >
+                    {platform === "youtube" ? (
+                      <optgroup label="Video (MP4)">
+                        <option value="1080">1080p Full HD</option>
+                        <option value="720">720p HD</option>
+                        <option value="480">480p</option>
+                        <option value="360">360p</option>
+                      </optgroup>
+                    ) : platform === "tiktok" ? (
+                      <optgroup label="Video">
+                        <option value="watermark_free">Filigransız (Orijinal)</option>
+                        <option value="watermark">Filigranlı (TikTok Logolu)</option>
+                      </optgroup>
+                    ) : (
+                      <option value="720">MP4 (Yüksek Kalite)</option>
+                    )}
+                  </select>
+
+                  <Button
+                    onClick={handleDownload}
+                    disabled={isProcessing}
+                    className="w-full bg-green-600 hover:bg-green-500 shadow-green-600/20 shadow-lg h-12"
+                  >
+                    <Download className="w-5 h-5 mr-2" />
+                    Hemen İndir
+                  </Button>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => { setVideoInfo(null); setUrl(""); }}
+                  className="mt-4 text-xs text-gray-500 hover:text-white transition-colors underline underline-offset-2 self-start"
+                  disabled={isProcessing}
+                >
+                  Farklı bir video indir
+                </button>
+              </div>
+            </motion.div>
+          )}
 
           {/* Hata Mesajı */}
           <AnimatePresence>
