@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
+// @ts-ignore
 import ytdl from 'ytdl-core-enhanced';
 import path from 'path';
 import fs from 'fs';
@@ -76,9 +77,9 @@ export async function POST(req: Request) {
       // Stream'i direkt Response olarak döndürüyoruz (Memory patlamasın diye)
       const readableWebStream = new ReadableStream({
         start(controller) {
-          stream.on('data', (chunk) => controller.enqueue(chunk));
+          stream.on('data', (chunk: any) => controller.enqueue(chunk));
           stream.on('end', () => controller.close());
-          stream.on('error', (err) => controller.error(err));
+          stream.on('error', (err: any) => controller.error(err));
         }
       });
 
