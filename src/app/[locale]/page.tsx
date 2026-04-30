@@ -13,38 +13,70 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
 
   return (
     <div className="flex flex-col flex-1 items-center justify-center font-sans w-full overflow-hidden">
-      {/* Hero Section */}
-      <main className="relative flex flex-1 w-full flex-col items-center justify-center py-28 px-4 sm:px-8 sm:items-center text-center bg-gradient-to-b from-[#0A0A0C] to-[#0F0F13]">
+
+      {/* Hero Section (SaveFrom Tarzı) */}
+      <main className="relative flex flex-1 w-full flex-col items-center justify-center pt-28 pb-16 px-4 sm:px-8 bg-gradient-to-b from-[#0A0A0C] to-[#0F0F13]">
         {/* Glow Effects */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-64 bg-blue-600/10 rounded-[100%] blur-[100px] pointer-events-none"></div>
 
-        <div className="relative z-10 mb-12 max-w-4xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#1C1C1E] border border-white/10 text-gray-300 text-sm font-medium mb-8 hover:bg-white/5 transition-colors cursor-pointer group shadow-lg">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-            </span>
-            {t('systemStatus')}
-          </div>
+        {/* Üst Reklam Alanı (Header Banner) */}
+        <div className="w-full max-w-[728px] h-[90px] bg-[#1C1C1E] border border-white/10 border-dashed rounded-xl hidden md:flex items-center justify-center text-gray-500 mb-8 relative group shadow-lg z-10">
+          <span className="absolute top-2 left-2 text-[10px] uppercase tracking-wider opacity-50 font-bold">Reklam</span>
+          <span className="font-medium group-hover:text-blue-400 transition-colors">728x90 Header Banner</span>
+        </div>
+        <div className="w-full max-w-[320px] h-[100px] bg-[#1C1C1E] border border-white/10 border-dashed rounded-xl flex md:hidden items-center justify-center text-gray-500 mb-8 relative group shadow-lg z-10">
+          <span className="absolute top-2 left-2 text-[10px] uppercase tracking-wider opacity-50 font-bold">Reklam</span>
+          <span className="font-medium group-hover:text-blue-400 transition-colors">320x100 Mobil Banner</span>
+        </div>
 
-          <h1 className="text-5xl sm:text-6xl md:text-7xl font-extrabold tracking-tight mb-8 leading-tight">
+        {/* Başlık ve Açıklama */}
+        <div className="relative z-10 mb-8 max-w-4xl mx-auto text-center">
+          <h1 className="text-5xl sm:text-6xl md:text-7xl font-extrabold tracking-tight mb-6 leading-tight">
             <span className="bg-clip-text text-transparent bg-gradient-to-b from-white to-gray-400">
               {t('title')}
             </span>
           </h1>
-
-          <p className="text-lg sm:text-xl text-gray-400 leading-relaxed max-w-2xl mx-auto mb-12">
+          <p className="text-lg sm:text-xl text-gray-400 leading-relaxed max-w-2xl mx-auto">
             {t('description')}
           </p>
         </div>
 
-        <div className="w-full relative z-10 flex justify-center mt-8">
-          <a href={`/${locale}/download`} className="px-10 py-5 bg-green-600 hover:bg-green-500 text-white rounded-2xl font-bold text-xl transition-all duration-300 hover:scale-105 shadow-xl shadow-green-600/30 flex items-center gap-3 group">
-            Hemen Ücretsiz Başla
-            <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-            </svg>
-          </a>
+        {/* 3 Kolonlu Ana Yapı: Sol Reklam | Dönüştürücü | Sağ Reklam */}
+        <div className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row gap-8 items-start justify-center relative z-10">
+
+          {/* Sol Sticky Sidebar Reklamı */}
+          <div className="hidden lg:flex flex-col gap-6 sticky top-28 w-[160px] xl:w-[300px]">
+            <div className="w-full h-[600px] xl:h-[250px] bg-[#1C1C1E] border border-white/10 border-dashed rounded-xl flex items-center justify-center text-gray-500 relative group shadow-lg">
+              <span className="absolute top-2 left-2 text-[10px] uppercase tracking-wider opacity-50 font-bold">Reklam</span>
+              <span className="font-medium group-hover:text-blue-400 transition-colors text-center px-2">Sol Sidebar</span>
+            </div>
+          </div>
+
+          {/* Ana Dönüştürücü Form */}
+          <div className="flex-1 w-full max-w-3xl mx-auto">
+            <ConverterForm />
+
+            {/* Form Altı Native Reklam */}
+            <div className="w-full h-[250px] bg-[#1C1C1E] border border-white/10 border-dashed rounded-xl flex items-center justify-center text-gray-500 mt-8 relative group shadow-lg">
+              <span className="absolute top-2 left-2 text-[10px] uppercase tracking-wider opacity-50 font-bold">Sponsorlu</span>
+              <span className="font-medium group-hover:text-blue-400 transition-colors">Native In-Feed Reklam Alanı</span>
+            </div>
+          </div>
+
+          {/* Sağ Sticky Sidebar Reklamı */}
+          <div className="hidden lg:flex flex-col gap-6 sticky top-28 w-[160px] xl:w-[300px]">
+            <div className="w-full h-[600px] xl:h-[250px] bg-[#1C1C1E] border border-white/10 border-dashed rounded-xl flex items-center justify-center text-gray-500 relative group shadow-lg">
+              <span className="absolute top-2 left-2 text-[10px] uppercase tracking-wider opacity-50 font-bold">Reklam</span>
+              <span className="font-medium group-hover:text-blue-400 transition-colors text-center px-2">Sağ Sidebar</span>
+            </div>
+          </div>
+
+        </div>
+
+        {/* Alt Banner (Footer Billboard) */}
+        <div className="w-full max-w-[970px] h-[250px] bg-[#1C1C1E] border border-white/10 border-dashed rounded-xl hidden lg:flex items-center justify-center text-gray-500 mt-12 relative group shadow-lg z-10">
+          <span className="absolute top-2 left-2 text-[10px] uppercase tracking-wider opacity-50 font-bold">Reklam</span>
+          <span className="font-medium group-hover:text-blue-400 transition-colors">970x250 Footer Billboard</span>
         </div>
       </main>
 
