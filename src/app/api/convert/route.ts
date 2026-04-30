@@ -74,7 +74,7 @@ export async function POST(req: Request) {
       `"${url}"`,
       `--no-warnings`,
       `--no-check-certificates`,
-      `--extractor-args "youtube:player_client=ios,android"`,
+      `--extractor-args "youtube:player_client=default"`,
       `-o "${outputTemplate}"`
     ];
 
