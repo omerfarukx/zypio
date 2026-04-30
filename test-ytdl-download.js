@@ -6,7 +6,7 @@ async function test() {
     const video = ytdl('https://www.youtube.com/watch?v=jNQXAC9IVRw', { quality: 'highest' });
     video.pipe(fs.createWriteStream('test.mp4'));
     video.on('end', () => console.log('Done!'));
-  } catch(e) {
+  } catch (e) {
     console.error(e);
   }
 }

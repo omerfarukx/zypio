@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Menu, X, ChevronDown, Globe, Download, Play, Music, Image as ImageIcon } from "lucide-react"
+import { Menu, X, ChevronDown, Globe, Download, Play, Music, Image as ImageIcon, LayoutGrid } from "lucide-react"
 import { Logo } from "./Logo"
 import { useTranslations, useLocale } from "next-intl"
 import { useRouter, usePathname } from "@/i18n/routing"
@@ -110,6 +110,7 @@ export function Header() {
             </AnimatePresence>
           </div>
 
+          <a href={`/${locale}/tools`} className="text-sm font-medium text-gray-300 hover:text-white transition-colors py-2">Tüm Araçlar</a>
           <a href="#features" className="text-sm font-medium text-gray-300 hover:text-white transition-colors py-2">{t("features")}</a>
           <a href="#faq" className="text-sm font-medium text-gray-300 hover:text-white transition-colors py-2">{t("faq")}</a>
 
@@ -149,6 +150,7 @@ export function Header() {
                 <a href={`/${locale}/platform/youtube`} className="flex items-center gap-3 p-3 bg-white/5 rounded-xl text-white font-medium active:scale-95 transition-transform"><Play className="w-5 h-5 text-red-500" /> YouTube Dönüştürücü</a>
                 <a href={`/${locale}/platform/tiktok`} className="flex items-center gap-3 p-3 bg-white/5 rounded-xl text-white font-medium active:scale-95 transition-transform"><Music className="w-5 h-5 text-gray-300" /> TikTok İndirici</a>
                 <a href={`/${locale}/platform/instagram`} className="flex items-center gap-3 p-3 bg-white/5 rounded-xl text-white font-medium active:scale-95 transition-transform"><ImageIcon className="w-5 h-5 text-pink-500" /> Instagram İndirici</a>
+                <a href={`/${locale}/tools`} className="flex items-center gap-3 p-3 bg-white/5 rounded-xl text-white font-medium active:scale-95 transition-transform"><LayoutGrid className="w-5 h-5 text-blue-400" /> Tüm Dönüştürücü Araçlar</a>
               </div>
 
               <div className="w-full h-px bg-white/10"></div>

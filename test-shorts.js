@@ -5,7 +5,7 @@ async function test() {
     console.log('Testing Shorts URL...');
     const info = await ytdl.getInfo('https://www.youtube.com/shorts/VYzgEOPQbXY');
     console.log("Title:", info.videoDetails.title);
-  } catch(e) {
+  } catch (e) {
     console.error("ERROR:", e.message);
   }
 }
