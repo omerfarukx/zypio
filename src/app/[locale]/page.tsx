@@ -38,9 +38,13 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           </p>
         </div>
 
-        {/* Converter Form UI */}
-        <div className="w-full relative z-10">
-          <ConverterForm />
+        <div className="w-full relative z-10 flex justify-center mt-8">
+          <a href={`/${locale}/download`} className="px-10 py-5 bg-green-600 hover:bg-green-500 text-white rounded-2xl font-bold text-xl transition-all duration-300 hover:scale-105 shadow-xl shadow-green-600/30 flex items-center gap-3 group">
+            Hemen Ücretsiz Başla
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+          </a>
         </div>
       </main>
 

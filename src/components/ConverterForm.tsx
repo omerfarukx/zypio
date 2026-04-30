@@ -182,9 +182,9 @@ export function ConverterForm() {
               </p>
 
               {/* SAHTE REKLAM ALANI (AdSense buraya eklenecek) */}
-              <div className="w-full h-[250px] bg-[#0F0F13] border border-dashed border-white/20 rounded-2xl flex flex-col items-center justify-center text-gray-600 relative overflow-hidden group">
+              <div className="w-full h-[250px] bg-[#0F0F13] border border-dashed border-white/20 rounded-2xl flex flex-col items-center justify-center text-gray-600 relative overflow-hidden group mt-4">
                 <span className="text-xs uppercase tracking-widest mb-2 font-bold opacity-50">Sponsorlu</span>
-                <span className="text-lg font-medium group-hover:text-blue-400 transition-colors">Reklam Alanı</span>
+                <span className="text-lg font-medium group-hover:text-blue-400 transition-colors">300x250 Premium Reklam Alanı</span>
                 <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/5 to-purple-500/5 pointer-events-none"></div>
               </div>
 
@@ -301,18 +301,23 @@ export function ConverterForm() {
                   >
                     {platform === "youtube" ? (
                       <optgroup label="Video (MP4)">
-                        <option value="1080">1080p Full HD</option>
-                        <option value="720">720p HD</option>
-                        <option value="480">480p</option>
-                        <option value="360">360p</option>
+                        <option value="1080">Ultra Kalite (1080p+)</option>
+                        <option value="720">Yüksek Kalite (720p)</option>
+                        <option value="480">Orta Kalite (480p)</option>
+                        <option value="360">Düşük Kalite (360p)</option>
                       </optgroup>
                     ) : platform === "tiktok" ? (
                       <optgroup label="Video">
-                        <option value="watermark_free">Filigransız (Orijinal)</option>
-                        <option value="watermark">Filigranlı (TikTok Logolu)</option>
+                        <option value="watermark_free">Ultra Kalite (Filigransız)</option>
+                        <option value="watermark">Orta Kalite (Filigranlı)</option>
                       </optgroup>
                     ) : (
-                      <option value="720">MP4 (Yüksek Kalite)</option>
+                      <optgroup label="Video">
+                        <option value="1080">Ultra Kalite</option>
+                        <option value="720">Yüksek Kalite</option>
+                        <option value="480">Orta Kalite</option>
+                        <option value="360">Düşük Kalite</option>
+                      </optgroup>
                     )}
                   </select>
 
