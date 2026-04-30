@@ -85,7 +85,22 @@
   },
   "PlatformSummary": {
     "title": "Supported Platforms",
-    "subtitle": "Our system can download files from hundreds of different sources. Check out our dedicated tools for popular services below."
+    "subtitle": "Our system can download files from hundreds of different sources. Check out our dedicated tools for popular services below.",
+    "youtubeTitle": "YouTube Video Downloader",
+    "youtubeDesc": "Download YouTube videos in 1080p, 4K and MP3 format for free, fast and ad-free. Save YouTube videos in the highest quality to your device.",
+    "youtubeStats": "1M+ Daily Downloads",
+    "tiktokTitle": "TikTok No Watermark Downloader",
+    "tiktokDesc": "Download TikTok videos instantly in original quality without watermark. Save TikTok songs as MP3.",
+    "tiktokStats": "500K+ Daily Downloads",
+    "facebookTitle": "Facebook Video Downloader",
+    "facebookDesc": "Download Facebook videos in HD quality to your computer or phone. Supports all public FB videos.",
+    "facebookStats": "250K+ Daily Downloads",
+    "instagramTitle": "Instagram Reels & Video Downloader",
+    "instagramDesc": "Download Instagram Reels, IGTV and regular post videos in high quality quickly. No login required.",
+    "instagramStats": "800K+ Daily Downloads",
+    "twitterTitle": "X (Twitter) Video Downloader",
+    "twitterDesc": "Download videos and GIFs from Twitter (X) ad-free, without waiting.",
+    "twitterStats": "150K+ Daily Downloads"
   },
   "Converter": {
     "placeholder": "Paste video link here (YouTube, TikTok, Facebook...)",

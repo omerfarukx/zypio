@@ -48,15 +48,15 @@ export function PlatformSummary() {
                                         {iconMap[platform.id]}
                                     </div>
                                     <h3 className="text-xl font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">
-                                        {platform.title}
+                                        {t(`${platform.id}Title`)}
                                     </h3>
                                     <p className="text-sm text-gray-400 leading-relaxed mb-6">
-                                        {platform.description.substring(0, 80)}...
+                                        {t(`${platform.id}Desc`).substring(0, 80)}...
                                     </p>
 
                                     <div className="flex items-center justify-between mt-auto">
                                         <span className="text-xs font-medium text-gray-500 bg-white/5 px-3 py-1 rounded-full">
-                                            {platform.stats}
+                                            {t(`${platform.id}Stats`)}
                                         </span>
                                         <ArrowRight className="w-5 h-5 text-gray-600 group-hover:text-white transition-colors group-hover:translate-x-1" />
                                     </div>

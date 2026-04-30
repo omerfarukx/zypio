@@ -85,7 +85,22 @@
   },
   "PlatformSummary": {
     "title": "Desteklenen Platformlar",
-    "subtitle": "Sistemimiz yüzlerce farklı kaynaktan dosya indirebilir. Sık kullanılan popüler servisler için özel araçlarımıza aşağıdan göz atın."
+    "subtitle": "Sistemimiz yüzlerce farklı kaynaktan dosya indirebilir. Sık kullanılan popüler servisler için özel araçlarımıza aşağıdan göz atın.",
+    "youtubeTitle": "YouTube Video İndirici",
+    "youtubeDesc": "YouTube videolarını 1080p, 4K ve MP3 formatında ücretsiz, hızlı ve reklamsız olarak indirin. En yüksek kalitede YouTube videolarını cihazınıza kaydedin.",
+    "youtubeStats": "Günlük 1M+ İndirme",
+    "tiktokTitle": "TikTok Filigransız İndirici",
+    "tiktokDesc": "TikTok videolarını filigran olmadan (No Watermark) orijinal kalitesinde anında indirin. TikTok şarkılarını MP3 olarak kaydedin.",
+    "tiktokStats": "Günlük 500K+ İndirme",
+    "facebookTitle": "Facebook Video İndirici",
+    "facebookDesc": "Facebook videolarını HD kalitede bilgisayarınıza veya telefonunuza indirin. Herkese açık tüm FB videolarını destekler.",
+    "facebookStats": "Günlük 250K+ İndirme",
+    "instagramTitle": "Instagram Reels ve Video İndirici",
+    "instagramDesc": "Instagram Reels, IGTV ve normal gönderi videolarını yüksek kalitede, hızlıca indirin. Giriş yapmanıza gerek yok.",
+    "instagramStats": "Günlük 800K+ İndirme",
+    "twitterTitle": "X (Twitter) Video İndirici",
+    "twitterDesc": "Twitter (X) üzerindeki videoları ve GIF'leri reklamsız, beklemeden indirin.",
+    "twitterStats": "Günlük 150K+ İndirme"
   },
   "Converter": {
     "placeholder": "Video linkini buraya yapıştırın (YouTube, TikTok, Facebook...)",
