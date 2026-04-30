@@ -32,6 +32,9 @@ export const metadata: Metadata = {
   authors: [{ name: "Zypio Team" }],
   creator: "Zypio",
   publisher: "Zypio",
+  verification: {
+    google: "GOOGLE_SEARCH_CONSOLE_VERIFICATION_CODE_HERE",
+  },
   formatDetection: {
     email: false,
     address: false,
@@ -105,6 +108,17 @@ export default async function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-[#0F0F13] text-white selection:bg-blue-500/30 selection:text-blue-200">
         <NextIntlClientProvider messages={messages}>
+          {/* Google Analytics Placeholder */}
+          <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+          <script dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-XXXXXXXXXX');
+            `
+          }} />
+
           <div className="flex flex-col min-h-screen w-full relative">
             <Header />
             <div className="pt-20 flex-1 flex flex-col">
