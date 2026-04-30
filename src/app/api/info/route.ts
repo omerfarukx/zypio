@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
-// @ts-ignore
-import ytdl from 'ytdl-core-enhanced';
+const ytdl = require('ytdl-core-enhanced');
 import path from 'path';
 import fs from 'fs';
 import { exec } from 'child_process';

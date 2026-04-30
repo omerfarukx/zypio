@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
-// @ts-ignore
-import ytdl from 'ytdl-core-enhanced';
+const ytdl = require('ytdl-core-enhanced');
 import path from 'path';
 import fs from 'fs';
 import os from 'os';
