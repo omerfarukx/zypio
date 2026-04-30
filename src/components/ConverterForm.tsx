@@ -268,11 +268,11 @@ export function ConverterForm() {
               className="flex flex-col md:flex-row gap-6 bg-[#0F0F13] p-5 rounded-2xl border border-white/10"
             >
               {/* Thumbnail */}
-              <div className="w-full md:w-48 aspect-video rounded-xl overflow-hidden bg-black relative flex-shrink-0 border border-white/5">
+              <div className="w-full md:w-48 aspect-video rounded-xl overflow-hidden bg-black relative flex-shrink-0 border border-white/5 flex items-center justify-center">
                 <img
-                  src={`/api/proxy-image?url=${encodeURIComponent(videoInfo.thumbnail)}`}
+                  src={videoInfo.thumbnail.includes("logo.clearbit.com") ? videoInfo.thumbnail : `/api/proxy-image?url=${encodeURIComponent(videoInfo.thumbnail)}`}
                   alt={videoInfo.title}
-                  className="w-full h-full object-cover"
+                  className={`w-full h-full ${videoInfo.thumbnail.includes("logo.clearbit.com") ? "object-contain p-4 opacity-50" : "object-cover"}`}
                   onError={(e) => {
                     e.currentTarget.src = "https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=600";
                     e.currentTarget.onerror = null;

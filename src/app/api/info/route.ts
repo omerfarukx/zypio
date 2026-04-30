@@ -38,9 +38,15 @@ export async function POST(req: Request) {
                 const data = await res.json();
 
                 if (data.success && data.info) {
+                    let thumbnail = data.info.image;
+                    // Eğer loader.to instagram için geçerli bir kapak bulamazsa logo gösterelim
+                    if (!thumbnail || thumbnail.includes("logo.clearbit.com")) {
+                        thumbnail = platform === 'youtube' ? "https://logo.clearbit.com/www.youtube.com?size=256" : "https://logo.clearbit.com/www.instagram.com?size=256";
+                    }
+
                     return NextResponse.json({
                         title: data.title || data.info.title || "Video",
-                        thumbnail: data.info.image || (platform === 'youtube' ? "https://logo.clearbit.com/www.youtube.com?size=256" : "https://logo.clearbit.com/www.instagram.com?size=256")
+                        thumbnail: thumbnail
                     });
                 } else {
                     throw new Error("Video bilgileri gizli veya servis meşgul.");
