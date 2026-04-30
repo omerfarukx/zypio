@@ -33,7 +33,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Girdiğiniz bağlantı geçersiz. Lütfen kontrol edip tekrar deneyiniz.' }, { status: 400 });
     }
 
-    // Güvenlik: Rate Limit Kontrolü (Supabase üzerinden)
+    // Güvenlik: Rate Limit Kontrolü (Geçici olarak iptal edildi çünkü veritabanı yoruyor ve yanlış limitliyor)
+    /*
     if (ip !== 'unknown') {
       const oneHourAgo = new Date();
       oneHourAgo.setHours(oneHourAgo.getHours() - 1);
@@ -52,6 +53,7 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: 'Saatlik işlem limitinize (20) ulaştınız. Lütfen daha sonra tekrar deneyiniz.' }, { status: 429 });
       }
     }
+    */
 
     const isAudio = format.startsWith('mp3');
     const responseFormat = isAudio ? 'mp3' : 'mp4';
