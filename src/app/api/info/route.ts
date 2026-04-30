@@ -30,8 +30,8 @@ export async function POST(req: Request) {
         }
 
         // Basit bir test: Sadece videonun meta verilerini (json) çek
-        // Bot korumasına takılmamak için extractor-args ekliyoruz
-        const command = `"${ytDlpPath}" "${url}" --dump-json --no-warnings --no-check-certificates --extractor-args "youtube:player_client=default"`;
+        // Bot korumasına takılmamak için IP sorununu aşacak alternatif parametreler
+        const command = `"${ytDlpPath}" "${url}" --dump-json --no-warnings --no-check-certificates --extractor-args "youtube:player_client=default" --extractor-args "youtube:player_skip=webpage,configs"`;
 
         const { stdout } = await execAsync(command);
 
