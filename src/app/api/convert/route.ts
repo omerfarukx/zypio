@@ -1,11 +1,13 @@
 import { NextResponse } from 'next/server';
+import { supabase } from '@/lib/supabase';
+import ytdl from 'ytdl-core-enhanced';
 import path from 'path';
 import fs from 'fs';
 import os from 'os';
 import { v4 as uuidv4 } from 'uuid';
 import { exec } from 'child_process';
 import { promisify } from 'util';
-import { supabase } from '@/lib/supabase';
+import { Readable } from 'stream';
 
 const execAsync = promisify(exec);
 
@@ -50,6 +52,47 @@ export async function POST(req: Request) {
       }
     }
 
+    const isAudio = format.startsWith('mp3');
+    const responseFormat = isAudio ? 'mp3' : 'mp4';
+
+    // Loglama fonksiyonu
+    const logDownload = (platform: string) => {
+      supabase.from('downloads_log').insert([{
+        ip_address: ip,
+        platform: platform,
+        format: format
+      }]).then(({ error }) => {
+        if (error) console.error("Supabase loglama hatası:", error.message);
+      });
+    };
+
+    // EĞER YOUTUBE İSE (ytdl-core-enhanced kullanarak Vercel banını aşıyoruz)
+    if (url.includes("youtube.com") || url.includes("youtu.be")) {
+      const stream = ytdl(url, {
+        filter: isAudio ? 'audioonly' : 'audioandvideo',
+        quality: 'highest'
+      });
+
+      // Stream'i direkt Response olarak döndürüyoruz (Memory patlamasın diye)
+      const readableWebStream = new ReadableStream({
+        start(controller) {
+          stream.on('data', (chunk) => controller.enqueue(chunk));
+          stream.on('end', () => controller.close());
+          stream.on('error', (err) => controller.error(err));
+        }
+      });
+
+      logDownload('youtube');
+
+      return new NextResponse(readableWebStream, {
+        headers: {
+          'Content-Disposition': `attachment; filename="zypio_converted.${responseFormat}"`,
+          'Content-Type': isAudio ? 'audio/mpeg' : 'video/mp4',
+        },
+      });
+    }
+
+    // EĞER DİĞER PLATFORMLAR İSE (yt-dlp kullanıyoruz)
     const taskId = uuidv4();
     const downloadsDir = path.join(os.tmpdir(), 'zypio_downloads');
 
@@ -59,14 +102,11 @@ export async function POST(req: Request) {
 
     const outputTemplate = path.join(downloadsDir, `${taskId}.%(ext)s`);
 
-    console.log(`[${taskId}] İndirme işlemi başladı: ${url} -> ${format}`);
-
     const isWindows = os.platform() === 'win32';
-    // Linux/Render ortamında Docker içindeki yt-dlp komutunu direkt çalıştır
     const ytDlpPath = isWindows ? path.join(process.cwd(), 'bin', 'yt-dlp.exe') : 'yt-dlp';
 
     if (isWindows && !fs.existsSync(ytDlpPath)) {
-      throw new Error(`yt-dlp bulunamadı baba: ${ytDlpPath}`);
+      throw new Error(`yt-dlp bulunamadı: ${ytDlpPath}`);
     }
 
     const args = [
@@ -74,78 +114,40 @@ export async function POST(req: Request) {
       `"${url}"`,
       `--no-warnings`,
       `--no-check-certificates`,
-      `--extractor-args "youtube:player_client=default"`,
-      `--extractor-args "youtube:player_skip=webpage,configs"`,
-      `--rm-cache-dir`,
       `-o "${outputTemplate}"`
     ];
 
-    // Format ve Kalite Seçenekleri
-    if (format.startsWith('mp3')) {
+    if (isAudio) {
       args.push('--extract-audio');
       args.push('--audio-format mp3');
-
-      if (format === 'mp3-128k') {
-        args.push('--audio-quality 128K');
-      } else {
-        args.push('--audio-quality 0'); // En iyi kalite (genelde 320k)
-      }
+      args.push('--audio-quality 0');
     } else {
-      // Video (MP4) Kaliteleri
       args.push('--merge-output-format mp4');
-
-      switch (format) {
-        case 'mp4-720p':
-          args.push('--format "bestvideo[height<=720][ext=mp4]+bestaudio[ext=m4a]/best[height<=720][ext=mp4]/best"');
-          break;
-        case 'mp4-480p':
-          args.push('--format "bestvideo[height<=480][ext=mp4]+bestaudio[ext=m4a]/best[height<=480][ext=mp4]/best"');
-          break;
-        case 'mp4-360p':
-          args.push('--format "bestvideo[height<=360][ext=mp4]+bestaudio[ext=m4a]/best[height<=360][ext=mp4]/best"');
-          break;
-        default: // mp4-best
-          args.push('--format "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best"');
-          break;
-      }
+      args.push('--format "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best"');
     }
 
     const command = args.join(' ');
-
-    // yt-dlp motorunu ateşle!
     await execAsync(command);
 
     const files = fs.readdirSync(downloadsDir);
     const downloadedFile = files.find(f => f.startsWith(taskId));
 
     if (!downloadedFile) {
-      throw new Error('Dosya indirilemedi baba, platform veya yt-dlp patladı!');
+      throw new Error('Dosya indirilemedi!');
     }
 
     const filePath = path.join(downloadsDir, downloadedFile);
     const fileBuffer = fs.readFileSync(filePath);
 
     fs.unlinkSync(filePath);
-    console.log(`[${taskId}] Dosya sunucudan anında silindi. Teliften yırttık!`);
 
-    const isAudio = format.startsWith('mp3');
-    const responseFormat = isAudio ? 'mp3' : 'mp4';
-
-    // Başarılı indirmeyi Supabase'e logla (Arka planda çalışır, response'u bekletmez)
     let platform = "unknown";
-    if (url.includes("youtube.com") || url.includes("youtu.be")) platform = "youtube";
-    else if (url.includes("tiktok.com")) platform = "tiktok";
+    if (url.includes("tiktok.com")) platform = "tiktok";
     else if (url.includes("facebook.com")) platform = "facebook";
     else if (url.includes("instagram.com")) platform = "instagram";
     else if (url.includes("twitter.com") || url.includes("x.com")) platform = "twitter";
 
-    supabase.from('downloads_log').insert([{
-      ip_address: ip,
-      platform: platform,
-      format: format
-    }]).then(({ error }) => {
-      if (error) console.error("Supabase loglama hatası:", error.message);
-    });
+    logDownload(platform);
 
     return new NextResponse(fileBuffer, {
       headers: {
