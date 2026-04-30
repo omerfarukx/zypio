@@ -11,9 +11,12 @@
   "dependencies": {
     "@ffmpeg-installer/ffmpeg": "^1.1.0",
     "@supabase/supabase-js": "^2.105.1",
+    "axios": "^1.15.2",
+    "cheerio": "^1.2.0",
     "cloud-ytdl": "^1.0.5-next",
     "clsx": "^2.1.1",
     "framer-motion": "^12.38.0",
+    "instagram-url-direct": "^2.0.7",
     "lucide-react": "^1.14.0",
     "next": "16.2.4",
     "next-intl": "^4.11.0",

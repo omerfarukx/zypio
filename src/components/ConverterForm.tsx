@@ -1,311 +1,234 @@
 "use client"
 
-import { useState } from "react"
-import { Link2, ArrowRight, Loader2, Download } from "lucide-react"
+import { useState, useEffect } from "react"
+import { Link2, ArrowRight, Loader2, Download, AlertCircle } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Input } from "./ui/input"
 import { Button } from "./ui/button"
 
-import { useTranslations } from "next-intl"
-
-type VideoInfo = {
-  title: string
-  thumbnail: string
-  duration: number
-  extractor: string
-}
-
 export function ConverterForm() {
-  const t = useTranslations("Converter")
   const [url, setUrl] = useState("")
-  const [format, setFormat] = useState<string>("mp4-best")
-  const [isLoadingInfo, setIsLoadingInfo] = useState(false)
-  const [isConverting, setIsConverting] = useState(false)
-  const [showAdLayer, setShowAdLayer] = useState(false) // Reklam ekranını tetiklemek için
+  const [platform, setPlatform] = useState<"youtube" | "instagram" | "tiktok" | "unknown">("unknown")
+  const [format, setFormat] = useState<string>("")
+  const [isProcessing, setIsProcessing] = useState(false)
+  const [progress, setProgress] = useState<number>(0)
   const [error, setError] = useState("")
-  const [videoInfo, setVideoInfo] = useState<VideoInfo | null>(null)
 
-  // 1. Adım: Videonun bilgilerini (kapak, başlık vs.) getir
-  const handleGetInfo = async (e: React.FormEvent) => {
+  // URL değiştiğinde platformu otomatik tanı
+  useEffect(() => {
+    if (!url) {
+      setPlatform("unknown")
+      return
+    }
+
+    if (url.includes("youtube.com") || url.includes("youtu.be")) {
+      setPlatform("youtube")
+      setFormat("720") // Varsayılan 720p
+    } else if (url.includes("instagram.com")) {
+      setPlatform("instagram")
+      setFormat("hd") // Instagram için HD
+    } else if (url.includes("tiktok.com")) {
+      setPlatform("tiktok")
+      setFormat("watermark_free") // TikTok için filigransız
+    } else {
+      setPlatform("unknown")
+    }
+  }, [url])
+
+  const handleDownload = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!url) return
+    if (!url || platform === "unknown") {
+      setError("Lütfen desteklenen bir platformdan geçerli bir URL giriniz (YouTube, Instagram, TikTok).")
+      return
+    }
 
-    setIsLoadingInfo(true)
+    setIsProcessing(true)
     setError("")
-    setVideoInfo(null)
+    setProgress(0)
 
     try {
-      // Dinamik backend URL kullanımı (Vercel -> Render)
-      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || '';
-      const response = await fetch(`${backendUrl}/api/info`, {
+      // API çağrısı
+      const response = await fetch('/api/video', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url })
+        body: JSON.stringify({ url, platform, format })
       })
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}))
-        throw new Error(errorData.error || 'Video bilgileri alınamadı.')
-      }
 
       const data = await response.json()
-      setVideoInfo(data)
-    } catch (err: any) {
-      setError(err.message)
-    } finally {
-      setIsLoadingInfo(false)
-    }
-  }
 
-  // 2. Adım: Adam formatı seçip indir dediğinde asıl indirmeyi başlat
-  const handleDownload = async () => {
-    if (!url) return
-
-    setIsConverting(true)
-    setShowAdLayer(true) // İndirme başlarken reklam ekranını aç
-    setError("")
-
-    try {
-      // Dinamik backend URL kullanımı (Vercel -> Render)
-      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || '';
-      const response = await fetch(`${backendUrl}/api/convert`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url, format })
-      })
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}))
-        throw new Error(errorData.error || 'Dönüştürme sırasında bir hata oluştu.')
+      if (!response.ok || data.error) {
+        throw new Error(data.error || "Video işlenirken bir hata oluştu.")
       }
 
-      // Dosyayı indirtmek için blob'a çeviriyoruz
-      const blob = await response.blob()
-      const downloadUrl = window.URL.createObjectURL(blob)
-      const a = document.createElement('a')
-      a.href = downloadUrl
+      if (data.download_url) {
+        // Direkt indirme linki geldi (TikTok gibi hızlı API'ler için)
+        setProgress(100)
+        window.location.href = data.download_url
+        setIsProcessing(false)
+        return
+      }
 
-      // Temiz bir dosya adı oluştur ve uzantıyı bul
-      const fileExt = format.startsWith("mp3") ? "mp3" : "mp4"
-      const cleanTitle = videoInfo?.title ? videoInfo.title.replace(/[^a-zA-Z0-9 ]/g, "").substring(0, 30) : "zypio_video"
-      a.download = `${cleanTitle}.${fileExt}`
-
-      document.body.appendChild(a)
-      a.click()
-      window.URL.revokeObjectURL(downloadUrl)
-      document.body.removeChild(a)
+      if (data.progress_url) {
+        // Asenkron indirme (loader.to gibi)
+        pollProgress(data.progress_url)
+      }
 
     } catch (err: any) {
       setError(err.message)
-      setShowAdLayer(false) // Hata olursa reklamı kapat
-    } finally {
-      setIsConverting(false)
-      // Dosya indikten sonra 2 saniye daha reklamı tutup sonra kapat
-      setTimeout(() => setShowAdLayer(false), 2000)
+      setIsProcessing(false)
     }
   }
 
-  // Süreyi MM:SS formatına çeviren yardımcı fonksiyon
-  const formatDuration = (seconds: number) => {
-    if (!seconds) return "0:00"
-    // Gelen saniye küsuratlıysa (Örn: 83.03499) yuvarla
-    const roundedSeconds = Math.round(seconds)
-    const m = Math.floor(roundedSeconds / 60)
-    const s = roundedSeconds % 60
-    return `${m}:${s.toString().padStart(2, '0')}`
-  }
+  const pollProgress = async (progressUrl: string) => {
+    try {
+      while (true) {
+        const pRes = await fetch(progressUrl)
+        const pData = await pRes.json()
 
-  // Thumbnail resmi yüklenemezse veya eksikse varsayılan bir kapak göster
-  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-    e.currentTarget.src = "https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=600&auto=format&fit=crop";
-    e.currentTarget.onerror = null; // Sonsuz döngüyü engelle
+        if (pData.progress) {
+          setProgress(pData.progress / 10) // 1000'e kadar çıkıyor loader.to'da
+        }
+
+        if (pData.success === 1 && pData.download_url) {
+          setProgress(100)
+          window.location.href = pData.download_url
+          setIsProcessing(false)
+          break
+        }
+
+        await new Promise(r => setTimeout(r, 1500))
+      }
+    } catch (err: any) {
+      setError("İndirme bağlantısı alınırken koptuk: " + err.message)
+      setIsProcessing(false)
+    }
   }
 
   return (
-    <div className="w-full max-w-3xl mx-auto relative z-20">
+    <div className="w-full max-w-2xl mx-auto relative z-20">
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-[#1C1C1E] rounded-3xl p-6 sm:p-8 border border-white/5 shadow-2xl"
+      >
+        <form onSubmit={handleDownload} className="flex flex-col gap-6">
 
-      {/* Reklam Overlay (İndirme sırasında tam ekran çıkan reklam alanı) */}
-      <AnimatePresence>
-        {showAdLayer && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4"
-          >
-            <div className="bg-[#1C1C1E] border border-white/10 rounded-3xl p-8 max-w-lg w-full text-center relative overflow-hidden">
-              <div className="absolute top-0 left-0 w-full h-1 bg-white/5">
-                <motion.div
-                  className="h-full bg-blue-500"
-                  initial={{ width: "0%" }}
-                  animate={{ width: "100%" }}
-                  transition={{ duration: 15, ease: "linear" }}
-                />
+          <div className="flex flex-col sm:flex-row gap-4 items-start">
+            <div className="relative w-full flex-1">
+              <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                <Link2 className="w-5 h-5 text-gray-500" />
               </div>
+              <Input
+                type="url"
+                placeholder="Video URL'sini buraya yapıştır..."
+                className="pl-12 bg-[#0F0F13] border-white/10 text-white h-14 rounded-2xl text-lg focus-visible:ring-blue-500"
+                value={url}
+                onChange={(e) => setUrl(e.target.value)}
+                required
+                disabled={isProcessing}
+              />
 
-              <Loader2 className="w-12 h-12 animate-spin text-blue-500 mx-auto mb-6" />
-              <h3 className="text-2xl font-bold text-white mb-2">{t("preparing")}</h3>
-              <p className="text-gray-400 mb-8">{t("pleaseWait")}</p>
-
-              {/* SAHTE REKLAM ALANI (AdSense buraya gelecek) */}
-              <div className="w-full h-[250px] bg-[#0F0F13] border border-dashed border-white/20 rounded-2xl flex flex-col items-center justify-center text-gray-600 relative overflow-hidden group">
-                <span className="text-xs uppercase tracking-widest mb-2 font-bold opacity-50">{t("sponsored")}</span>
-                <span className="text-lg font-medium group-hover:text-blue-400 transition-colors">{t("adSpace")}</span>
-                <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/5 to-purple-500/5 pointer-events-none"></div>
-              </div>
+              {/* Platform Tanıma Göstergesi */}
+              <AnimatePresence>
+                {platform !== "unknown" && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.8 }}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wider bg-white/10 text-white"
+                  >
+                    {platform}
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
-      <AnimatePresence mode="wait">
-        <motion.div
-          key="link"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-          transition={{ duration: 0.2 }}
-          className="bg-[#1C1C1E] rounded-3xl p-6 sm:p-8 border border-white/5 shadow-2xl"
-        >
-          {/* Eğer henüz video bilgisi çekilmediyse URL giriş formunu göster */}
-          {!videoInfo ? (
-            <form onSubmit={handleGetInfo} className="flex flex-col gap-4">
-              <div className="flex flex-col sm:flex-row gap-4">
-                <div className="relative flex-1">
-                  <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
-                    <Link2 className="w-5 h-5 text-gray-500" />
-                  </div>
-                  <Input
-                    type="url"
-                    placeholder={t("placeholder")}
-                    className="pl-12 bg-[#0F0F13] border-white/5"
-                    value={url}
-                    onChange={(e) => setUrl(e.target.value)}
-                    required
+            <Button
+              type="submit"
+              disabled={isProcessing || !url || platform === "unknown"}
+              className="sm:w-auto w-full h-14 px-8 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-medium text-lg group transition-all"
+            >
+              {isProcessing ? (
+                <Loader2 className="w-6 h-6 animate-spin" />
+              ) : (
+                <>
+                  İndir
+                  <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                </>
+              )}
+            </Button>
+          </div>
+
+          {/* Dinamik Çözünürlük Seçenekleri */}
+          <AnimatePresence>
+            {platform === "youtube" && !isProcessing && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                className="flex items-center justify-center gap-3"
+              >
+                <span className="text-sm text-gray-400 font-medium">Kalite Seçin:</span>
+                <div className="flex bg-[#0F0F13] p-1 rounded-xl border border-white/5">
+                  {["360", "720", "1080"].map((q) => (
+                    <button
+                      key={q}
+                      type="button"
+                      onClick={() => setFormat(q)}
+                      className={`px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${format === q
+                        ? "bg-blue-500 text-white shadow-lg"
+                        : "text-gray-400 hover:text-white hover:bg-white/5"
+                        }`}
+                    >
+                      {q}p
+                    </button>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* İlerleme Çubuğu */}
+          <AnimatePresence>
+            {isProcessing && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="w-full bg-[#0F0F13] rounded-xl p-4 border border-white/5"
+              >
+                <div className="flex justify-between text-sm mb-2">
+                  <span className="text-gray-400 font-medium">Video hazırlanıyor...</span>
+                  <span className="text-blue-400 font-bold">{Math.round(progress)}%</span>
+                </div>
+                <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
+                  <motion.div
+                    className="h-full bg-blue-500"
+                    initial={{ width: 0 }}
+                    animate={{ width: `${progress}%` }}
+                    transition={{ ease: "linear" }}
                   />
                 </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
-                <Button
-                  type="submit"
-                  disabled={isLoadingInfo || !url}
-                  className="sm:w-auto w-full group"
-                >
-                  {isLoadingInfo ? (
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                  ) : (
-                    <>
-                      {t("analyze")}
-                      <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                    </>
-                  )}
-                </Button>
-              </div>
+          {/* Hata Mesajı */}
+          <AnimatePresence>
+            {error && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                className="flex items-start gap-3 text-red-400 text-sm p-4 bg-red-500/10 rounded-xl border border-red-500/20"
+              >
+                <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                <p>{error}</p>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
-              {error && (
-                <div className="text-red-400 text-sm mt-2 p-3 bg-red-500/10 rounded-xl border border-red-500/20">
-                  {error}
-                </div>
-              )}
-            </form>
-          ) : (
-            // Video bilgisi çekildiyse önizleme (Preview) ve İndirme butonlarını göster (SaveFrom Mantığı)
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="flex flex-col md:flex-row gap-6 bg-[#0F0F13] p-5 rounded-2xl border border-white/10"
-            >
-              {/* Thumbnail */}
-              <div className="w-full md:w-56 aspect-video rounded-xl overflow-hidden bg-black relative flex-shrink-0 border border-white/5">
-                <img
-                  src={`${process.env.NEXT_PUBLIC_BACKEND_URL || ''}/api/proxy-image?url=${encodeURIComponent(videoInfo.thumbnail)}`}
-                  alt={videoInfo.title}
-                  className="w-full h-full object-cover"
-                  onError={handleImageError}
-                />
-                <div className="absolute bottom-2 right-2 bg-black/80 backdrop-blur-md px-2 py-1 rounded text-xs font-medium text-white shadow-lg">
-                  {formatDuration(videoInfo.duration)}
-                </div>
-              </div>
-
-              {/* Info & Download Actions */}
-              <div className="flex flex-col justify-between flex-1 text-left min-w-0">
-                <div className="mb-4">
-                  <h3 className="text-lg font-semibold text-white truncate leading-snug mb-1" title={videoInfo.title}>
-                    {videoInfo.title}
-                  </h3>
-                  <p className="text-sm text-gray-500 capitalize">
-                    {t("source")} <span className="text-blue-400 font-medium">{videoInfo.extractor}</span>
-                  </p>
-                </div>
-
-                <div className="flex flex-col gap-3">
-                  <select
-                    className="w-full bg-[#1C1C1E] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all font-medium text-sm appearance-none cursor-pointer"
-                    value={format}
-                    onChange={(e) => setFormat(e.target.value)}
-                    disabled={isConverting}
-                  >
-                    <optgroup label={t("videoOpt")}>
-                      <option value="mp4-best">{t("q1080")}</option>
-                      <option value="mp4-720p">{t("q720")}</option>
-                      <option value="mp4-480p">{t("q480")}</option>
-                      <option value="mp4-360p">{t("q360")}</option>
-                    </optgroup>
-                    <optgroup label={t("audioOpt")}>
-                      <option value="mp3-best">{t("q320k")}</option>
-                      <option value="mp3-128k">{t("q128k")}</option>
-                    </optgroup>
-                  </select>
-
-                  <Button
-                    onClick={handleDownload}
-                    disabled={isConverting}
-                    className="w-full bg-green-600 hover:bg-green-500 shadow-green-600/20 shadow-lg h-12"
-                  >
-                    {isConverting ? (
-                      <>
-                        <Loader2 className="w-5 h-5 animate-spin mr-2" />
-                        {t("converting")}
-                      </>
-                    ) : (
-                      <>
-                        <Download className="w-5 h-5 mr-2" />
-                        {t("downloadNow")}
-                      </>
-                    )}
-                  </Button>
-                </div>
-
-                {/* Başka video indir butonu */}
-                <button
-                  onClick={() => { setVideoInfo(null); setUrl(""); }}
-                  className="mt-4 text-xs text-gray-500 hover:text-white transition-colors underline underline-offset-2 self-start"
-                  disabled={isConverting}
-                >
-                  {t("convertAnother")}
-                </button>
-              </div>
-            </motion.div>
-          )}
-
-          {!videoInfo && (
-            <div className="mt-6 flex items-center justify-center gap-6 text-sm text-gray-500">
-              <span className="flex items-center gap-2">
-                <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
-                {t("free")}
-              </span>
-              <span className="flex items-center gap-2">
-                <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
-                {t("noReg")}
-              </span>
-              <span className="flex items-center gap-2">
-                <div className="w-1.5 h-1.5 rounded-full bg-purple-500"></div>
-                {t("fast")}
-              </span>
-            </div>
-          )}
-        </motion.div>
-      </AnimatePresence>
+        </form>
+      </motion.div>
     </div>
   )
 }
