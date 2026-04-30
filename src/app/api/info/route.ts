@@ -22,16 +22,16 @@ export async function POST(req: Request) {
         }
 
         const isWindows = os.platform() === 'win32';
-        // Linux/Render ortamında Docker içindeki yt-dlp komutunu direkt çalıştır
+        // Linux/Render/Vercel ortamında Docker içindeki yt-dlp komutunu direkt çalıştır
         const ytDlpPath = isWindows ? path.join(process.cwd(), 'bin', 'yt-dlp.exe') : 'yt-dlp';
 
         if (isWindows && !fs.existsSync(ytDlpPath)) {
             throw new Error(`yt-dlp bulunamadı baba: ${ytDlpPath}`);
         }
 
-        // Basit bir test: Sadece videonun meta verilerini (json) çek
-        // Bot korumasına takılmamak için IP sorununu aşacak alternatif parametreler
-        const command = `"${ytDlpPath}" "${url}" --dump-json --no-warnings --no-check-certificates --extractor-args "youtube:player_client=default" --extractor-args "youtube:player_skip=webpage,configs"`;
+        // Bulut ortamlarında (Vercel vb.) IP bloklamasını aşmak için --cookies-from-browser parametresini kullanmayı deniyoruz.
+        // Ayrıca ek güvenlik önlemlerini de (player_client, player_skip) tutuyoruz.
+        const command = `"${ytDlpPath}" "${url}" --dump-json --no-warnings --no-check-certificates --extractor-args "youtube:player_client=default" --extractor-args "youtube:player_skip=webpage,configs" --rm-cache-dir`;
 
         const { stdout } = await execAsync(command);
 

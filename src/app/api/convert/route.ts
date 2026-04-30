@@ -76,6 +76,7 @@ export async function POST(req: Request) {
       `--no-check-certificates`,
       `--extractor-args "youtube:player_client=default"`,
       `--extractor-args "youtube:player_skip=webpage,configs"`,
+      `--rm-cache-dir`,
       `-o "${outputTemplate}"`
     ];
 
