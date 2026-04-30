@@ -85,7 +85,7 @@ export default async function PlatformPage({
 
                     {/* Converter Form UI */}
                     <div className="w-full relative z-10 mb-20">
-                        <ConverterForm />
+                        <ConverterForm activeContext={platform} />
                     </div>
 
                     {/* Usage Instructions / Info Section */}

@@ -100,7 +100,19 @@
     "instagramStats": "800K+ Daily Downloads",
     "twitterTitle": "X (Twitter) Video Downloader",
     "twitterDesc": "Download videos and GIFs from Twitter (X) ad-free, without waiting.",
-    "twitterStats": "150K+ Daily Downloads"
+    "twitterStats": "150K+ Daily Downloads",
+    "instagram-photoTitle": "Instagram Photo Downloader",
+    "instagram-photoDesc": "Download Instagram photos in original high quality (HD). Easily save all images from carousel posts.",
+    "instagram-photoStats": "300K+ Daily Downloads",
+    "tiktok-photoTitle": "TikTok Photo Downloader",
+    "tiktok-photoDesc": "Download TikTok photo slideshows without watermark in original quality, either individually or in bulk.",
+    "tiktok-photoStats": "200K+ Daily Downloads",
+    "facebook-photoTitle": "Facebook Photo Downloader",
+    "facebook-photoDesc": "Download high-resolution photos from Facebook posts to your device with a single click and no quality loss.",
+    "facebook-photoStats": "100K+ Daily Downloads",
+    "twitter-photoTitle": "X (Twitter) Photo Downloader",
+    "twitter-photoDesc": "Download images and pictures from X (Twitter) directly without any quality loss.",
+    "twitter-photoStats": "50K+ Daily Downloads"
   },
   "Converter": {
     "placeholder": "Paste video link here (YouTube, TikTok, Facebook...)",

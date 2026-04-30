@@ -6,9 +6,9 @@ import { motion, AnimatePresence } from "framer-motion"
 import { Input } from "./ui/input"
 import { Button } from "./ui/button"
 
-export function ConverterForm() {
+export function ConverterForm({ activeContext }: { activeContext?: string }) {
   const [url, setUrl] = useState("")
-  const [platform, setPlatform] = useState<"youtube" | "instagram" | "tiktok" | "unknown">("unknown")
+  const [platform, setPlatform] = useState<string>("unknown")
   const [format, setFormat] = useState<string>("")
   const [isProcessing, setIsProcessing] = useState(false)
   const [progress, setProgress] = useState<number>(0)
@@ -26,13 +26,19 @@ export function ConverterForm() {
 
     if (url.includes("youtube.com") || url.includes("youtu.be")) {
       setPlatform("youtube")
-      setFormat("720") // Varsayılan 720p
+      setFormat("720")
     } else if (url.includes("instagram.com")) {
-      setPlatform("instagram")
-      setFormat("720") // Instagram için HD
+      setPlatform(activeContext === "instagram-photo" ? "instagram-photo" : "instagram")
+      setFormat(activeContext === "instagram-photo" ? "jpg" : "720")
     } else if (url.includes("tiktok.com")) {
-      setPlatform("tiktok")
-      setFormat("watermark_free") // TikTok için filigransız
+      setPlatform(activeContext === "tiktok-photo" ? "tiktok-photo" : "tiktok")
+      setFormat(activeContext === "tiktok-photo" ? "jpg" : "watermark_free")
+    } else if (url.includes("facebook.com") || url.includes("fb.watch")) {
+      setPlatform(activeContext === "facebook-photo" ? "facebook-photo" : "facebook")
+      setFormat(activeContext === "facebook-photo" ? "jpg" : "720")
+    } else if (url.includes("twitter.com") || url.includes("x.com")) {
+      setPlatform(activeContext === "twitter-photo" ? "twitter-photo" : "twitter")
+      setFormat(activeContext === "twitter-photo" ? "jpg" : "720")
     } else {
       setPlatform("unknown")
       setVideoInfo(null)
@@ -310,6 +316,11 @@ export function ConverterForm() {
                       <optgroup label="Video">
                         <option value="watermark_free">Ultra Kalite (Filigransız)</option>
                         <option value="watermark">Orta Kalite (Filigranlı)</option>
+                      </optgroup>
+                    ) : platform.includes("-photo") ? (
+                      <optgroup label="Fotoğraf / Görsel">
+                        <option value="jpg">Orijinal Kalite (JPG)</option>
+                        <option value="png">Yüksek Kalite (PNG)</option>
                       </optgroup>
                     ) : (
                       <optgroup label="Video">

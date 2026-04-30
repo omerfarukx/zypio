@@ -100,7 +100,19 @@
     "instagramStats": "Günlük 800K+ İndirme",
     "twitterTitle": "X (Twitter) Video İndirici",
     "twitterDesc": "Twitter (X) üzerindeki videoları ve GIF'leri reklamsız, beklemeden indirin.",
-    "twitterStats": "Günlük 150K+ İndirme"
+    "twitterStats": "Günlük 150K+ İndirme",
+    "instagram-photoTitle": "Instagram Fotoğraf İndirici",
+    "instagram-photoDesc": "Instagram fotoğraflarını orijinal yüksek kalitesinde (HD) indirin. Çoklu kaydırmalı (carousel) gönderilerdeki tüm resimleri kolayca kaydedin.",
+    "instagram-photoStats": "Günlük 300K+ İndirme",
+    "tiktok-photoTitle": "TikTok Fotoğraf İndirici",
+    "tiktok-photoDesc": "TikTok kaydırmalı fotoğraf gönderilerini (slideshow) filigransız olarak orijinal kalitede toplu veya tek tek indirin.",
+    "tiktok-photoStats": "Günlük 200K+ İndirme",
+    "facebook-photoTitle": "Facebook Fotoğraf İndirici",
+    "facebook-photoDesc": "Facebook gönderilerindeki yüksek çözünürlüklü fotoğrafları cihazınıza tek tıkla ve kalitesi bozulmadan indirin.",
+    "facebook-photoStats": "Günlük 100K+ İndirme",
+    "twitter-photoTitle": "X (Twitter) Fotoğraf İndirici",
+    "twitter-photoDesc": "X (Twitter) üzerindeki görselleri ve resimleri kalite kaybı olmadan doğrudan indirin.",
+    "twitter-photoStats": "Günlük 50K+ İndirme"
   },
   "Converter": {
     "placeholder": "Video linkini buraya yapıştırın (YouTube, TikTok, Facebook...)",

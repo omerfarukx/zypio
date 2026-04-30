@@ -73,5 +73,65 @@ export const platforms = {
             "Kutucuğa yapıştırın.",
             "Video formatında MP4 olarak indirin."
         ]
+    },
+    "instagram-photo": {
+        id: "instagram-photo",
+        name: "Instagram",
+        title: "Instagram Fotoğraf İndirici",
+        description: "Instagram fotoğraflarını orijinal yüksek kalitesinde (HD) indirin. Çoklu kaydırmalı (carousel) gönderilerdeki tüm resimleri kolayca kaydedin.",
+        stats: "Günlük 300K+ İndirme",
+        color: "purple-500",
+        bg: "from-purple-500/20 to-purple-600/5",
+        border: "border-purple-500/20",
+        usage: [
+            "Instagram'dan indirmek istediğiniz fotoğrafın bağlantısını kopyalayın.",
+            "Sistemimize yapıştırın ve 'Analiz Et' butonuna basın.",
+            "JPG veya PNG formatında cihazınıza kaydedin."
+        ]
+    },
+    "tiktok-photo": {
+        id: "tiktok-photo",
+        name: "TikTok",
+        title: "TikTok Fotoğraf İndirici",
+        description: "TikTok kaydırmalı fotoğraf gönderilerini (slideshow) filigransız olarak orijinal kalitede toplu veya tek tek indirin.",
+        stats: "Günlük 200K+ İndirme",
+        color: "pink-500",
+        bg: "from-pink-500/20 to-pink-600/5",
+        border: "border-pink-500/20",
+        usage: [
+            "TikTok'taki fotoğraf gönderisinin linkini kopyalayın.",
+            "Buraya yapıştırıp analiz edin.",
+            "Filigransız fotoğrafları anında indirin."
+        ]
+    },
+    "facebook-photo": {
+        id: "facebook-photo",
+        name: "Facebook",
+        title: "Facebook Fotoğraf İndirici",
+        description: "Facebook gönderilerindeki yüksek çözünürlüklü fotoğrafları cihazınıza tek tıkla ve kalitesi bozulmadan indirin.",
+        stats: "Günlük 100K+ İndirme",
+        color: "blue-500",
+        bg: "from-blue-500/20 to-blue-600/5",
+        border: "border-blue-500/20",
+        usage: [
+            "Facebook'taki resmin URL'sini kopyalayın.",
+            "Kutucuğa yapıştırın.",
+            "HD kalitesinde fotoğrafı anında indirin."
+        ]
+    },
+    "twitter-photo": {
+        id: "twitter-photo",
+        name: "X (Twitter)",
+        title: "X (Twitter) Fotoğraf İndirici",
+        description: "X (Twitter) üzerindeki görselleri ve resimleri kalite kaybı olmadan doğrudan indirin.",
+        stats: "Günlük 50K+ İndirme",
+        color: "gray-300",
+        bg: "from-gray-500/20 to-gray-600/5",
+        border: "border-gray-500/20",
+        usage: [
+            "Resmin bulunduğu Tweet bağlantısını kopyalayın.",
+            "Arama kutusuna yapıştırın.",
+            "Görseli orijinal boyutuyla indirin."
+        ]
     }
 };

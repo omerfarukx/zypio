@@ -87,20 +87,20 @@ export function Header() {
                     </div>
                   </div>
                   <div>
-                    <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-4">Görsel & Diğer</h4>
+                    <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-4">Görsel & Fotoğraf</h4>
                     <div className="flex flex-col gap-2">
-                      <a href={`/${locale}/platform/instagram`} className="flex items-start gap-3 p-3 hover:bg-white/5 rounded-xl transition-colors group/item">
+                      <a href={`/${locale}/platform/instagram-photo`} className="flex items-start gap-3 p-3 hover:bg-white/5 rounded-xl transition-colors group/item">
                         <div className="p-2 bg-pink-500/10 text-pink-500 rounded-lg group-hover/item:bg-pink-500 group-hover/item:text-white transition-colors"><ImageIcon className="w-5 h-5" /></div>
                         <div>
-                          <div className="text-sm font-bold text-white mb-0.5">Instagram İndirici</div>
-                          <div className="text-xs text-gray-400">Reels ve gönderileri indir.</div>
+                          <div className="text-sm font-bold text-white mb-0.5">Instagram Fotoğraf İndirici</div>
+                          <div className="text-xs text-gray-400">Çoklu gönderileri indir.</div>
                         </div>
                       </a>
-                      <a href="#" className="flex items-start gap-3 p-3 hover:bg-white/5 rounded-xl transition-colors group/item opacity-50 cursor-not-allowed">
-                        <div className="p-2 bg-blue-500/10 text-blue-500 rounded-lg"><Download className="w-5 h-5" /></div>
+                      <a href={`/${locale}/platform/tiktok-photo`} className="flex items-start gap-3 p-3 hover:bg-white/5 rounded-xl transition-colors group/item">
+                        <div className="p-2 bg-blue-500/10 text-blue-500 rounded-lg group-hover/item:bg-blue-500 group-hover/item:text-white transition-colors"><Download className="w-5 h-5" /></div>
                         <div>
-                          <div className="text-sm font-bold text-white mb-0.5">Sahibinden İndirici <span className="text-[10px] bg-blue-500 text-white px-1.5 py-0.5 rounded ml-1">Yakında</span></div>
-                          <div className="text-xs text-gray-400">İlan resimlerini toplu indir.</div>
+                          <div className="text-sm font-bold text-white mb-0.5">TikTok Fotoğraf İndirici</div>
+                          <div className="text-xs text-gray-400">Kaydırmalı resimleri indir.</div>
                         </div>
                       </a>
                     </div>
@@ -149,7 +149,8 @@ export function Header() {
                 <span className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Araçlarımız</span>
                 <a href={`/${locale}/platform/youtube`} className="flex items-center gap-3 p-3 bg-white/5 rounded-xl text-white font-medium active:scale-95 transition-transform"><Play className="w-5 h-5 text-red-500" /> YouTube Dönüştürücü</a>
                 <a href={`/${locale}/platform/tiktok`} className="flex items-center gap-3 p-3 bg-white/5 rounded-xl text-white font-medium active:scale-95 transition-transform"><Music className="w-5 h-5 text-gray-300" /> TikTok İndirici</a>
-                <a href={`/${locale}/platform/instagram`} className="flex items-center gap-3 p-3 bg-white/5 rounded-xl text-white font-medium active:scale-95 transition-transform"><ImageIcon className="w-5 h-5 text-pink-500" /> Instagram İndirici</a>
+                <a href={`/${locale}/platform/instagram-photo`} className="flex items-center gap-3 p-3 bg-white/5 rounded-xl text-white font-medium active:scale-95 transition-transform"><ImageIcon className="w-5 h-5 text-pink-500" /> Instagram Fotoğraf İndirici</a>
+                <a href={`/${locale}/platform/tiktok-photo`} className="flex items-center gap-3 p-3 bg-white/5 rounded-xl text-white font-medium active:scale-95 transition-transform"><ImageIcon className="w-5 h-5 text-blue-400" /> TikTok Fotoğraf İndirici</a>
                 <a href={`/${locale}/tools`} className="flex items-center gap-3 p-3 bg-white/5 rounded-xl text-white font-medium active:scale-95 transition-transform"><LayoutGrid className="w-5 h-5 text-blue-400" /> Tüm Dönüştürücü Araçlar</a>
               </div>
 
