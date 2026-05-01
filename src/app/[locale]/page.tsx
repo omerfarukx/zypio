@@ -67,7 +67,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         </section>
 
         {/* Alt Banner (Footer Billboard) */}
-        <aside className="w-full max-w-[970px] h-[250px] hidden lg:flex items-center justify-center mt-12 relative z-10" aria-label="Footer Advertisement">
+        <aside className="w-full max-w-[970px] h-[250px] hidden lg:flex items-center justify-center mt-12 relative z-50 mx-auto" aria-label="Footer Advertisement">
           <iframe
             srcDoc={`
               <html>
@@ -92,7 +92,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
             height="250"
             frameBorder="0"
             scrolling="no"
-            className="w-[970px] h-[250px] bg-[#1C1C1E] border border-dashed border-white/10 rounded-xl"
+            className="w-[970px] h-[250px] bg-[#1C1C1E] border border-dashed border-white/10 rounded-xl mx-auto block"
             title="Advertisement 970x250"
           />
         </aside>

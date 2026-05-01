@@ -149,9 +149,9 @@ export default async function PlatformPage({
                 </article>
 
                 {/* Alt Banner (Footer Billboard) */}
-                <aside className="w-full max-w-[970px] h-[250px] hidden lg:flex items-center justify-center mt-12 relative z-10" aria-label="Footer Advertisement">
-                    <iframe
-                        srcDoc={`
+        <aside className="w-full max-w-[970px] h-[250px] hidden lg:flex items-center justify-center mt-12 relative z-50 mx-auto" aria-label="Footer Advertisement">
+          <iframe
+            srcDoc={`
               <html>
                 <head>
                   <style>body{margin:0;padding:0;overflow:hidden;background:transparent;}</style>
@@ -170,15 +170,15 @@ export default async function PlatformPage({
                 </body>
               </html>
             `}
-                        width="970"
-                        height="250"
-                        frameBorder="0"
-                        scrolling="no"
-                        className="w-[970px] h-[250px] bg-[#1C1C1E] border border-dashed border-white/10 rounded-xl"
-                        title="Advertisement 970x250"
-                    />
-                </aside>
-            </main>
+            width="970"
+            height="250"
+            frameBorder="0"
+            scrolling="no"
+            className="w-[970px] h-[250px] bg-[#1C1C1E] border border-dashed border-white/10 rounded-xl mx-auto block"
+            title="Advertisement 970x250"
+          />
+        </aside>
+      </main>
         </div>
     );
 }
