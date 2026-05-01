@@ -47,13 +47,13 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     openGraph: {
       title: t('ogTitle'),
       description: t('ogDesc'),
-      url: `https://zypio.vercel.app/${locale}`,
+      url: `https://zypio.online/${locale}`,
       siteName: "Zypio",
       locale: locale === 'tr' ? "tr_TR" : "en_US",
       type: "website",
       images: [
         {
-          url: "https://zypio.vercel.app/og-image.jpg",
+          url: "https://zypio.online/og-image.jpg",
           width: 1200,
           height: 630,
           alt: "Zypio Platform",
@@ -64,7 +64,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
       card: "summary_large_image",
       title: t('twTitle'),
       description: t('twDesc'),
-      images: ["https://zypio.vercel.app/og-image.jpg"],
+      images: ["https://zypio.online/og-image.jpg"],
     },
     robots: {
       index: true,
@@ -78,10 +78,10 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
       },
     },
     alternates: {
-      canonical: `https://zypio.vercel.app/${locale}`,
+      canonical: `https://zypio.online/${locale}`,
       languages: {
-        'en-US': 'https://zypio.vercel.app/en',
-        'tr-TR': 'https://zypio.vercel.app/tr',
+        'en-US': 'https://zypio.online/en',
+        'tr-TR': 'https://zypio.online/tr',
       },
     },
   };
