@@ -112,8 +112,8 @@ export async function POST(req: Request) {
             }
         }
 
-        // YOUTUBE (Video) - loader.to
-        if (platform === 'youtube') {
+        // YOUTUBE, INSTAGRAM, FACEBOOK (Video) - loader.to
+        if (platform === 'youtube' || platform === 'instagram' || platform === 'facebook') {
             try {
                 const res = await fetch(`https://loader.to/ajax/download.php?format=720&url=${encodeURIComponent(url)}`);
                 const data = await res.json();
@@ -121,70 +121,27 @@ export async function POST(req: Request) {
                 if (data.success && data.info) {
                     let thumbnail = data.info.image;
                     if (!thumbnail || thumbnail.includes("logo.clearbit.com")) {
-                        thumbnail = "https://logo.clearbit.com/www.youtube.com?size=256";
+                        thumbnail = `https://logo.clearbit.com/www.${platform}.com?size=256`;
                     }
 
                     return NextResponse.json({
-                        title: data.title || data.info.title || "Video",
+                        title: data.title || data.info.title || `${platform} İçeriği`,
                         thumbnail: thumbnail
                     });
                 } else {
-                    throw new Error("Video bilgileri gizli veya servis meşgul.");
+                    throw new Error("İçerik gizli veya servis meşgul.");
                 }
             } catch (err: any) {
-                return NextResponse.json({ error: `Video bilgileri alınamadı: ` + err.message }, { status: 500 });
+                return NextResponse.json({ error: `Bilgiler alınamadı: ` + err.message }, { status: 500 });
             }
         }
 
-        // INSTAGRAM (VİDEO/FOTO/DP), FACEBOOK (VİDEO/FOTO) - RAPIDAPI KULLANIMI
-        if (platform.includes('instagram') || platform.includes('facebook')) {
-            const rapidApiKey = process.env.RAPIDAPI_KEY;
-
-            if (!rapidApiKey) {
-                return NextResponse.json({
-                    title: `${platform.includes('instagram') ? 'Instagram' : 'Facebook'} İçeriği (RapidAPI Key Bekleniyor)`,
-                    thumbnail: platform.includes('instagram') ? "https://logo.clearbit.com/www.instagram.com?size=256" : "https://logo.clearbit.com/www.facebook.com?size=256"
-                });
-            }
-
-            try {
-                const options = {
-                    method: 'GET',
-                    headers: {
-                        'x-rapidapi-key': rapidApiKey,
-                        'x-rapidapi-host': 'social-media-video-downloader.p.rapidapi.com'
-                    }
-                };
-
-                let finalUrl = url;
-                if (platform === 'instagram-dp' && !url.includes('instagram.com')) {
-                    finalUrl = `https://www.instagram.com/${url.replace('@', '')}/`;
-                }
-
-                const encodedUrl = encodeURIComponent(finalUrl);
-                const apiUrl = `https://social-media-video-downloader.p.rapidapi.com/smvd/get/all?url=${encodedUrl}`;
-
-                const res = await fetch(apiUrl, options);
-                const data = await res.json();
-
-                if (res.status === 401 || res.status === 403 || data.message === "You are not subscribed to this API.") {
-                    throw new Error("RapidAPI aboneliği aktif değil. Lütfen yöneticinizle iletişime geçin.");
-                }
-
-                const contents = data.body || data.contents || data;
-
-                if (contents) {
-                    return NextResponse.json({
-                        title: contents.title || contents.desc || "Sosyal Medya İçeriği",
-                        thumbnail: contents.picture || contents.thumbnail || (platform.includes('instagram') ? "https://logo.clearbit.com/www.instagram.com?size=256" : "https://logo.clearbit.com/www.facebook.com?size=256")
-                    });
-                } else {
-                    // API'den gelen gerçek hatayı yakalayalım
-                    throw new Error(data.message || "İçerik gizli veya bulunamadı.");
-                }
-            } catch (err: any) {
-                return NextResponse.json({ error: err.message }, { status: 500 });
-            }
+        // INSTAGRAM FOTO/DP - ESKİ YÖNTEM (Eskisi gibi sorunsuz)
+        if (platform === 'instagram-photo' || platform === 'instagram-dp' || platform === 'facebook-photo') {
+            return NextResponse.json({
+                title: `${platform} İçeriği`,
+                thumbnail: `https://logo.clearbit.com/www.${platform.split('-')[0]}.com?size=256`
+            });
         }
 
         return NextResponse.json({ error: 'Desteklenmeyen platform.' }, { status: 400 });

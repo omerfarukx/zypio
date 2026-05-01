@@ -129,6 +129,7 @@ export function ConverterForm({ activeContext }: { activeContext?: string }) {
     } catch (err: any) {
       setError(err.message)
       setIsProcessing(false)
+      setShowAdLayer(false) // Overlay kapatılmalı!
     }
   }
 

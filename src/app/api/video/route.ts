@@ -121,8 +121,8 @@ export async function POST(req: Request) {
             }
         }
 
-        // YOUTUBE (Video) İÇİN (loader.to asenkron API)
-        if (platform === 'youtube') {
+        // YOUTUBE, INSTAGRAM, FACEBOOK (Video) İÇİN (loader.to asenkron API)
+        if (platform === 'youtube' || platform === 'instagram' || platform === 'facebook') {
             try {
                 const loaderFormat = format || '720';
                 const res = await fetch(`https://loader.to/ajax/download.php?format=${loaderFormat}&url=${encodeURIComponent(url)}`);
@@ -133,87 +133,16 @@ export async function POST(req: Request) {
                         progress_url: data.progress_url
                     });
                 } else {
-                    throw new Error("YouTube bu videoyu gizlemiş veya yaş kısıtlaması var.");
+                    throw new Error("İçerik gizli, yaş kısıtlaması var veya desteklenmiyor.");
                 }
             } catch (err: any) {
-                return NextResponse.json({ error: `YouTube servisi çöktü: ` + err.message }, { status: 500 });
+                return NextResponse.json({ error: `Servis çöktü: ` + err.message }, { status: 500 });
             }
         }
 
-        // INSTAGRAM (VİDEO/FOTO/DP), FACEBOOK (VİDEO/FOTO) - RAPIDAPI
-        if (platform.includes('instagram') || platform.includes('facebook')) {
-            const rapidApiKey = process.env.RAPIDAPI_KEY;
-
-            if (!rapidApiKey) {
-                return NextResponse.json({ error: "Sistem Bakımda: RapidAPI Key eksik. Lütfen yöneticinize başvurun." }, { status: 500 });
-            }
-
-            try {
-                const options = {
-                    method: 'GET',
-                    headers: {
-                        'x-rapidapi-key': rapidApiKey,
-                        'x-rapidapi-host': 'social-media-video-downloader.p.rapidapi.com'
-                    }
-                };
-
-                let finalUrl = url;
-                if (platform === 'instagram-dp' && !url.includes('instagram.com')) {
-                    finalUrl = `https://www.instagram.com/${url.replace('@', '')}/`;
-                }
-
-                const encodedUrl = encodeURIComponent(finalUrl);
-                const apiUrl = `https://social-media-video-downloader.p.rapidapi.com/smvd/get/all?url=${encodedUrl}`;
-
-                const res = await fetch(apiUrl, options);
-                const data = await res.json();
-
-                if (res.status === 401 || res.status === 403 || data.message === "You are not subscribed to this API.") {
-                    throw new Error("RapidAPI aboneliği aktif değil. Lütfen yöneticinizle iletişime geçin.");
-                }
-
-                // RapidAPI'nin yeni JSON yapısı: data.body.videos[] (videolar/resimler için) veya data.body.images[]
-                // Attığın resimdeki yapıya göre içerikler data.body.videos veya data.contents.videos dizisinde dönüyor.
-
-                // Resimdeki "contents" veya "body" objesine göre güvenli arama yapıyoruz:
-                const contents = data.body || data.contents || data;
-                let itemsList: any[] = [];
-
-                if (contents.videos && Array.isArray(contents.videos)) itemsList = [...itemsList, ...contents.videos];
-                if (contents.images && Array.isArray(contents.images)) itemsList = [...itemsList, ...contents.images];
-                if (contents.links && Array.isArray(contents.links)) itemsList = [...itemsList, ...contents.links];
-
-                // Eğer dizi dönmeyip direkt url döndüyse
-                if (itemsList.length === 0 && (contents.url || contents.video || contents.link)) {
-                    itemsList.push(contents);
-                }
-
-                if (itemsList.length > 0) {
-                    let bestLink = itemsList[0].url || itemsList[0].link || itemsList[0];
-
-                    // Eğer spesifik kalite/format isteniyorsa (RapidAPI genelde hd/sd veya 1080p etiketleriyle döner)
-                    if (platform.includes('photo')) {
-                        const imageLinks = itemsList.filter((l: any) => l.type === 'image' || (l.url && l.url.includes('.jpg')));
-                        if (imageLinks.length > 0) bestLink = imageLinks[0].url || imageLinks[0].link;
-                    } else {
-                        const hdLinks = itemsList.filter((l: any) => l.label === 'HD' || l.label === '1080p' || l.quality === 'hd');
-                        if (hdLinks.length > 0) bestLink = hdLinks[0].url || hdLinks[0].link;
-                    }
-
-                    // Eğer obje değil direkt string URL döndüyse onu al
-                    if (typeof bestLink === 'object' && bestLink !== null) {
-                        bestLink = bestLink.url || bestLink.link;
-                    }
-
-                    return NextResponse.json({
-                        download_url: bestLink
-                    });
-                } else {
-                    throw new Error(data.message || "İçerik indirilemedi veya gizli profil.");
-                }
-            } catch (err: any) {
-                return NextResponse.json({ error: err.message }, { status: 500 });
-            }
+        // INSTAGRAM FOTO / FACEBOOK FOTO (Basit geri dönüş)
+        if (platform === 'instagram-photo' || platform === 'instagram-dp' || platform === 'facebook-photo') {
+            return NextResponse.json({ error: "Fotoğraf indirme şu an güncelleniyor. Lütfen video indiriciyi kullanın." }, { status: 400 });
         }
 
         return NextResponse.json({ error: 'Desteklenmeyen platform.' }, { status: 400 });

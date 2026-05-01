@@ -22,14 +22,12 @@ export async function GET(req: Request) {
         }
 
         const arrayBuffer = await response.arrayBuffer();
-        const buffer = Buffer.from(arrayBuffer);
 
         // Resmin formatını al (yoksa jpeg varsay)
         const contentType = response.headers.get('content-type') || 'image/jpeg';
 
         // Orijinal resmi proxy üzerinden kendi sunucumuzdan dönüyoruz
-        // Böylece tarayıcı CORS veya hotlinking (çalıntı resim) hatasına düşmez
-        return new NextResponse(buffer, {
+        return new NextResponse(arrayBuffer, {
             headers: {
                 'Content-Type': contentType,
                 'Cache-Control': 'public, max-age=86400', // 1 gün önbellekte tut
