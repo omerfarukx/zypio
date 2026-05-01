@@ -6,6 +6,9 @@ import { FAQSection } from '@/components/FAQSection';
 import { PlatformSummary } from '@/components/PlatformSummary';
 import { HowItWorksSection } from '@/components/HowItWorksSection';
 import { TestimonialsSection } from '@/components/TestimonialsSection';
+import Ad728x90 from '@/components/Ad728x90';
+import Ad160x600 from '@/components/Ad160x600';
+import AdNative from '@/components/AdNative';
 
 export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -18,9 +21,8 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-64 bg-blue-600/10 rounded-[100%] blur-[100px] pointer-events-none" aria-hidden="true"></div>
 
         {/* Üst Reklam Alanı (Header Banner) */}
-        <aside className="w-full max-w-[728px] h-[90px] bg-[#1C1C1E] border border-white/10 border-dashed rounded-xl hidden md:flex items-center justify-center text-gray-500 mb-8 relative group shadow-lg z-10" aria-label="Header Advertisement">
-          <span className="absolute top-2 left-2 text-[10px] uppercase tracking-wider opacity-50 font-bold" aria-hidden="true">{t('adLabel')}</span>
-          <span className="font-medium group-hover:text-blue-400 transition-colors">{t('adHeader')}</span>
+        <aside className="w-full hidden md:flex items-center justify-center z-10" aria-label="Header Advertisement">
+          <Ad728x90 />
         </aside>
         <aside className="w-full max-w-[320px] h-[100px] bg-[#1C1C1E] border border-white/10 border-dashed rounded-xl flex md:hidden items-center justify-center text-gray-500 mb-8 relative group shadow-lg z-10" aria-label="Mobile Header Advertisement">
           <span className="absolute top-2 left-2 text-[10px] uppercase tracking-wider opacity-50 font-bold" aria-hidden="true">{t('adLabel')}</span>
@@ -44,10 +46,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
 
           {/* Sol Sticky Sidebar Reklamı */}
           <aside className="hidden lg:flex flex-col gap-6 sticky top-28 w-[160px] xl:w-[300px]" aria-label="Left Sidebar Advertisement">
-            <div className="w-full h-[600px] xl:h-[250px] bg-[#1C1C1E] border border-white/10 border-dashed rounded-xl flex items-center justify-center text-gray-500 relative group shadow-lg">
-              <span className="absolute top-2 left-2 text-[10px] uppercase tracking-wider opacity-50 font-bold" aria-hidden="true">{t('adLabel')}</span>
-              <span className="font-medium group-hover:text-blue-400 transition-colors text-center px-2">{t('adLeft')}</span>
-            </div>
+            <Ad160x600 />
           </aside>
 
           {/* Ana Dönüştürücü Form */}
@@ -55,18 +54,14 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
             <ConverterForm />
 
             {/* Form Altı Native Reklam */}
-            <aside className="w-full h-[250px] bg-[#1C1C1E] border border-white/10 border-dashed rounded-xl flex items-center justify-center text-gray-500 mt-8 relative group shadow-lg" aria-label="In-Feed Advertisement">
-              <span className="absolute top-2 left-2 text-[10px] uppercase tracking-wider opacity-50 font-bold" aria-hidden="true">{t('sponsored')}</span>
-              <span className="font-medium group-hover:text-blue-400 transition-colors">{t('adNative')}</span>
+            <aside className="w-full mt-8" aria-label="In-Feed Advertisement">
+              <AdNative />
             </aside>
           </article>
 
           {/* Sağ Sticky Sidebar Reklamı */}
           <aside className="hidden lg:flex flex-col gap-6 sticky top-28 w-[160px] xl:w-[300px]" aria-label="Right Sidebar Advertisement">
-            <div className="w-full h-[600px] xl:h-[250px] bg-[#1C1C1E] border border-white/10 border-dashed rounded-xl flex items-center justify-center text-gray-500 relative group shadow-lg">
-              <span className="absolute top-2 left-2 text-[10px] uppercase tracking-wider opacity-50 font-bold" aria-hidden="true">{t('adLabel')}</span>
-              <span className="font-medium group-hover:text-blue-400 transition-colors text-center px-2">{t('adRight')}</span>
-            </div>
+            <Ad160x600 />
           </aside>
 
         </section>
