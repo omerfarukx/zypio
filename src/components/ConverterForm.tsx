@@ -197,7 +197,9 @@ export function ConverterForm({ activeContext }: { activeContext?: string }) {
               </p>
 
               {/* GERÇEK ADSTERRA BANNER REKLAMI */}
-              <AdBanner />
+              <div className="flex justify-center items-center w-full min-h-[50px] mb-4">
+                <AdBanner />
+              </div>
 
               {/* Çarpı (Kapat) butonu - Kullanıcı takılırsa çıksın diye */}
               {progress === 100 && (

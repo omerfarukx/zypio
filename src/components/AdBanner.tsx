@@ -2,7 +2,7 @@
 
 export default function AdBanner() {
     return (
-        <div className="flex justify-center items-center w-full my-4 min-h-[50px]">
+        <div className="flex justify-center items-center w-full my-4 min-h-[50px] relative z-50">
             <iframe
                 srcDoc={`
                     <html>
@@ -27,7 +27,7 @@ export default function AdBanner() {
                 height="50"
                 frameBorder="0"
                 scrolling="no"
-                className="w-[320px] h-[50px] bg-[#0A0A0C] border border-white/5 rounded"
+                className="w-[320px] h-[50px] bg-[#0A0A0C] border border-white/5 rounded mx-auto block"
                 title="Advertisement"
             />
         </div>
