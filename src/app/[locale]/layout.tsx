@@ -113,6 +113,12 @@ export default async function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-[#0F0F13] text-white selection:bg-blue-500/30 selection:text-blue-200">
         <NextIntlClientProvider messages={messages}>
+          {/* Adsterra Popunder */}
+          <script type='text/javascript' src='//pl29311910.profitablecpmratenetwork.com/a1/d4/d3/a1d4d3661113c56f73f7a0dfca336e67.js' async></script>
+
+          {/* Adsterra Social Bar */}
+          <script type='text/javascript' src='//pl29311912.profitablecpmratenetwork.com/82/a3/60/82a360ad42f680ed03447b9f22f5df83.js' async></script>
+
           {/* Google Analytics Placeholder */}
           <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
           <script dangerouslySetInnerHTML={{

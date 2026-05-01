@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import { Input } from "./ui/input"
 import { Button } from "./ui/button"
 import Image from "next/image"
+import AdBanner from "./AdBanner"
 
 export function ConverterForm({ activeContext }: { activeContext?: string }) {
   const [url, setUrl] = useState("")
@@ -190,16 +191,12 @@ export function ConverterForm({ activeContext }: { activeContext?: string }) {
               <h3 className="text-2xl font-bold text-white mb-2">
                 {progress === 100 ? "İndirme Başlıyor!" : "Video Hazırlanıyor..."}
               </h3>
-              <p className="text-gray-400 mb-8">
+              <p className="text-gray-400 mb-4">
                 {progress === 100 ? "Dosyanız kaydediliyor..." : `Lütfen bekleyin... ${Math.round(progress)}%`}
               </p>
 
-              {/* SAHTE REKLAM ALANI (AdSense buraya eklenecek) */}
-              <div className="w-full h-[250px] bg-[#0F0F13] border border-dashed border-white/20 rounded-2xl flex flex-col items-center justify-center text-gray-600 relative overflow-hidden group mt-4">
-                <span className="text-xs uppercase tracking-widest mb-2 font-bold opacity-50">Sponsorlu</span>
-                <span className="text-lg font-medium group-hover:text-blue-400 transition-colors">300x250 Premium Reklam Alanı</span>
-                <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/5 to-purple-500/5 pointer-events-none"></div>
-              </div>
+              {/* GERÇEK ADSTERRA BANNER REKLAMI */}
+              <AdBanner />
 
               {/* Çarpı (Kapat) butonu - Kullanıcı takılırsa çıksın diye */}
               {progress === 100 && (
