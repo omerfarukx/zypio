@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Menu, X, ChevronDown, Globe, Download, Play, Music, Image as ImageIcon, LayoutGrid } from "lucide-react"
+import { Menu, X, ChevronDown, Globe, Download, Play, Music, Image as ImageIcon, LayoutGrid, Share2, MessageSquare } from "lucide-react"
 import { Logo } from "./Logo"
 import { useTranslations, useLocale } from "next-intl"
 import { useRouter, usePathname } from "@/i18n/routing"
@@ -77,44 +77,79 @@ export function Header() {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 10, scale: 0.95 }}
                   transition={{ duration: 0.2, ease: "easeOut" }}
-                  className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[600px] bg-[#1C1C1E]/95 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-2xl grid grid-cols-2 gap-6"
+                  className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[800px] bg-[#1C1C1E]/95 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-2xl grid grid-cols-2 gap-8"
                   role="menu"
                   aria-orientation="vertical"
                 >
                   <div>
-                    <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-4" id="menu-video-audio">Video & Ses</h4>
+                    <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-4" id="menu-video-audio">Video & Ses Araçları</h4>
                     <div className="flex flex-col gap-2" role="group" aria-labelledby="menu-video-audio">
                       <a href={`/${locale}/platform/youtube`} className="flex items-start gap-3 p-3 hover:bg-white/5 rounded-xl transition-colors group/item focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500" role="menuitem">
-                        <div className="p-2 bg-red-500/10 text-red-500 rounded-lg group-hover/item:bg-red-500 group-hover/item:text-white transition-colors" aria-hidden="true"><Play className="w-5 h-5" /></div>
+                        <div className="p-2 bg-red-500/10 text-red-500 rounded-lg group-hover/item:bg-red-500 group-hover/item:text-white transition-colors shadow-lg" aria-hidden="true"><Play className="w-5 h-5" /></div>
                         <div>
-                          <div className="text-sm font-bold text-white mb-0.5">YouTube Dönüştürücü</div>
+                          <div className="text-sm font-bold text-white mb-0.5 group-hover/item:text-blue-400 transition-colors">YouTube İndirici</div>
                           <div className="text-xs text-gray-400">Videoları MP4 ve MP3 yap.</div>
                         </div>
                       </a>
                       <a href={`/${locale}/platform/tiktok`} className="flex items-start gap-3 p-3 hover:bg-white/5 rounded-xl transition-colors group/item focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500" role="menuitem">
-                        <div className="p-2 bg-black/50 text-white rounded-lg border border-white/10 group-hover/item:bg-white group-hover/item:text-black transition-colors" aria-hidden="true"><Music className="w-5 h-5" /></div>
+                        <div className="p-2 bg-gray-500/10 text-gray-300 rounded-lg border border-white/5 group-hover/item:bg-gray-200 group-hover/item:text-black transition-colors shadow-lg" aria-hidden="true"><Music className="w-5 h-5" /></div>
                         <div>
-                          <div className="text-sm font-bold text-white mb-0.5">TikTok İndirici</div>
+                          <div className="text-sm font-bold text-white mb-0.5 group-hover/item:text-blue-400 transition-colors">TikTok İndirici</div>
                           <div className="text-xs text-gray-400">Filigransız MP4 indir.</div>
+                        </div>
+                      </a>
+                      <a href={`/${locale}/platform/facebook`} className="flex items-start gap-3 p-3 hover:bg-white/5 rounded-xl transition-colors group/item focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500" role="menuitem">
+                        <div className="p-2 bg-blue-600/10 text-blue-500 rounded-lg group-hover/item:bg-blue-600 group-hover/item:text-white transition-colors shadow-lg" aria-hidden="true"><Share2 className="w-5 h-5" /></div>
+                        <div>
+                          <div className="text-sm font-bold text-white mb-0.5 group-hover/item:text-blue-400 transition-colors">Facebook İndirici</div>
+                          <div className="text-xs text-gray-400">HD kalitede FB videoları.</div>
+                        </div>
+                      </a>
+                      <a href={`/${locale}/platform/twitter`} className="flex items-start gap-3 p-3 hover:bg-white/5 rounded-xl transition-colors group/item focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500" role="menuitem">
+                        <div className="p-2 bg-sky-500/10 text-sky-400 rounded-lg group-hover/item:bg-sky-500 group-hover/item:text-white transition-colors shadow-lg" aria-hidden="true"><MessageSquare className="w-5 h-5" /></div>
+                        <div>
+                          <div className="text-sm font-bold text-white mb-0.5 group-hover/item:text-blue-400 transition-colors">X (Twitter) İndirici</div>
+                          <div className="text-xs text-gray-400">Twitter videoları ve GIF'ler.</div>
+                        </div>
+                      </a>
+                      <a href={`/${locale}/platform/instagram`} className="flex items-start gap-3 p-3 hover:bg-white/5 rounded-xl transition-colors group/item focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500" role="menuitem">
+                        <div className="p-2 bg-purple-500/10 text-purple-500 rounded-lg group-hover/item:bg-gradient-to-tr group-hover/item:from-yellow-500 group-hover/item:via-pink-500 group-hover/item:to-purple-500 group-hover/item:text-white transition-colors shadow-lg" aria-hidden="true"><Play className="w-5 h-5" /></div>
+                        <div>
+                          <div className="text-sm font-bold text-white mb-0.5 group-hover/item:text-blue-400 transition-colors">Instagram Reels</div>
+                          <div className="text-xs text-gray-400">IGTV ve Reels videoları.</div>
                         </div>
                       </a>
                     </div>
                   </div>
                   <div>
-                    <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-4" id="menu-photo">Görsel & Fotoğraf</h4>
+                    <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-4" id="menu-photo">Görsel & Fotoğraf Araçları</h4>
                     <div className="flex flex-col gap-2" role="group" aria-labelledby="menu-photo">
                       <a href={`/${locale}/platform/instagram-photo`} className="flex items-start gap-3 p-3 hover:bg-white/5 rounded-xl transition-colors group/item focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500" role="menuitem">
-                        <div className="p-2 bg-pink-500/10 text-pink-500 rounded-lg group-hover/item:bg-pink-500 group-hover/item:text-white transition-colors" aria-hidden="true"><ImageIcon className="w-5 h-5" /></div>
+                        <div className="p-2 bg-pink-500/10 text-pink-500 rounded-lg group-hover/item:bg-gradient-to-tr group-hover/item:from-yellow-500 group-hover/item:via-pink-500 group-hover/item:to-purple-500 group-hover/item:text-white transition-colors shadow-lg" aria-hidden="true"><ImageIcon className="w-5 h-5" /></div>
                         <div>
-                          <div className="text-sm font-bold text-white mb-0.5">Instagram Fotoğraf İndirici</div>
-                          <div className="text-xs text-gray-400">Çoklu gönderileri indir.</div>
+                          <div className="text-sm font-bold text-white mb-0.5 group-hover/item:text-blue-400 transition-colors">Instagram Fotoğraf</div>
+                          <div className="text-xs text-gray-400">Çoklu gönderileri (carousel) indir.</div>
                         </div>
                       </a>
                       <a href={`/${locale}/platform/tiktok-photo`} className="flex items-start gap-3 p-3 hover:bg-white/5 rounded-xl transition-colors group/item focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500" role="menuitem">
-                        <div className="p-2 bg-blue-500/10 text-blue-500 rounded-lg group-hover/item:bg-blue-500 group-hover/item:text-white transition-colors" aria-hidden="true"><Download className="w-5 h-5" /></div>
+                        <div className="p-2 bg-gray-500/10 text-gray-300 rounded-lg border border-white/5 group-hover/item:bg-gray-200 group-hover/item:text-black transition-colors shadow-lg" aria-hidden="true"><Download className="w-5 h-5" /></div>
                         <div>
-                          <div className="text-sm font-bold text-white mb-0.5">TikTok Fotoğraf İndirici</div>
-                          <div className="text-xs text-gray-400">Kaydırmalı resimleri indir.</div>
+                          <div className="text-sm font-bold text-white mb-0.5 group-hover/item:text-blue-400 transition-colors">TikTok Fotoğraf</div>
+                          <div className="text-xs text-gray-400">Kaydırmalı resimleri sömür.</div>
+                        </div>
+                      </a>
+                      <a href={`/${locale}/platform/facebook-photo`} className="flex items-start gap-3 p-3 hover:bg-white/5 rounded-xl transition-colors group/item focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500" role="menuitem">
+                        <div className="p-2 bg-blue-600/10 text-blue-500 rounded-lg group-hover/item:bg-blue-600 group-hover/item:text-white transition-colors shadow-lg" aria-hidden="true"><ImageIcon className="w-5 h-5" /></div>
+                        <div>
+                          <div className="text-sm font-bold text-white mb-0.5 group-hover/item:text-blue-400 transition-colors">Facebook Fotoğraf</div>
+                          <div className="text-xs text-gray-400">HD kalitede gönderi resimleri.</div>
+                        </div>
+                      </a>
+                      <a href={`/${locale}/platform/twitter-photo`} className="flex items-start gap-3 p-3 hover:bg-white/5 rounded-xl transition-colors group/item focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500" role="menuitem">
+                        <div className="p-2 bg-sky-500/10 text-sky-400 rounded-lg group-hover/item:bg-sky-500 group-hover/item:text-white transition-colors shadow-lg" aria-hidden="true"><ImageIcon className="w-5 h-5" /></div>
+                        <div>
+                          <div className="text-sm font-bold text-white mb-0.5 group-hover/item:text-blue-400 transition-colors">X (Twitter) Fotoğraf</div>
+                          <div className="text-xs text-gray-400">Tweet'lerdeki medyaları kaydet.</div>
                         </div>
                       </a>
                     </div>
@@ -166,13 +201,22 @@ export function Header() {
             aria-label="Mobile Navigation"
           >
             <div className="p-6 flex flex-col gap-6">
-              <div className="flex flex-col gap-2">
-                <span className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Araçlarımız</span>
-                <a href={`/${locale}/platform/youtube`} className="flex items-center gap-3 p-3 bg-white/5 rounded-xl text-white font-medium active:scale-95 transition-transform focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"><Play className="w-5 h-5 text-red-500" aria-hidden="true" /> YouTube Dönüştürücü</a>
+              <div className="flex flex-col gap-2 overflow-y-auto max-h-[60vh] pr-2 custom-scrollbar">
+                <span className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Video & Ses</span>
+                <a href={`/${locale}/platform/youtube`} className="flex items-center gap-3 p-3 bg-white/5 rounded-xl text-white font-medium active:scale-95 transition-transform focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"><Play className="w-5 h-5 text-red-500" aria-hidden="true" /> YouTube İndirici</a>
                 <a href={`/${locale}/platform/tiktok`} className="flex items-center gap-3 p-3 bg-white/5 rounded-xl text-white font-medium active:scale-95 transition-transform focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"><Music className="w-5 h-5 text-gray-300" aria-hidden="true" /> TikTok İndirici</a>
-                <a href={`/${locale}/platform/instagram-photo`} className="flex items-center gap-3 p-3 bg-white/5 rounded-xl text-white font-medium active:scale-95 transition-transform focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"><ImageIcon className="w-5 h-5 text-pink-500" aria-hidden="true" /> Instagram Fotoğraf İndirici</a>
-                <a href={`/${locale}/platform/tiktok-photo`} className="flex items-center gap-3 p-3 bg-white/5 rounded-xl text-white font-medium active:scale-95 transition-transform focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"><ImageIcon className="w-5 h-5 text-blue-400" aria-hidden="true" /> TikTok Fotoğraf İndirici</a>
-                <a href={`/${locale}/tools`} className="flex items-center gap-3 p-3 bg-white/5 rounded-xl text-white font-medium active:scale-95 transition-transform focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"><LayoutGrid className="w-5 h-5 text-blue-400" aria-hidden="true" /> Tüm Dönüştürücü Araçlar</a>
+                <a href={`/${locale}/platform/facebook`} className="flex items-center gap-3 p-3 bg-white/5 rounded-xl text-white font-medium active:scale-95 transition-transform focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"><Share2 className="w-5 h-5 text-blue-500" aria-hidden="true" /> Facebook İndirici</a>
+                <a href={`/${locale}/platform/twitter`} className="flex items-center gap-3 p-3 bg-white/5 rounded-xl text-white font-medium active:scale-95 transition-transform focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"><MessageSquare className="w-5 h-5 text-sky-400" aria-hidden="true" /> X (Twitter) İndirici</a>
+                <a href={`/${locale}/platform/instagram`} className="flex items-center gap-3 p-3 bg-white/5 rounded-xl text-white font-medium active:scale-95 transition-transform focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"><Play className="w-5 h-5 text-purple-500" aria-hidden="true" /> Instagram Reels</a>
+
+                <span className="text-xs font-bold text-gray-500 uppercase tracking-wider mt-4 mb-2">Görsel & Fotoğraf</span>
+                <a href={`/${locale}/platform/instagram-photo`} className="flex items-center gap-3 p-3 bg-white/5 rounded-xl text-white font-medium active:scale-95 transition-transform focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"><ImageIcon className="w-5 h-5 text-pink-500" aria-hidden="true" /> Instagram Fotoğraf</a>
+                <a href={`/${locale}/platform/tiktok-photo`} className="flex items-center gap-3 p-3 bg-white/5 rounded-xl text-white font-medium active:scale-95 transition-transform focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"><Download className="w-5 h-5 text-gray-300" aria-hidden="true" /> TikTok Fotoğraf</a>
+                <a href={`/${locale}/platform/facebook-photo`} className="flex items-center gap-3 p-3 bg-white/5 rounded-xl text-white font-medium active:scale-95 transition-transform focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"><ImageIcon className="w-5 h-5 text-blue-500" aria-hidden="true" /> Facebook Fotoğraf</a>
+                <a href={`/${locale}/platform/twitter-photo`} className="flex items-center gap-3 p-3 bg-white/5 rounded-xl text-white font-medium active:scale-95 transition-transform focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"><ImageIcon className="w-5 h-5 text-sky-400" aria-hidden="true" /> X (Twitter) Fotoğraf</a>
+
+                <div className="w-full h-px bg-white/10 my-2" aria-hidden="true"></div>
+                <a href={`/${locale}/tools`} className="flex items-center gap-3 p-3 bg-blue-600/20 border border-blue-500/30 rounded-xl text-blue-400 font-bold active:scale-95 transition-transform focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"><LayoutGrid className="w-5 h-5" aria-hidden="true" /> Tüm Araçları Keşfet</a>
               </div>
 
               <div className="w-full h-px bg-white/10" aria-hidden="true"></div>
