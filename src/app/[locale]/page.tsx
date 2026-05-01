@@ -67,9 +67,34 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         </section>
 
         {/* Alt Banner (Footer Billboard) */}
-        <aside className="w-full max-w-[970px] h-[250px] bg-[#1C1C1E] border border-white/10 border-dashed rounded-xl hidden lg:flex items-center justify-center text-gray-500 mt-12 relative group shadow-lg z-10" aria-label="Footer Advertisement">
-          <span className="absolute top-2 left-2 text-[10px] uppercase tracking-wider opacity-50 font-bold" aria-hidden="true">{t('adLabel')}</span>
-          <span className="font-medium group-hover:text-blue-400 transition-colors">{t('adFooter')}</span>
+        <aside className="w-full max-w-[970px] h-[250px] hidden lg:flex items-center justify-center mt-12 relative z-10" aria-label="Footer Advertisement">
+          <iframe
+            srcDoc={`
+              <html>
+                <head>
+                  <style>body{margin:0;padding:0;overflow:hidden;background:transparent;}</style>
+                </head>
+                <body>
+                  <script type="text/javascript">
+                    atOptions = {
+                      'key' : 'b41bc19e3b6a9e1d88a4e8d2e8b248a3',
+                      'format' : 'iframe',
+                      'height' : 250,
+                      'width' : 970,
+                      'params' : {}
+                    };
+                  </script>
+                  <script type="text/javascript" src="https://www.highperformanceformat.com/b41bc19e3b6a9e1d88a4e8d2e8b248a3/invoke.js"></script>
+                </body>
+              </html>
+            `}
+            width="970"
+            height="250"
+            frameBorder="0"
+            scrolling="no"
+            className="w-[970px] h-[250px] bg-[#1C1C1E] border border-dashed border-white/10 rounded-xl"
+            title="Advertisement 970x250"
+          />
         </aside>
       </main>
 
