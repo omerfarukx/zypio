@@ -133,5 +133,50 @@ export const platforms = {
             "Arama kutusuna yapıştırın.",
             "Görseli orijinal boyutuyla indirin."
         ]
+    },
+    "instagram-dp": {
+        id: "instagram-dp",
+        name: "Instagram DP",
+        title: "Instagram Profil Fotoğrafı (DP) Büyütme",
+        description: "Instagram profil fotoğraflarını (PP/DP) orijinal ve yüksek çözünürlüklü boyutunda indirin ve görüntüleyin.",
+        stats: "Günlük 400K+ İşlem",
+        color: "purple-500",
+        bg: "from-purple-500/20 to-purple-600/5",
+        border: "border-purple-500/20",
+        usage: [
+            "Profilini görmek istediğiniz Instagram kullanıcısının linkini (veya @kullaniciadi) kopyalayın.",
+            "Sisteme yapıştırın ve 'Analiz Et' butonuna tıklayın.",
+            "Büyük boy (HD) profil fotoğrafını anında indirin."
+        ]
+    },
+    "tiktok-dp": {
+        id: "tiktok-dp",
+        name: "TikTok DP",
+        title: "TikTok Profil Fotoğrafı (DP) Büyütme",
+        description: "TikTok profil fotoğraflarını en yüksek kalitede, orijinal boyutunda görüntüleyin ve indirin.",
+        stats: "Günlük 150K+ İşlem",
+        color: "pink-500",
+        bg: "from-pink-500/20 to-pink-600/5",
+        border: "border-pink-500/20",
+        usage: [
+            "TikTok kullanıcı profilinin linkini (veya @kullaniciadi) kopyalayın.",
+            "Arama kutusuna yapıştırın.",
+            "Profil fotoğrafını HD kalitede indirin."
+        ]
+    },
+    "twitter-dp": {
+        id: "twitter-dp",
+        name: "X (Twitter) DP",
+        title: "X (Twitter) Profil Fotoğrafı İndirici",
+        description: "Twitter (X) hesaplarının profil fotoğraflarını tam çözünürlüklü olarak büyütün ve kaydedin.",
+        stats: "Günlük 80K+ İşlem",
+        color: "gray-300",
+        bg: "from-gray-500/20 to-gray-600/5",
+        border: "border-gray-500/20",
+        usage: [
+            "Twitter kullanıcı profilinin linkini kopyalayın.",
+            "Arama kutusuna yapıştırın.",
+            "Orijinal boyuttaki profil fotoğrafını indirin."
+        ]
     }
 };

@@ -129,7 +129,16 @@
     "facebook-photoStats": "Günlük 100K+ İndirme",
     "twitter-photoTitle": "X (Twitter) Fotoğraf İndirici",
     "twitter-photoDesc": "X (Twitter) üzerindeki görselleri ve resimleri kalite kaybı olmadan doğrudan indirin.",
-    "twitter-photoStats": "Günlük 50K+ İndirme"
+    "twitter-photoStats": "Günlük 50K+ İndirme",
+    "instagram-dpTitle": "Instagram Profil Fotoğrafı Büyütme",
+    "instagram-dpDesc": "Instagram profil fotoğraflarını orijinal yüksek çözünürlüklü boyutunda indirin ve görüntüleyin.",
+    "instagram-dpStats": "Günlük 400K+ İşlem",
+    "tiktok-dpTitle": "TikTok Profil Fotoğrafı Büyütme",
+    "tiktok-dpDesc": "TikTok profil fotoğraflarını en yüksek kalitede, orijinal boyutunda görüntüleyin ve indirin.",
+    "tiktok-dpStats": "Günlük 150K+ İşlem",
+    "twitter-dpTitle": "X (Twitter) Profil Fotoğrafı İndirici",
+    "twitter-dpDesc": "Twitter (X) hesaplarının profil fotoğraflarını tam çözünürlüklü olarak büyütün ve kaydedin.",
+    "twitter-dpStats": "Günlük 80K+ İşlem"
   },
   "Converter": {
     "placeholder": "Video linkini buraya yapıştırın (YouTube, TikTok, Facebook...)",

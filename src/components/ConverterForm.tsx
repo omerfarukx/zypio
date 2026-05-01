@@ -25,21 +25,27 @@ export function ConverterForm({ activeContext }: { activeContext?: string }) {
       return
     }
 
+    if (activeContext?.includes("-dp") && url && !url.startsWith("http")) {
+      setPlatform(activeContext)
+      setFormat("jpg")
+      return
+    }
+
     if (url.includes("youtube.com") || url.includes("youtu.be")) {
       setPlatform("youtube")
       setFormat("720")
     } else if (url.includes("instagram.com")) {
-      setPlatform(activeContext === "instagram-photo" ? "instagram-photo" : "instagram")
-      setFormat(activeContext === "instagram-photo" ? "jpg" : "720")
+      setPlatform(activeContext === "instagram-photo" ? "instagram-photo" : activeContext === "instagram-dp" ? "instagram-dp" : "instagram")
+      setFormat(activeContext === "instagram-photo" || activeContext === "instagram-dp" ? "jpg" : "720")
     } else if (url.includes("tiktok.com")) {
-      setPlatform(activeContext === "tiktok-photo" ? "tiktok-photo" : "tiktok")
-      setFormat(activeContext === "tiktok-photo" ? "jpg" : "watermark_free")
+      setPlatform(activeContext === "tiktok-photo" ? "tiktok-photo" : activeContext === "tiktok-dp" ? "tiktok-dp" : "tiktok")
+      setFormat(activeContext === "tiktok-photo" || activeContext === "tiktok-dp" ? "jpg" : "watermark_free")
     } else if (url.includes("facebook.com") || url.includes("fb.watch")) {
       setPlatform(activeContext === "facebook-photo" ? "facebook-photo" : "facebook")
       setFormat(activeContext === "facebook-photo" ? "jpg" : "720")
     } else if (url.includes("twitter.com") || url.includes("x.com")) {
-      setPlatform(activeContext === "twitter-photo" ? "twitter-photo" : "twitter")
-      setFormat(activeContext === "twitter-photo" ? "jpg" : "720")
+      setPlatform(activeContext === "twitter-photo" ? "twitter-photo" : activeContext === "twitter-dp" ? "twitter-dp" : "twitter")
+      setFormat(activeContext === "twitter-photo" || activeContext === "twitter-dp" ? "jpg" : "720")
     } else {
       setPlatform("unknown")
       setVideoInfo(null)
@@ -222,15 +228,16 @@ export function ConverterForm({ activeContext }: { activeContext?: string }) {
                     <Link2 className="w-5 h-5 text-gray-500" />
                   </div>
                   <Input
-                    type="url"
+                    type={activeContext?.includes("-dp") ? "text" : "url"}
                     placeholder={
-                      activeContext === "instagram-photo" ? "https://www.instagram.com/p/..." :
-                        activeContext === "tiktok-photo" ? "https://www.tiktok.com/@user/photo/..." :
-                          activeContext === "twitter-photo" ? "https://x.com/user/status/..." :
-                            activeContext === "youtube" ? "https://www.youtube.com/watch?v=..." :
-                              "Video veya görsel bağlantısını yapıştırın..."
+                      activeContext?.includes("-dp") ? "Profil linkini veya kullanıcı adını yapıştırın..." :
+                        activeContext === "instagram-photo" ? "https://www.instagram.com/p/..." :
+                          activeContext === "tiktok-photo" ? "https://www.tiktok.com/@user/photo/..." :
+                            activeContext === "twitter-photo" ? "https://x.com/user/status/..." :
+                              activeContext === "youtube" ? "https://www.youtube.com/watch?v=..." :
+                                "Video veya görsel bağlantısını yapıştırın..."
                     }
-                    className="pl-12 bg-[#0F0F13] border-white/10 text-white h-14 rounded-2xl text-lg focus-visible:ring-blue-500 placeholder:text-gray-600"
+                    className="pl-12 pr-32 bg-[#0F0F13] border-white/10 text-white h-14 rounded-2xl text-lg focus-visible:ring-blue-500 placeholder:text-gray-600"
                     value={url}
                     onChange={(e) => setUrl(e.target.value)}
                     required
@@ -244,9 +251,9 @@ export function ConverterForm({ activeContext }: { activeContext?: string }) {
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.8 }}
-                        className="absolute right-4 top-1/2 -translate-y-1/2 px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wider bg-white/10 text-white"
+                        className="absolute right-4 top-1/2 -translate-y-1/2 px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wider bg-[#1C1C1E] border border-white/10 text-white pointer-events-none backdrop-blur-md"
                       >
-                        {platform}
+                        {platform.replace('-photo', ' Foto')}
                       </motion.div>
                     )}
                   </AnimatePresence>
@@ -326,7 +333,7 @@ export function ConverterForm({ activeContext }: { activeContext?: string }) {
                         <option value="watermark_free">Ultra Kalite (Filigransız)</option>
                         <option value="watermark">Orta Kalite (Filigranlı)</option>
                       </optgroup>
-                    ) : platform.includes("-photo") ? (
+                    ) : platform.includes("-photo") || platform.includes("-dp") ? (
                       <optgroup label="Fotoğraf / Görsel">
                         <option value="jpg">Orijinal Kalite (JPG)</option>
                         <option value="png">Yüksek Kalite (PNG)</option>

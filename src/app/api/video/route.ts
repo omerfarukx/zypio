@@ -12,6 +12,57 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: 'Lütfen geçerli bir URL giriniz.' }, { status: 400 });
         }
 
+        // TIKTOK DP
+        if (platform === 'tiktok-dp') {
+            try {
+                let uniqueId = url;
+                if (url.includes('tiktok.com')) {
+                    const match = url.match(/@([a-zA-Z0-9_.-]+)/);
+                    if (match) uniqueId = match[1];
+                }
+                if (!uniqueId.startsWith('@') && !uniqueId.includes('http')) uniqueId = '@' + uniqueId;
+
+                const res = await fetch(`https://tikwm.com/api/user/info?unique_id=${uniqueId}`);
+                const data = await res.json();
+
+                if (data.code === 0 && data.data && data.data.user) {
+                    return NextResponse.json({
+                        download_url: data.data.user.avatarLarger || data.data.user.avatarMedium || data.data.user.avatarThumb
+                    });
+                } else {
+                    throw new Error("TikTok kullanıcısı bulunamadı.");
+                }
+            } catch (err: any) {
+                return NextResponse.json({ error: 'TikTok sunucularına bağlanırken hata: ' + err.message }, { status: 500 });
+            }
+        }
+
+        // TWITTER DP
+        if (platform === 'twitter-dp') {
+            try {
+                let username = url;
+                if (url.includes('twitter.com') || url.includes('x.com')) {
+                    const parts = url.split('/');
+                    username = parts[parts.findIndex(p => p === 'twitter.com' || p === 'x.com') + 1];
+                    username = username.split('?')[0];
+                }
+                username = username.replace('@', '');
+
+                const res = await fetch(`https://api.vxtwitter.com/${username}`);
+                const data = await res.json();
+
+                if (data && data.profile_image_url) {
+                    return NextResponse.json({
+                        download_url: data.profile_image_url.replace('_normal', '_400x400')
+                    });
+                } else {
+                    throw new Error("Twitter kullanıcısı bulunamadı.");
+                }
+            } catch (err: any) {
+                return NextResponse.json({ error: 'Twitter sunucularına bağlanılamadı: ' + err.message }, { status: 500 });
+            }
+        }
+
         // TIKTOK & TIKTOK-PHOTO İÇİN HIZLI API (tikwm)
         if (platform === 'tiktok' || platform === 'tiktok-photo') {
             try {
@@ -19,22 +70,18 @@ export async function POST(req: Request) {
                 const data = await res.json();
 
                 if (data.code === 0 && data.data) {
-                    // Eğer fotoğraf (slideshow) isteniyorsa
-                    if (platform === 'tiktok-photo') {
-                        if (data.data.images && data.data.images.length > 0) {
-                            // Şimdilik sadece ilk fotoğrafı (veya en iyi çözünürlüklü) indiriyoruz.
-                            // İleride toplu ZIP olarak da verilebilir.
-                            return NextResponse.json({
-                                download_url: data.data.images[0]
-                            });
-                        } else {
-                            throw new Error("Bu linkte bir fotoğraf galerisi bulunamadı.");
-                        }
-                    } else {
+                    // Eğer fotoğraf (slideshow) ise
+                    if (data.data.images && data.data.images.length > 0) {
+                        return NextResponse.json({
+                            download_url: data.data.images[0]
+                        });
+                    } else if (data.data.play || data.data.wmplay) {
                         // Normal video
                         return NextResponse.json({
                             download_url: format === 'watermark_free' ? data.data.play : data.data.wmplay
                         });
+                    } else {
+                        throw new Error("Bu linkte indirilebilir bir içerik bulunamadı.");
                     }
                 } else {
                     throw new Error("TikTok içeriği gizli veya silinmiş olabilir.");
@@ -74,10 +121,10 @@ export async function POST(req: Request) {
             }
         }
 
-        // YOUTUBE ve INSTAGRAM (Video) İÇİN (loader.to asenkron API)
-        if (platform === 'youtube' || platform === 'instagram') {
+        // YOUTUBE (Video) İÇİN (loader.to asenkron API)
+        if (platform === 'youtube') {
             try {
-                const loaderFormat = platform === 'instagram' ? '720' : (format || '720');
+                const loaderFormat = format || '720';
                 const res = await fetch(`https://loader.to/ajax/download.php?format=${loaderFormat}&url=${encodeURIComponent(url)}`);
                 const data = await res.json();
 
@@ -86,15 +133,15 @@ export async function POST(req: Request) {
                         progress_url: data.progress_url
                     });
                 } else {
-                    throw new Error(platform === 'youtube' ? "YouTube bu videoyu gizlemiş veya yaş kısıtlaması var." : "Instagram gizli profilleri indiremiyoruz.");
+                    throw new Error("YouTube bu videoyu gizlemiş veya yaş kısıtlaması var.");
                 }
             } catch (err: any) {
-                return NextResponse.json({ error: `${platform === 'youtube' ? 'YouTube' : 'Instagram'} servisi çöktü: ` + err.message }, { status: 500 });
+                return NextResponse.json({ error: `YouTube servisi çöktü: ` + err.message }, { status: 500 });
             }
         }
 
-        // INSTAGRAM FOTO, FACEBOOK, FACEBOOK FOTO - RAPIDAPI
-        if (platform === 'instagram-photo' || platform === 'facebook' || platform === 'facebook-photo') {
+        // INSTAGRAM (VİDEO/FOTO/DP), FACEBOOK (VİDEO/FOTO) - RAPIDAPI
+        if (platform.includes('instagram') || platform.includes('facebook')) {
             const rapidApiKey = process.env.RAPIDAPI_KEY;
 
             if (!rapidApiKey) {
@@ -110,11 +157,13 @@ export async function POST(req: Request) {
                     }
                 };
 
-                // Yeni endpoint yapısına göre güncellendi
-                const encodedUrl = encodeURIComponent(url);
-                const apiUrl = platform.includes('instagram')
-                    ? `https://social-media-video-downloader.p.rapidapi.com/smvd/get/instagram?url=${encodedUrl}`
-                    : `https://social-media-video-downloader.p.rapidapi.com/smvd/get/facebook?url=${encodedUrl}`;
+                let finalUrl = url;
+                if (platform === 'instagram-dp' && !url.includes('instagram.com')) {
+                    finalUrl = `https://www.instagram.com/${url.replace('@', '')}/`;
+                }
+
+                const encodedUrl = encodeURIComponent(finalUrl);
+                const apiUrl = `https://social-media-video-downloader.p.rapidapi.com/smvd/get/all?url=${encodedUrl}`;
 
                 const res = await fetch(apiUrl, options);
                 const data = await res.json();
@@ -133,6 +182,11 @@ export async function POST(req: Request) {
                 if (contents.videos && Array.isArray(contents.videos)) itemsList = [...itemsList, ...contents.videos];
                 if (contents.images && Array.isArray(contents.images)) itemsList = [...itemsList, ...contents.images];
                 if (contents.links && Array.isArray(contents.links)) itemsList = [...itemsList, ...contents.links];
+
+                // Eğer dizi dönmeyip direkt url döndüyse
+                if (itemsList.length === 0 && (contents.url || contents.video || contents.link)) {
+                    itemsList.push(contents);
+                }
 
                 if (itemsList.length > 0) {
                     let bestLink = itemsList[0].url || itemsList[0].link || itemsList[0];

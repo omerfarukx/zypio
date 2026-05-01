@@ -12,6 +12,61 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: 'Lütfen geçerli bir URL giriniz.' }, { status: 400 });
         }
 
+        // TIKTOK DP
+        if (platform === 'tiktok-dp') {
+            try {
+                let uniqueId = url;
+                if (url.includes('tiktok.com')) {
+                    const match = url.match(/@([a-zA-Z0-9_.-]+)/);
+                    if (match) uniqueId = match[1];
+                }
+                if (!uniqueId.startsWith('@') && !uniqueId.includes('http')) uniqueId = '@' + uniqueId;
+                // If it's still a full URL but not matching @, tikwm might fail, but let's try.
+
+                const res = await fetch(`https://tikwm.com/api/user/info?unique_id=${uniqueId}`);
+                const data = await res.json();
+
+                if (data.code === 0 && data.data && data.data.user) {
+                    return NextResponse.json({
+                        title: `${data.data.user.nickname} (@${data.data.user.uniqueId}) TikTok DP`,
+                        thumbnail: data.data.user.avatarLarger || data.data.user.avatarMedium || data.data.user.avatarThumb
+                    });
+                } else {
+                    throw new Error("Kullanıcı bulunamadı veya gizli.");
+                }
+            } catch (err: any) {
+                return NextResponse.json({ error: 'TikTok kullanıcı verisi alınamadı: ' + err.message }, { status: 500 });
+            }
+        }
+
+        // TWITTER DP
+        if (platform === 'twitter-dp') {
+            try {
+                let username = url;
+                if (url.includes('twitter.com') || url.includes('x.com')) {
+                    const parts = url.split('/');
+                    username = parts[parts.findIndex(p => p === 'twitter.com' || p === 'x.com') + 1];
+                    username = username.split('?')[0];
+                }
+                username = username.replace('@', '');
+
+                const res = await fetch(`https://api.vxtwitter.com/${username}`);
+                const data = await res.json();
+
+                if (data && data.name) {
+                    const hdProfilePic = data.profile_image_url ? data.profile_image_url.replace('_normal', '_400x400') : "https://logo.clearbit.com/twitter.com?size=256";
+                    return NextResponse.json({
+                        title: `${data.name} (@${data.screen_name}) X DP`,
+                        thumbnail: hdProfilePic
+                    });
+                } else {
+                    throw new Error("Kullanıcı bulunamadı veya gizli.");
+                }
+            } catch (err: any) {
+                return NextResponse.json({ error: 'Twitter kullanıcı verisi alınamadı: ' + err.message }, { status: 500 });
+            }
+        }
+
         // TIKTOK & TIKTOK-PHOTO
         if (platform === 'tiktok' || platform === 'tiktok-photo') {
             try {
@@ -19,9 +74,14 @@ export async function POST(req: Request) {
                 const data = await res.json();
 
                 if (data.code === 0 && data.data) {
+                    let thumb = data.data.cover || data.data.origin_cover;
+                    if (!thumb && data.data.images && data.data.images.length > 0) {
+                        thumb = data.data.images[0];
+                    }
+
                     return NextResponse.json({
                         title: data.data.title || "TikTok Medyası",
-                        thumbnail: data.data.cover || data.data.origin_cover || "https://logo.clearbit.com/www.tiktok.com?size=256"
+                        thumbnail: thumb || "https://logo.clearbit.com/www.tiktok.com?size=256"
                     });
                 } else {
                     throw new Error("TikTok içeriği bulunamadı.");
@@ -52,8 +112,8 @@ export async function POST(req: Request) {
             }
         }
 
-        // YOUTUBE ve INSTAGRAM (Video) - loader.to
-        if (platform === 'youtube' || platform === 'instagram') {
+        // YOUTUBE (Video) - loader.to
+        if (platform === 'youtube') {
             try {
                 const res = await fetch(`https://loader.to/ajax/download.php?format=720&url=${encodeURIComponent(url)}`);
                 const data = await res.json();
@@ -61,7 +121,7 @@ export async function POST(req: Request) {
                 if (data.success && data.info) {
                     let thumbnail = data.info.image;
                     if (!thumbnail || thumbnail.includes("logo.clearbit.com")) {
-                        thumbnail = platform === 'youtube' ? "https://logo.clearbit.com/www.youtube.com?size=256" : "https://logo.clearbit.com/www.instagram.com?size=256";
+                        thumbnail = "https://logo.clearbit.com/www.youtube.com?size=256";
                     }
 
                     return NextResponse.json({
@@ -76,12 +136,11 @@ export async function POST(req: Request) {
             }
         }
 
-        // INSTAGRAM FOTO, FACEBOOK, FACEBOOK FOTO - RAPIDAPI KULLANIMI
-        if (platform === 'instagram-photo' || platform === 'facebook' || platform === 'facebook-photo') {
+        // INSTAGRAM (VİDEO/FOTO/DP), FACEBOOK (VİDEO/FOTO) - RAPIDAPI KULLANIMI
+        if (platform.includes('instagram') || platform.includes('facebook')) {
             const rapidApiKey = process.env.RAPIDAPI_KEY;
 
             if (!rapidApiKey) {
-                // Eğer key yoksa sadece generic bir logo dönelim ki UI patlamasın. (Video indirme aşamasında hata verdireceğiz)
                 return NextResponse.json({
                     title: `${platform.includes('instagram') ? 'Instagram' : 'Facebook'} İçeriği (RapidAPI Key Bekleniyor)`,
                     thumbnail: platform.includes('instagram') ? "https://logo.clearbit.com/www.instagram.com?size=256" : "https://logo.clearbit.com/www.facebook.com?size=256"
@@ -97,11 +156,13 @@ export async function POST(req: Request) {
                     }
                 };
 
-                // Yeni endpoint yapısına göre güncellendi
-                const encodedUrl = encodeURIComponent(url);
-                const apiUrl = platform.includes('instagram')
-                    ? `https://social-media-video-downloader.p.rapidapi.com/smvd/get/instagram?url=${encodedUrl}`
-                    : `https://social-media-video-downloader.p.rapidapi.com/smvd/get/facebook?url=${encodedUrl}`;
+                let finalUrl = url;
+                if (platform === 'instagram-dp' && !url.includes('instagram.com')) {
+                    finalUrl = `https://www.instagram.com/${url.replace('@', '')}/`;
+                }
+
+                const encodedUrl = encodeURIComponent(finalUrl);
+                const apiUrl = `https://social-media-video-downloader.p.rapidapi.com/smvd/get/all?url=${encodedUrl}`;
 
                 const res = await fetch(apiUrl, options);
                 const data = await res.json();
@@ -110,10 +171,12 @@ export async function POST(req: Request) {
                     throw new Error("RapidAPI aboneliği aktif değil. Lütfen yöneticinizle iletişime geçin.");
                 }
 
-                if (data && data.title) {
+                const contents = data.body || data.contents || data;
+
+                if (contents) {
                     return NextResponse.json({
-                        title: data.title || "Sosyal Medya İçeriği",
-                        thumbnail: data.picture || (platform.includes('instagram') ? "https://logo.clearbit.com/www.instagram.com?size=256" : "https://logo.clearbit.com/www.facebook.com?size=256")
+                        title: contents.title || contents.desc || "Sosyal Medya İçeriği",
+                        thumbnail: contents.picture || contents.thumbnail || (platform.includes('instagram') ? "https://logo.clearbit.com/www.instagram.com?size=256" : "https://logo.clearbit.com/www.facebook.com?size=256")
                     });
                 } else {
                     // API'den gelen gerçek hatayı yakalayalım

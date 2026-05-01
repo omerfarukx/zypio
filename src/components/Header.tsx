@@ -77,7 +77,7 @@ export function Header() {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 10, scale: 0.95 }}
                   transition={{ duration: 0.2, ease: "easeOut" }}
-                  className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[800px] bg-[#1C1C1E]/95 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-2xl grid grid-cols-2 gap-8"
+                  className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[1000px] bg-[#1C1C1E]/95 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-2xl grid grid-cols-3 gap-6"
                   role="menu"
                   aria-orientation="vertical"
                 >
@@ -154,6 +154,32 @@ export function Header() {
                       </a>
                     </div>
                   </div>
+                  <div>
+                    <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-4" id="menu-dp">Profil (DP) Araçları</h4>
+                    <div className="flex flex-col gap-2" role="group" aria-labelledby="menu-dp">
+                      <a href={`/${locale}/platform/instagram-dp`} className="flex items-start gap-3 p-3 hover:bg-white/5 rounded-xl transition-colors group/item focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500" role="menuitem">
+                        <div className="p-2 bg-purple-500/10 text-purple-500 rounded-lg group-hover/item:bg-gradient-to-tr group-hover/item:from-yellow-500 group-hover/item:via-pink-500 group-hover/item:to-purple-500 group-hover/item:text-white transition-colors shadow-lg" aria-hidden="true"><ImageIcon className="w-5 h-5" /></div>
+                        <div>
+                          <div className="text-sm font-bold text-white mb-0.5 group-hover/item:text-blue-400 transition-colors">Instagram DP</div>
+                          <div className="text-xs text-gray-400">PP'leri HD olarak büyüt.</div>
+                        </div>
+                      </a>
+                      <a href={`/${locale}/platform/tiktok-dp`} className="flex items-start gap-3 p-3 hover:bg-white/5 rounded-xl transition-colors group/item focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500" role="menuitem">
+                        <div className="p-2 bg-gray-500/10 text-gray-300 rounded-lg border border-white/5 group-hover/item:bg-gray-200 group-hover/item:text-black transition-colors shadow-lg" aria-hidden="true"><ImageIcon className="w-5 h-5" /></div>
+                        <div>
+                          <div className="text-sm font-bold text-white mb-0.5 group-hover/item:text-blue-400 transition-colors">TikTok DP</div>
+                          <div className="text-xs text-gray-400">TikTok profillerini indir.</div>
+                        </div>
+                      </a>
+                      <a href={`/${locale}/platform/twitter-dp`} className="flex items-start gap-3 p-3 hover:bg-white/5 rounded-xl transition-colors group/item focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500" role="menuitem">
+                        <div className="p-2 bg-sky-500/10 text-sky-400 rounded-lg group-hover/item:bg-sky-500 group-hover/item:text-white transition-colors shadow-lg" aria-hidden="true"><ImageIcon className="w-5 h-5" /></div>
+                        <div>
+                          <div className="text-sm font-bold text-white mb-0.5 group-hover/item:text-blue-400 transition-colors">X (Twitter) DP</div>
+                          <div className="text-xs text-gray-400">Twitter PP'lerini kaydet.</div>
+                        </div>
+                      </a>
+                    </div>
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -214,6 +240,11 @@ export function Header() {
                 <a href={`/${locale}/platform/tiktok-photo`} className="flex items-center gap-3 p-3 bg-white/5 rounded-xl text-white font-medium active:scale-95 transition-transform focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"><Download className="w-5 h-5 text-gray-300" aria-hidden="true" /> TikTok Fotoğraf</a>
                 <a href={`/${locale}/platform/facebook-photo`} className="flex items-center gap-3 p-3 bg-white/5 rounded-xl text-white font-medium active:scale-95 transition-transform focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"><ImageIcon className="w-5 h-5 text-blue-500" aria-hidden="true" /> Facebook Fotoğraf</a>
                 <a href={`/${locale}/platform/twitter-photo`} className="flex items-center gap-3 p-3 bg-white/5 rounded-xl text-white font-medium active:scale-95 transition-transform focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"><ImageIcon className="w-5 h-5 text-sky-400" aria-hidden="true" /> X (Twitter) Fotoğraf</a>
+
+                <span className="text-xs font-bold text-gray-500 uppercase tracking-wider mt-4 mb-2">Profil (DP) Araçları</span>
+                <a href={`/${locale}/platform/instagram-dp`} className="flex items-center gap-3 p-3 bg-white/5 rounded-xl text-white font-medium active:scale-95 transition-transform focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"><ImageIcon className="w-5 h-5 text-pink-500" aria-hidden="true" /> Instagram DP Büyütme</a>
+                <a href={`/${locale}/platform/tiktok-dp`} className="flex items-center gap-3 p-3 bg-white/5 rounded-xl text-white font-medium active:scale-95 transition-transform focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"><ImageIcon className="w-5 h-5 text-gray-300" aria-hidden="true" /> TikTok DP İndirici</a>
+                <a href={`/${locale}/platform/twitter-dp`} className="flex items-center gap-3 p-3 bg-white/5 rounded-xl text-white font-medium active:scale-95 transition-transform focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"><ImageIcon className="w-5 h-5 text-sky-400" aria-hidden="true" /> X (Twitter) DP İndirici</a>
 
                 <div className="w-full h-px bg-white/10 my-2" aria-hidden="true"></div>
                 <a href={`/${locale}/tools`} className="flex items-center gap-3 p-3 bg-blue-600/20 border border-blue-500/30 rounded-xl text-blue-400 font-bold active:scale-95 transition-transform focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"><LayoutGrid className="w-5 h-5" aria-hidden="true" /> Tüm Araçları Keşfet</a>

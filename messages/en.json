@@ -129,7 +129,16 @@
     "facebook-photoStats": "100K+ Daily Downloads",
     "twitter-photoTitle": "X (Twitter) Photo Downloader",
     "twitter-photoDesc": "Download images and pictures from X (Twitter) directly without any quality loss.",
-    "twitter-photoStats": "50K+ Daily Downloads"
+    "twitter-photoStats": "50K+ Daily Downloads",
+    "instagram-dpTitle": "Instagram Profile Picture (DP) Viewer",
+    "instagram-dpDesc": "View and download Instagram profile pictures (DP) in full original HD resolution anonymously.",
+    "instagram-dpStats": "400K+ Daily Requests",
+    "tiktok-dpTitle": "TikTok Profile Picture (DP) Viewer",
+    "tiktok-dpDesc": "Download TikTok user profile pictures in the highest quality and original size.",
+    "tiktok-dpStats": "150K+ Daily Requests",
+    "twitter-dpTitle": "X (Twitter) Profile Picture Downloader",
+    "twitter-dpDesc": "Enlarge and save Twitter (X) profile pictures in full resolution.",
+    "twitter-dpStats": "80K+ Daily Requests"
   },
   "Converter": {
     "placeholder": "Paste video link here (YouTube, TikTok, Facebook...)",
