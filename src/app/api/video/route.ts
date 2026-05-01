@@ -140,8 +140,43 @@ export async function POST(req: Request) {
             }
         }
 
-        // INSTAGRAM FOTO / FACEBOOK FOTO (Basit geri dönüş)
-        if (platform === 'instagram-photo' || platform === 'instagram-dp' || platform === 'facebook-photo') {
+        // INSTAGRAM DP - API YÖNTEMİ
+        if (platform === 'instagram-dp') {
+            try {
+                let username = url;
+                if (username.includes('instagram.com')) {
+                    const match = username.match(/instagram\.com\/([^/?]+)/);
+                    if (match) username = match[1];
+                }
+                username = username.replace('@', '').trim();
+
+                const igRes = await fetch(`https://www.instagram.com/api/v1/users/web_profile_info/?username=${username}`, {
+                    headers: {
+                        'x-ig-app-id': '936619743392459',
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
+                        'sec-fetch-dest': 'empty',
+                        'sec-fetch-mode': 'cors',
+                        'sec-fetch-site': 'same-origin'
+                    }
+                });
+
+                const data = await igRes.json();
+                const hdUrl = data?.data?.user?.profile_pic_url_hd;
+
+                if (hdUrl) {
+                    return NextResponse.json({
+                        download_url: hdUrl
+                    });
+                } else {
+                    throw new Error("Profil bulunamadı veya gizli.");
+                }
+            } catch (err: any) {
+                return NextResponse.json({ error: "Fotoğraf alınamadı: " + err.message }, { status: 500 });
+            }
+        }
+
+        // INSTAGRAM FOTO / FACEBOOK FOTO
+        if (platform === 'instagram-photo' || platform === 'facebook-photo') {
             return NextResponse.json({ error: "Fotoğraf indirme şu an güncelleniyor. Lütfen video indiriciyi kullanın." }, { status: 400 });
         }
 
