@@ -13,24 +13,22 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
 
   return (
     <div className="flex flex-col flex-1 items-center justify-center font-sans w-full overflow-hidden">
-
-      {/* Hero Section (SaveFrom Tarzı) */}
       <main className="relative flex flex-1 w-full flex-col items-center justify-center pt-28 pb-16 px-4 sm:px-8 bg-gradient-to-b from-[#0A0A0C] to-[#0F0F13]">
         {/* Glow Effects */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-64 bg-blue-600/10 rounded-[100%] blur-[100px] pointer-events-none"></div>
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-64 bg-blue-600/10 rounded-[100%] blur-[100px] pointer-events-none" aria-hidden="true"></div>
 
         {/* Üst Reklam Alanı (Header Banner) */}
-        <div className="w-full max-w-[728px] h-[90px] bg-[#1C1C1E] border border-white/10 border-dashed rounded-xl hidden md:flex items-center justify-center text-gray-500 mb-8 relative group shadow-lg z-10">
-          <span className="absolute top-2 left-2 text-[10px] uppercase tracking-wider opacity-50 font-bold">Reklam</span>
+        <aside className="w-full max-w-[728px] h-[90px] bg-[#1C1C1E] border border-white/10 border-dashed rounded-xl hidden md:flex items-center justify-center text-gray-500 mb-8 relative group shadow-lg z-10" aria-label="Header Advertisement">
+          <span className="absolute top-2 left-2 text-[10px] uppercase tracking-wider opacity-50 font-bold" aria-hidden="true">Reklam</span>
           <span className="font-medium group-hover:text-blue-400 transition-colors">728x90 Header Banner</span>
-        </div>
-        <div className="w-full max-w-[320px] h-[100px] bg-[#1C1C1E] border border-white/10 border-dashed rounded-xl flex md:hidden items-center justify-center text-gray-500 mb-8 relative group shadow-lg z-10">
-          <span className="absolute top-2 left-2 text-[10px] uppercase tracking-wider opacity-50 font-bold">Reklam</span>
+        </aside>
+        <aside className="w-full max-w-[320px] h-[100px] bg-[#1C1C1E] border border-white/10 border-dashed rounded-xl flex md:hidden items-center justify-center text-gray-500 mb-8 relative group shadow-lg z-10" aria-label="Mobile Header Advertisement">
+          <span className="absolute top-2 left-2 text-[10px] uppercase tracking-wider opacity-50 font-bold" aria-hidden="true">Reklam</span>
           <span className="font-medium group-hover:text-blue-400 transition-colors">320x100 Mobil Banner</span>
-        </div>
+        </aside>
 
         {/* Başlık ve Açıklama */}
-        <div className="relative z-10 mb-8 max-w-4xl mx-auto text-center">
+        <header className="relative z-10 mb-8 max-w-4xl mx-auto text-center">
           <h1 className="text-5xl sm:text-6xl md:text-7xl font-extrabold tracking-tight mb-6 leading-tight">
             <span className="bg-clip-text text-transparent bg-gradient-to-b from-white to-gray-400">
               {t('title')}
@@ -39,65 +37,54 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           <p className="text-lg sm:text-xl text-gray-400 leading-relaxed max-w-2xl mx-auto">
             {t('description')}
           </p>
-        </div>
+        </header>
 
         {/* 3 Kolonlu Ana Yapı: Sol Reklam | Dönüştürücü | Sağ Reklam */}
-        <div className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row gap-8 items-start justify-center relative z-10">
+        <section className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row gap-8 items-start justify-center relative z-10" aria-label="Converter Tool Area">
 
           {/* Sol Sticky Sidebar Reklamı */}
-          <div className="hidden lg:flex flex-col gap-6 sticky top-28 w-[160px] xl:w-[300px]">
+          <aside className="hidden lg:flex flex-col gap-6 sticky top-28 w-[160px] xl:w-[300px]" aria-label="Left Sidebar Advertisement">
             <div className="w-full h-[600px] xl:h-[250px] bg-[#1C1C1E] border border-white/10 border-dashed rounded-xl flex items-center justify-center text-gray-500 relative group shadow-lg">
-              <span className="absolute top-2 left-2 text-[10px] uppercase tracking-wider opacity-50 font-bold">Reklam</span>
+              <span className="absolute top-2 left-2 text-[10px] uppercase tracking-wider opacity-50 font-bold" aria-hidden="true">Reklam</span>
               <span className="font-medium group-hover:text-blue-400 transition-colors text-center px-2">Sol Sidebar</span>
             </div>
-          </div>
+          </aside>
 
           {/* Ana Dönüştürücü Form */}
-          <div className="flex-1 w-full max-w-3xl mx-auto">
+          <article className="flex-1 w-full max-w-3xl mx-auto">
             <ConverterForm />
 
             {/* Form Altı Native Reklam */}
-            <div className="w-full h-[250px] bg-[#1C1C1E] border border-white/10 border-dashed rounded-xl flex items-center justify-center text-gray-500 mt-8 relative group shadow-lg">
-              <span className="absolute top-2 left-2 text-[10px] uppercase tracking-wider opacity-50 font-bold">Sponsorlu</span>
+            <aside className="w-full h-[250px] bg-[#1C1C1E] border border-white/10 border-dashed rounded-xl flex items-center justify-center text-gray-500 mt-8 relative group shadow-lg" aria-label="In-Feed Advertisement">
+              <span className="absolute top-2 left-2 text-[10px] uppercase tracking-wider opacity-50 font-bold" aria-hidden="true">Sponsorlu</span>
               <span className="font-medium group-hover:text-blue-400 transition-colors">Native In-Feed Reklam Alanı</span>
-            </div>
-          </div>
+            </aside>
+          </article>
 
           {/* Sağ Sticky Sidebar Reklamı */}
-          <div className="hidden lg:flex flex-col gap-6 sticky top-28 w-[160px] xl:w-[300px]">
+          <aside className="hidden lg:flex flex-col gap-6 sticky top-28 w-[160px] xl:w-[300px]" aria-label="Right Sidebar Advertisement">
             <div className="w-full h-[600px] xl:h-[250px] bg-[#1C1C1E] border border-white/10 border-dashed rounded-xl flex items-center justify-center text-gray-500 relative group shadow-lg">
-              <span className="absolute top-2 left-2 text-[10px] uppercase tracking-wider opacity-50 font-bold">Reklam</span>
+              <span className="absolute top-2 left-2 text-[10px] uppercase tracking-wider opacity-50 font-bold" aria-hidden="true">Reklam</span>
               <span className="font-medium group-hover:text-blue-400 transition-colors text-center px-2">Sağ Sidebar</span>
             </div>
-          </div>
+          </aside>
 
-        </div>
+        </section>
 
         {/* Alt Banner (Footer Billboard) */}
-        <div className="w-full max-w-[970px] h-[250px] bg-[#1C1C1E] border border-white/10 border-dashed rounded-xl hidden lg:flex items-center justify-center text-gray-500 mt-12 relative group shadow-lg z-10">
-          <span className="absolute top-2 left-2 text-[10px] uppercase tracking-wider opacity-50 font-bold">Reklam</span>
+        <aside className="w-full max-w-[970px] h-[250px] bg-[#1C1C1E] border border-white/10 border-dashed rounded-xl hidden lg:flex items-center justify-center text-gray-500 mt-12 relative group shadow-lg z-10" aria-label="Footer Advertisement">
+          <span className="absolute top-2 left-2 text-[10px] uppercase tracking-wider opacity-50 font-bold" aria-hidden="true">Reklam</span>
           <span className="font-medium group-hover:text-blue-400 transition-colors">970x250 Footer Billboard</span>
-        </div>
+        </aside>
       </main>
 
-      {/* Platform Summary Section */}
       <PlatformSummary />
-
-      {/* How it works Section */}
       <HowItWorksSection />
-
-      {/* Stats Section */}
       <StatsSection />
-
-      {/* Features Section */}
-      <div id="features" className="w-full">
+      <section id="features" className="w-full" aria-label="Features Section">
         <FeaturesSection />
-      </div>
-
-      {/* Testimonials Section */}
+      </section>
       <TestimonialsSection />
-
-      {/* FAQ Section */}
       <FAQSection />
     </div>
   );
