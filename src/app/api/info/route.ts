@@ -106,16 +106,21 @@ export async function POST(req: Request) {
                 const res = await fetch(apiUrl, options);
                 const data = await res.json();
 
+                if (res.status === 401 || res.status === 403 || data.message === "You are not subscribed to this API.") {
+                    throw new Error("RapidAPI aboneliği aktif değil. Lütfen yöneticinizle iletişime geçin.");
+                }
+
                 if (data && data.title) {
                     return NextResponse.json({
                         title: data.title || "Sosyal Medya İçeriği",
                         thumbnail: data.picture || (platform.includes('instagram') ? "https://logo.clearbit.com/www.instagram.com?size=256" : "https://logo.clearbit.com/www.facebook.com?size=256")
                     });
                 } else {
-                    throw new Error("İçerik gizli veya bulunamadı.");
+                    // API'den gelen gerçek hatayı yakalayalım
+                    throw new Error(data.message || "İçerik gizli veya bulunamadı.");
                 }
             } catch (err: any) {
-                return NextResponse.json({ error: `API Hatası: ` + err.message }, { status: 500 });
+                return NextResponse.json({ error: err.message }, { status: 500 });
             }
         }
 

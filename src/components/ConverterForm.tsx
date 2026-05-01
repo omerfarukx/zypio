@@ -222,8 +222,14 @@ export function ConverterForm({ activeContext }: { activeContext?: string }) {
                   </div>
                   <Input
                     type="url"
-                    placeholder="Video URL'sini buraya yapıştır..."
-                    className="pl-12 bg-[#0F0F13] border-white/10 text-white h-14 rounded-2xl text-lg focus-visible:ring-blue-500"
+                    placeholder={
+                      activeContext === "instagram-photo" ? "https://www.instagram.com/p/..." :
+                        activeContext === "tiktok-photo" ? "https://www.tiktok.com/@user/photo/..." :
+                          activeContext === "twitter-photo" ? "https://x.com/user/status/..." :
+                            activeContext === "youtube" ? "https://www.youtube.com/watch?v=..." :
+                              "Video veya görsel bağlantısını yapıştırın..."
+                    }
+                    className="pl-12 bg-[#0F0F13] border-white/10 text-white h-14 rounded-2xl text-lg focus-visible:ring-blue-500 placeholder:text-gray-600"
                     value={url}
                     onChange={(e) => setUrl(e.target.value)}
                     required
