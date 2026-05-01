@@ -119,32 +119,46 @@ export async function POST(req: Request) {
                 const res = await fetch(apiUrl, options);
                 const data = await res.json();
 
-                if (data && data.links && data.links.length > 0) {
-                    // Genellikle en iyi kalite linki ilk sırada veya hd olanıdır
-                    let bestLink = data.links[0].link;
+                if (res.status === 401 || res.status === 403 || data.message === "You are not subscribed to this API.") {
+                    throw new Error("RapidAPI aboneliği aktif değil. Lütfen yöneticinizle iletişime geçin.");
+                }
 
-                    // Fotoğraf isteniyorsa ve carousel/resim linkleri varsa
+                // RapidAPI'nin yeni JSON yapısı: data.body.videos[] (videolar/resimler için) veya data.body.images[]
+                // Attığın resimdeki yapıya göre içerikler data.body.videos veya data.contents.videos dizisinde dönüyor.
+
+                // Resimdeki "contents" veya "body" objesine göre güvenli arama yapıyoruz:
+                const contents = data.body || data.contents || data;
+                let itemsList: any[] = [];
+
+                if (contents.videos && Array.isArray(contents.videos)) itemsList = [...itemsList, ...contents.videos];
+                if (contents.images && Array.isArray(contents.images)) itemsList = [...itemsList, ...contents.images];
+                if (contents.links && Array.isArray(contents.links)) itemsList = [...itemsList, ...contents.links];
+
+                if (itemsList.length > 0) {
+                    let bestLink = itemsList[0].url || itemsList[0].link || itemsList[0];
+
+                    // Eğer spesifik kalite/format isteniyorsa (RapidAPI genelde hd/sd veya 1080p etiketleriyle döner)
                     if (platform.includes('photo')) {
-                        const imageLinks = data.links.filter((l: any) => l.type === 'image' || l.link.includes('.jpg') || l.link.includes('.png'));
-                        if (imageLinks.length > 0) {
-                            bestLink = imageLinks[0].link;
-                        }
+                        const imageLinks = itemsList.filter((l: any) => l.type === 'image' || (l.url && l.url.includes('.jpg')));
+                        if (imageLinks.length > 0) bestLink = imageLinks[0].url || imageLinks[0].link;
                     } else {
-                        // Video isteniyorsa mp4 olanı bul
-                        const videoLinks = data.links.filter((l: any) => l.type === 'video' || l.link.includes('.mp4'));
-                        if (videoLinks.length > 0) {
-                            bestLink = videoLinks[0].link;
-                        }
+                        const hdLinks = itemsList.filter((l: any) => l.label === 'HD' || l.label === '1080p' || l.quality === 'hd');
+                        if (hdLinks.length > 0) bestLink = hdLinks[0].url || hdLinks[0].link;
+                    }
+
+                    // Eğer obje değil direkt string URL döndüyse onu al
+                    if (typeof bestLink === 'object' && bestLink !== null) {
+                        bestLink = bestLink.url || bestLink.link;
                     }
 
                     return NextResponse.json({
                         download_url: bestLink
                     });
                 } else {
-                    throw new Error("İçerik indirilemedi veya gizli profil.");
+                    throw new Error(data.message || "İçerik indirilemedi veya gizli profil.");
                 }
             } catch (err: any) {
-                return NextResponse.json({ error: `API Hatası: ` + err.message }, { status: 500 });
+                return NextResponse.json({ error: err.message }, { status: 500 });
             }
         }
 
