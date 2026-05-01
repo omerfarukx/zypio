@@ -25,7 +25,6 @@
     "react-icons": "^5.6.0",
     "tailwind-merge": "^3.5.0",
     "uuid": "^14.0.0",
-    "youtube-dl-exec": "^3.1.5",
     "yt-streamer": "^6.7.23",
     "ytdl-core-enhanced": "^2.3.0"
   },
