@@ -1,8 +1,25 @@
 {
+  "SEO": {
+    "title": "Zypio - Free Video and Media Downloader",
+    "description": "Download high quality, free and watermark-free videos and media from YouTube, TikTok, Instagram and more. Complete your PDF, MP4, MP3 conversions in seconds.",
+    "keywords": "video downloader, youtube converter, tiktok downloader, instagram reels download, watermark free video, pdf converter, zypio, mp4 download",
+    "ogTitle": "Zypio - Fast and Free Media Downloader",
+    "ogDesc": "Instantly download high quality videos and images from all social media platforms. Unlimited and completely free.",
+    "twTitle": "Zypio - Free Video and Media Downloader",
+    "twDesc": "Download YouTube, TikTok, Instagram videos and images in high quality with one click."
+  },
   "Index": {
     "title": "Free Video and File Converter",
     "description": "Convert your videos and files at high speed, securely, and ad-free. Convert all your files to any format you want safely, unlimitedly and completely free of charge.",
-    "systemStatus": "System Running at 100% Performance"
+    "systemStatus": "System Running at 100% Performance",
+    "adHeader": "728x90 Header Banner",
+    "adMobile": "320x100 Mobile Banner",
+    "adLeft": "Left Sidebar",
+    "adRight": "Right Sidebar",
+    "adNative": "Native In-Feed Ad Space",
+    "adFooter": "970x250 Footer Billboard",
+    "adLabel": "Advertisement",
+    "sponsored": "Sponsored"
   },
   "Header": {
     "tools": "Tools",

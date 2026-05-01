@@ -1,8 +1,25 @@
 {
+  "SEO": {
+    "title": "Zypio - Ücretsiz Video ve Görsel İndirici",
+    "description": "YouTube, TikTok, Instagram ve daha fazlasından yüksek kalitede, ücretsiz ve filigransız video/görsel indirin. Dönüştürme araçlarıyla PDF, MP4, MP3 işlemlerini saniyeler içinde tamamlayın.",
+    "keywords": "video indir, youtube dönüştürücü, tiktok indirici, instagram reels indir, filigransız video, pdf dönüştürücü, zypio, mp4 indir",
+    "ogTitle": "Zypio - Hızlı ve Ücretsiz Medya İndirici",
+    "ogDesc": "Tüm sosyal medya platformlarından anında yüksek kaliteli video ve görsel indirin. Sınırsız ve tamamen ücretsiz.",
+    "twTitle": "Zypio - Ücretsiz Video ve Görsel İndirici",
+    "twDesc": "YouTube, TikTok, Instagram videolarını ve görsellerini tek tıkla yüksek kalitede indirin."
+  },
   "Index": {
     "title": "Ücretsiz Video ve Dosya Dönüştürücü",
     "description": "Video ve dosyalarınızı yüksek hızda, güvenle ve reklamsız dönüştürün. Tüm dosyalarınızı güvenli, sınırsız ve tamamen ücretsiz şekilde dilediğiniz formata çevirin.",
-    "systemStatus": "Sistem %100 Performansla Çalışıyor"
+    "systemStatus": "Sistem %100 Performansla Çalışıyor",
+    "adHeader": "728x90 Header Banner",
+    "adMobile": "320x100 Mobil Banner",
+    "adLeft": "Sol Sidebar",
+    "adRight": "Sağ Sidebar",
+    "adNative": "Native In-Feed Reklam Alanı",
+    "adFooter": "970x250 Footer Billboard",
+    "adLabel": "Reklam",
+    "sponsored": "Sponsorlu"
   },
   "Header": {
     "tools": "Araçlar",
