@@ -109,7 +109,14 @@ export async function POST(req: Request) {
                         'x-rapidapi-host': 'social-media-video-downloader.p.rapidapi.com'
                     }
                 };
-                const res = await fetch(`https://social-media-video-downloader.p.rapidapi.com/smvd/get/all?url=${encodeURIComponent(url)}`, options);
+
+                // Yeni endpoint yapısına göre güncellendi
+                const encodedUrl = encodeURIComponent(url);
+                const apiUrl = platform.includes('instagram')
+                    ? `https://social-media-video-downloader.p.rapidapi.com/smvd/get/instagram?url=${encodedUrl}`
+                    : `https://social-media-video-downloader.p.rapidapi.com/smvd/get/facebook?url=${encodedUrl}`;
+
+                const res = await fetch(apiUrl, options);
                 const data = await res.json();
 
                 if (data && data.links && data.links.length > 0) {
