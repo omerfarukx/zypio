@@ -45,7 +45,7 @@ export async function POST(req: Request) {
                 let username = url;
                 if (url.includes('twitter.com') || url.includes('x.com')) {
                     const parts = url.split('/');
-                    username = parts[parts.findIndex(p => p === 'twitter.com' || p === 'x.com') + 1];
+                    username = parts[parts.findIndex((p: string) => p === 'twitter.com' || p === 'x.com') + 1];
                     username = username.split('?')[0];
                 }
                 username = username.replace('@', '');
