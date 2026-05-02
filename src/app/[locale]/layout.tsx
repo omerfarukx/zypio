@@ -38,7 +38,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     creator: "Zypio",
     publisher: "Zypio",
     verification: {
-      google: "GOOGLE_SEARCH_CONSOLE_VERIFICATION_CODE_HERE",
+      google: "T4syyRQhYHMjQFgx6b9xmS43ezw-v3NozNz-2c_Az2A",
     },
     formatDetection: {
       email: false,
