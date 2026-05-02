@@ -5,6 +5,9 @@ import { platforms } from '@/lib/platforms';
 import { Metadata } from 'next';
 import { CheckCircle } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
+import Ad728x90 from '@/components/Ad728x90';
+import AdNative from '@/components/AdNative';
+import AdBanner from '@/components/AdBanner';
 
 export async function generateMetadata({
     params
@@ -100,7 +103,9 @@ export default async function PlatformPage({
                             {localizedStats}
                         </div>
 
-                        <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight mb-6 leading-tight">
+                        <AdBanner />
+
+                        <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight mb-6 leading-tight mt-6">
                             <span className="bg-clip-text text-transparent bg-gradient-to-b from-white to-gray-400">
                                 {localizedTitle}
                             </span>
@@ -112,12 +117,14 @@ export default async function PlatformPage({
                     </header>
 
                     {/* Converter Form UI */}
-                    <section className="w-full relative z-10 mb-20" aria-label="Converter Form">
+                    <section className="w-full relative z-10 mb-8" aria-label="Converter Form">
                         <ConverterForm activeContext={platform} />
                     </section>
 
+                    <AdNative />
+
                     {/* Usage Instructions / Info Section */}
-                    <section className="bg-[#1C1C1E] rounded-3xl p-8 sm:p-12 border border-white/5 shadow-2xl" aria-label="How to use">
+                    <section className="bg-[#1C1C1E] rounded-3xl p-8 sm:p-12 border border-white/5 shadow-2xl mt-8" aria-label="How to use">
                         <h2 className="text-2xl sm:text-3xl font-bold text-white mb-8 text-center">{locale === 'tr' ? 'Nasıl Kullanılır?' : 'How It Works?'}</h2>
 
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -149,36 +156,11 @@ export default async function PlatformPage({
                 </article>
 
                 {/* Alt Banner (Footer Billboard) */}
-        <aside className="w-full max-w-[970px] h-[250px] hidden lg:flex items-center justify-center mt-12 relative z-50 mx-auto" aria-label="Footer Advertisement">
-          <iframe
-            srcDoc={`
-              <html>
-                <head>
-                  <style>body{margin:0;padding:0;overflow:hidden;background:transparent;}</style>
-                </head>
-                <body>
-                  <script type="text/javascript">
-                    atOptions = {
-                      'key' : 'b41bc19e3b6a9e1d88a4e8d2e8b248a3',
-                      'format' : 'iframe',
-                      'height' : 250,
-                      'width' : 970,
-                      'params' : {}
-                    };
-                  </script>
-                  <script type="text/javascript" src="https://www.highperformanceformat.com/b41bc19e3b6a9e1d88a4e8d2e8b248a3/invoke.js"></script>
-                </body>
-              </html>
-            `}
-            width="970"
-            height="250"
-            frameBorder="0"
-            scrolling="no"
-            className="w-[970px] h-[250px] bg-[#1C1C1E] border border-dashed border-white/10 rounded-xl mx-auto block"
-            title="Advertisement 970x250"
-          />
-        </aside>
-      </main>
+                <aside className="w-full hidden lg:flex items-center justify-center mt-12 relative z-50 mx-auto" aria-label="Footer Advertisement">
+                    <Ad728x90 />
+                </aside>
+            </main>
+            <AdNative />
         </div>
     );
 }

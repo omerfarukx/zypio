@@ -9,6 +9,7 @@ import { TestimonialsSection } from '@/components/TestimonialsSection';
 import Ad728x90 from '@/components/Ad728x90';
 import Ad160x600 from '@/components/Ad160x600';
 import AdNative from '@/components/AdNative';
+import AdBanner from '@/components/AdBanner';
 
 export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -41,6 +42,8 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           </p>
         </header>
 
+        <AdBanner />
+
         {/* 3 Kolonlu Ana Yapı: Sol Reklam | Dönüştürücü | Sağ Reklam */}
         <section className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row gap-8 items-start justify-center relative z-10" aria-label="Converter Tool Area">
 
@@ -67,45 +70,26 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         </section>
 
         {/* Alt Banner (Footer Billboard) */}
-        <aside className="w-full max-w-[970px] h-[250px] hidden lg:flex items-center justify-center mt-12 relative z-50 mx-auto" aria-label="Footer Advertisement">
-          <iframe
-            srcDoc={`
-              <html>
-                <head>
-                  <style>body{margin:0;padding:0;overflow:hidden;background:transparent;}</style>
-                </head>
-                <body>
-                  <script type="text/javascript">
-                    atOptions = {
-                      'key' : 'b41bc19e3b6a9e1d88a4e8d2e8b248a3',
-                      'format' : 'iframe',
-                      'height' : 250,
-                      'width' : 970,
-                      'params' : {}
-                    };
-                  </script>
-                  <script type="text/javascript" src="https://www.highperformanceformat.com/b41bc19e3b6a9e1d88a4e8d2e8b248a3/invoke.js"></script>
-                </body>
-              </html>
-            `}
-            width="970"
-            height="250"
-            frameBorder="0"
-            scrolling="no"
-            className="w-[970px] h-[250px] bg-[#1C1C1E] border border-dashed border-white/10 rounded-xl mx-auto block"
-            title="Advertisement 970x250"
-          />
+        <aside className="w-full hidden lg:flex items-center justify-center mt-12 relative z-50 mx-auto" aria-label="Footer Advertisement">
+          <Ad728x90 />
         </aside>
       </main>
 
+      <AdNative />
       <PlatformSummary />
+      <Ad728x90 />
       <HowItWorksSection />
+      <AdNative />
       <StatsSection />
+      <Ad728x90 />
       <section id="features" className="w-full" aria-label="Features Section">
         <FeaturesSection />
       </section>
+      <AdNative />
       <TestimonialsSection />
+      <Ad728x90 />
       <FAQSection />
+      <AdNative />
     </div>
   );
 }
