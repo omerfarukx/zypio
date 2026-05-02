@@ -290,10 +290,10 @@ export function ConverterForm({ activeContext }: { activeContext?: string }) {
               {/* Thumbnail */}
               <div className="w-full md:w-48 aspect-video rounded-xl overflow-hidden bg-black relative flex-shrink-0 border border-white/5 flex items-center justify-center">
                 <Image
-                  src={videoInfo.thumbnail.includes("logo.clearbit.com") ? videoInfo.thumbnail : `/api/proxy-image?url=${encodeURIComponent(videoInfo.thumbnail)}`}
-                  alt={videoInfo.title}
+                  src={videoInfo?.thumbnail?.includes("logo.clearbit.com") ? videoInfo.thumbnail : `/api/proxy-image?url=${encodeURIComponent(videoInfo?.thumbnail || '')}`}
+                  alt={videoInfo?.title || 'Video'}
                   fill
-                  className={`${videoInfo.thumbnail.includes("logo.clearbit.com") ? "object-contain p-4 opacity-50" : "object-cover"}`}
+                  className={`${videoInfo?.thumbnail?.includes("logo.clearbit.com") ? "object-contain p-4 opacity-50" : "object-cover"}`}
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
                     target.src = "https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=600";
@@ -305,8 +305,8 @@ export function ConverterForm({ activeContext }: { activeContext?: string }) {
               {/* Bilgiler ve Butonlar */}
               <div className="flex flex-col justify-between flex-1 min-w-0">
                 <div className="mb-4">
-                  <h3 className="text-lg font-semibold text-white truncate leading-snug mb-1" title={videoInfo.title}>
-                    {videoInfo.title}
+                  <h3 className="text-lg font-semibold text-white truncate leading-snug mb-1" title={videoInfo?.title}>
+                    {videoInfo?.title}
                   </h3>
                   <p className="text-sm text-gray-500 capitalize">
                     Platform: <span className="text-blue-400 font-medium">{platform}</span>
