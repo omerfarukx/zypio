@@ -160,7 +160,6 @@ export default async function PlatformPage({
                     <Ad728x90 />
                 </aside>
             </main>
-            <AdNative />
         </div>
     );
 }
