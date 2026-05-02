@@ -160,6 +160,11 @@ export default async function PlatformPage({
                     <Ad728x90 />
                 </aside>
             </main>
+
+            {/* Sayfa Altı Ekstra Native Reklam - Güvenli Alan */}
+            <div className="w-full max-w-7xl mx-auto px-4 sm:px-8 mb-12">
+                <AdNative />
+            </div>
         </div>
     );
 }

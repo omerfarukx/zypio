@@ -75,7 +75,11 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         </aside>
       </main>
 
-      <AdNative />
+      {/* Sayfa Altı Ekstra Native Reklam - Güvenli Alan */}
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-8 mt-12">
+        <AdNative />
+      </div>
+
       <PlatformSummary />
       <Ad728x90 />
       <HowItWorksSection />
