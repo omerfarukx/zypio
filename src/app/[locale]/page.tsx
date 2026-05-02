@@ -25,9 +25,8 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         <aside className="w-full hidden md:flex items-center justify-center z-10" aria-label="Header Advertisement">
           <Ad728x90 />
         </aside>
-        <aside className="w-full max-w-[320px] h-[100px] bg-[#1C1C1E] border border-white/10 border-dashed rounded-xl flex md:hidden items-center justify-center text-gray-500 mb-8 relative group shadow-lg z-10" aria-label="Mobile Header Advertisement">
-          <span className="absolute top-2 left-2 text-[10px] uppercase tracking-wider opacity-50 font-bold" aria-hidden="true">{t('adLabel')}</span>
-          <span className="font-medium group-hover:text-blue-400 transition-colors">{t('adMobile')}</span>
+        <aside className="w-full max-w-[320px] h-[100px] flex md:hidden items-center justify-center text-gray-500 mb-8 relative group shadow-lg z-10" aria-label="Mobile Header Advertisement">
+          <AdBanner />
         </aside>
 
         {/* Başlık ve Açıklama */}

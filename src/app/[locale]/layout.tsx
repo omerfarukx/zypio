@@ -78,6 +78,15 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
         'max-snippet': -1,
       },
     },
+    icons: {
+      icon: [
+        { url: '/favicon.ico' },
+        { url: '/icon.png', type: 'image/png' },
+      ],
+      apple: [
+        { url: '/apple-icon.png' },
+      ],
+    },
     alternates: {
       canonical: `https://zypio.online/${locale}`,
       languages: {
