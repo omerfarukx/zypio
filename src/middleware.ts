@@ -30,5 +30,5 @@ export default function middleware(req: NextRequest) {
 
 export const config = {
   // API rotalarını da middleware'e dahil et
-  matcher: ['/', '/(tr|en)/:path*', '/api/:path*']
+  matcher: ['/', '/(tr|en)/:path*', '/watch', '/api/:path*']
 };

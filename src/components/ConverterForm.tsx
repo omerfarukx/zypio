@@ -8,8 +8,8 @@ import { Button } from "./ui/button"
 import Image from "next/image"
 import AdBanner from "./AdBanner"
 
-export function ConverterForm({ activeContext }: { activeContext?: string }) {
-  const [url, setUrl] = useState("")
+export function ConverterForm({ activeContext, initialUrl }: { activeContext?: string, initialUrl?: string }) {
+  const [url, setUrl] = useState(initialUrl || "")
   const [platform, setPlatform] = useState<string>("unknown")
   const [format, setFormat] = useState<string>("")
   const [isProcessing, setIsProcessing] = useState(false)
@@ -52,6 +52,30 @@ export function ConverterForm({ activeContext }: { activeContext?: string }) {
       setVideoInfo(null)
     }
   }, [url])
+
+  useEffect(() => {
+    if (initialUrl && url === initialUrl && platform !== "unknown" && !videoInfo && !isProcessing && !error) {
+      const fetchInitialInfo = async () => {
+        setIsProcessing(true)
+        setError("")
+        try {
+          const response = await fetch('/api/info', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ url: initialUrl, platform })
+          })
+          const data = await response.json()
+          if (!response.ok || data.error) throw new Error(data.error || "Video bilgileri alınamadı.")
+          setVideoInfo({ title: data.title, thumbnail: data.thumbnail })
+        } catch (err: any) {
+          setError(err.message)
+        } finally {
+          setIsProcessing(false)
+        }
+      }
+      fetchInitialInfo();
+    }
+  }, [initialUrl, url, platform, videoInfo, isProcessing, error])
 
   // Yeni Adım 1: Analiz Et (Video bilgilerini getir)
   const handleGetInfo = async (e: React.FormEvent) => {
@@ -293,6 +317,7 @@ export function ConverterForm({ activeContext }: { activeContext?: string }) {
                   src={videoInfo?.thumbnail?.includes("logo.clearbit.com") ? videoInfo.thumbnail : `/api/proxy-image?url=${encodeURIComponent(videoInfo?.thumbnail || '')}`}
                   alt={videoInfo?.title || 'Video'}
                   fill
+                  unoptimized={true}
                   className={`${videoInfo?.thumbnail?.includes("logo.clearbit.com") ? "object-contain p-4 opacity-50" : "object-cover"}`}
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
