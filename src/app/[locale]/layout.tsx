@@ -128,14 +128,14 @@ export default async function RootLayout({
           {/* Adsterra Social Bar */}
           <script type='text/javascript' src='//pl29311912.profitablecpmratenetwork.com/82/a3/60/82a360ad42f680ed03447b9f22f5df83.js' async></script>
 
-          {/* Google Analytics Placeholder */}
-          <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+          {/* Google Analytics */}
+          <script async src="https://www.googletagmanager.com/gtag/js?id=G-DCCRH80TXT"></script>
           <script dangerouslySetInnerHTML={{
             __html: `
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
-              gtag('config', 'G-XXXXXXXXXX');
+              gtag('config', 'G-DCCRH80TXT');
             `
           }} />
 
