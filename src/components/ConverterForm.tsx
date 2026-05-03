@@ -260,12 +260,19 @@ export function ConverterForm({ activeContext, initialUrl }: { activeContext?: s
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4"
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-md p-4"
           >
-            <div className="bg-[#1C1C1E] border border-white/10 rounded-3xl p-8 max-w-lg w-full text-center relative overflow-hidden">
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              className="glass-strong rounded-3xl p-8 max-w-lg w-full text-center relative overflow-hidden"
+            >
+              {/* Animated progress bar */}
               <div className="absolute top-0 left-0 w-full h-1 bg-white/5">
                 <motion.div
-                  className="h-full bg-blue-500"
+                  className="h-full bg-gradient-to-r from-blue-500 via-purple-500 to-cyan-500"
                   initial={{ width: 0 }}
                   animate={{ width: `${progress}%` }}
                   transition={{ ease: "linear" }}
@@ -273,11 +280,19 @@ export function ConverterForm({ activeContext, initialUrl }: { activeContext?: s
               </div>
 
               {progress === 100 ? (
-                <div className="w-16 h-16 bg-green-500/20 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ type: "spring", damping: 15 }}
+                  className="w-16 h-16 bg-green-500/20 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6 glow-green"
+                >
                   <Download className="w-8 h-8" />
-                </div>
+                </motion.div>
               ) : (
-                <Loader2 className="w-12 h-12 animate-spin text-blue-500 mx-auto mb-6" />
+                <div className="relative mx-auto mb-6 w-16 h-16 flex items-center justify-center">
+                  <div className="absolute inset-0 rounded-full border-2 border-blue-500/20 animate-pulse"></div>
+                  <Loader2 className="w-10 h-10 animate-spin text-blue-500" />
+                </div>
               )}
 
               <h3 className="text-2xl font-bold text-white mb-2">
@@ -292,21 +307,22 @@ export function ConverterForm({ activeContext, initialUrl }: { activeContext?: s
                 <AdBanner />
               </div>
 
-              {/* Çarpı (Kapat) butonu - Kullanıcı takılırsa çıksın diye */}
+              {/* Çarpı (Kapat) butonu */}
               {progress === 100 && (
-                <button onClick={() => setShowAdLayer(false)} className="mt-6 text-sm text-gray-500 hover:text-white underline underline-offset-4">
+                <button onClick={() => setShowAdLayer(false)} className="mt-6 text-sm text-gray-500 hover:text-white transition-colors underline underline-offset-4">
                   Kapat
                 </button>
               )}
-            </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
 
       <motion.div
-        initial={{ opacity: 0, y: 10 }}
+        initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-[#1C1C1E] rounded-3xl p-6 sm:p-8 border border-white/5 shadow-2xl"
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        className="glass-strong rounded-3xl p-6 sm:p-8 shadow-2xl shimmer gradient-border"
       >
         <form onSubmit={!videoInfo ? handleGetInfo : (e) => e.preventDefault()} className="flex flex-col gap-6">
 
@@ -353,14 +369,14 @@ export function ConverterForm({ activeContext, initialUrl }: { activeContext?: s
                 <Button
                   type="submit"
                   disabled={isProcessing || !url || platform === "unknown"}
-                  className="sm:w-auto w-full h-14 px-8 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-medium text-lg group transition-all"
+                  className="sm:w-auto w-full h-14 px-8 rounded-2xl bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold text-lg group transition-all shadow-lg shadow-blue-600/20 hover:shadow-blue-500/30 active:scale-[0.98]"
                 >
                   {isProcessing ? (
                     <Loader2 className="w-6 h-6 animate-spin" />
                   ) : (
                     <>
                       Analiz Et
-                      <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                      <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1.5 transition-transform duration-300" />
                     </>
                   )}
                 </Button>
@@ -453,7 +469,7 @@ export function ConverterForm({ activeContext, initialUrl }: { activeContext?: s
                     <Button
                       onClick={handleDownload}
                       disabled={isProcessing || (galleryImages.length > 0 && selectedImages.size === 0)}
-                      className="w-full bg-green-600 hover:bg-green-500 shadow-green-600/20 shadow-lg h-12"
+                      className="w-full bg-gradient-to-r from-green-600 to-emerald-500 hover:from-green-500 hover:to-emerald-400 shadow-green-600/20 shadow-lg h-12 active:scale-[0.98] transition-all"
                     >
                       <Download className="w-5 h-5 mr-2" />
                       {galleryImages.length > 0
