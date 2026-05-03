@@ -177,7 +177,7 @@ export function ConverterForm({ activeContext, initialUrl }: { activeContext?: s
         await new Promise(r => setTimeout(r, 1500))
       }
     } catch (err: any) {
-      setError("İndirme bağlantısı alınırken koptuk: " + err.message)
+      setError("İndirme bağlantısı alınırken bir sorun oluştu: " + err.message)
       setIsProcessing(false)
       setShowAdLayer(false)
     }
@@ -214,7 +214,7 @@ export function ConverterForm({ activeContext, initialUrl }: { activeContext?: s
               )}
 
               <h3 className="text-2xl font-bold text-white mb-2">
-                {progress === 100 ? "İndirme Başlıyor!" : "Video Hazırlanıyor..."}
+                {progress === 100 ? "İndirme Başlıyor!" : format.startsWith("mp3") ? "Ses Dosyası Hazırlanıyor..." : "Video Hazırlanıyor..."}
               </h3>
               <p className="text-gray-400 mb-4">
                 {progress === 100 ? "Dosyanız kaydediliyor..." : `Lütfen bekleyin... ${Math.round(progress)}%`}
@@ -347,12 +347,18 @@ export function ConverterForm({ activeContext, initialUrl }: { activeContext?: s
                     disabled={isProcessing}
                   >
                     {platform === "youtube" ? (
+                      <>
                       <optgroup label="Video (MP4)">
                         <option value="1080">Ultra Kalite (1080p+)</option>
                         <option value="720">Yüksek Kalite (720p)</option>
                         <option value="480">Orta Kalite (480p)</option>
                         <option value="360">Düşük Kalite (360p)</option>
                       </optgroup>
+                      <optgroup label="Ses (MP3)">
+                        <option value="mp3">MP3 — Standart (128kbps)</option>
+                        <option value="mp3320">MP3 — Yüksek Kalite (320kbps)</option>
+                      </optgroup>
+                      </>
                     ) : platform === "tiktok" ? (
                       <optgroup label="Video">
                         <option value="watermark_free">Ultra Kalite (Filigransız)</option>

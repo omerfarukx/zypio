@@ -120,7 +120,7 @@ export default async function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-[#0F0F13] text-white selection:bg-blue-500/30 selection:text-blue-200">
         <NextIntlClientProvider messages={messages}>
-          {/* Adsterra Reklamları - Webview içindeyse Popunder yükleme ki sayfa çökmesin amk! */}
+          {/* Adsterra Reklamları - Webview içindeyse Popunder yükleme (uygulama içi tarayıcılarda uyumluluk sorunu yaratabilir) */}
           {!isWebview && (
             <script type='text/javascript' src='//pl29311910.profitablecpmratenetwork.com/a1/d4/d3/a1d4d3661113c56f73f7a0dfca336e67.js' async></script>
           )}

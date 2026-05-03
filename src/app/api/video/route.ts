@@ -87,7 +87,7 @@ export async function POST(req: Request) {
                     throw new Error("TikTok içeriği gizli veya silinmiş olabilir.");
                 }
             } catch (err: any) {
-                return NextResponse.json({ error: 'TikTok sunucularına bağlanırken patladık: ' + err.message }, { status: 500 });
+                return NextResponse.json({ error: 'TikTok sunucularına bağlanırken bir hata oluştu: ' + err.message }, { status: 500 });
             }
         }
 
@@ -136,7 +136,7 @@ export async function POST(req: Request) {
                     throw new Error("İçerik gizli, yaş kısıtlaması var veya desteklenmiyor.");
                 }
             } catch (err: any) {
-                return NextResponse.json({ error: `Servis çöktü: ` + err.message }, { status: 500 });
+                return NextResponse.json({ error: 'Servis geçici olarak kullanılamıyor: ' + err.message }, { status: 500 });
             }
         }
 

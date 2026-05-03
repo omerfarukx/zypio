@@ -135,7 +135,7 @@ export function Header() {
                         <div className="p-2 bg-gray-500/10 text-gray-300 rounded-lg border border-white/5 group-hover/item:bg-gray-200 group-hover/item:text-black transition-colors shadow-lg" aria-hidden="true"><Download className="w-5 h-5" /></div>
                         <div>
                           <div className="text-sm font-bold text-white mb-0.5 group-hover/item:text-blue-400 transition-colors">TikTok Fotoğraf</div>
-                          <div className="text-xs text-gray-400">Kaydırmalı resimleri sömür.</div>
+                          <div className="text-xs text-gray-400">Filigransız fotoğrafları indir.</div>
                         </div>
                       </a>
                       <a href={`/${locale}/platform/facebook-photo`} className="flex items-start gap-3 p-3 hover:bg-white/5 rounded-xl transition-colors group/item focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500" role="menuitem">
