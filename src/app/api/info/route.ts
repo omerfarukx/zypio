@@ -176,11 +176,43 @@ export async function POST(req: Request) {
             });
         }
 
-        // INSTAGRAM FOTO / FACEBOOK FOTO
-        if (platform === 'instagram-photo' || platform === 'facebook-photo') {
+        // INSTAGRAM FOTO - instagram-url-direct ile önizleme bilgisi
+        if (platform === 'instagram-photo') {
+            try {
+                const { instagramGetUrl } = await import('instagram-url-direct');
+                const result = await instagramGetUrl(url);
+
+                if (result && result.url_list && result.url_list.length > 0) {
+                    return NextResponse.json({
+                        title: `Instagram Fotoğraf Gönderisi (${result.url_list.length} medya)`,
+                        thumbnail: result.url_list[0]
+                    });
+                }
+            } catch { /* fallback'a düş */ }
+
             return NextResponse.json({
-                title: `${platform} İçeriği`,
-                thumbnail: `https://logo.clearbit.com/www.${platform.split('-')[0]}.com?size=256`
+                title: 'Instagram Fotoğraf Gönderisi',
+                thumbnail: `https://logo.clearbit.com/www.instagram.com?size=256`
+            });
+        }
+
+        // FACEBOOK FOTO - loader.to ile info
+        if (platform === 'facebook-photo') {
+            try {
+                const res = await fetch(`https://loader.to/ajax/download.php?format=jpg&url=${encodeURIComponent(url)}`);
+                const data = await res.json();
+
+                if (data.success && data.info) {
+                    return NextResponse.json({
+                        title: data.title || data.info.title || 'Facebook Fotoğraf Gönderisi',
+                        thumbnail: data.info.image || `https://logo.clearbit.com/www.facebook.com?size=256`
+                    });
+                }
+            } catch { /* fallback'a düş */ }
+
+            return NextResponse.json({
+                title: 'Facebook Fotoğraf Gönderisi',
+                thumbnail: `https://logo.clearbit.com/www.facebook.com?size=256`
             });
         }
 

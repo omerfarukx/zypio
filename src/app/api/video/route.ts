@@ -175,9 +175,52 @@ export async function POST(req: Request) {
             }
         }
 
-        // INSTAGRAM FOTO / FACEBOOK FOTO
-        if (platform === 'instagram-photo' || platform === 'facebook-photo') {
-            return NextResponse.json({ error: "Fotoğraf indirme şu an güncelleniyor. Lütfen video indiriciyi kullanın." }, { status: 400 });
+        // INSTAGRAM FOTO - instagram-url-direct paketi ile
+        if (platform === 'instagram-photo') {
+            try {
+                const { instagramGetUrl } = await import('instagram-url-direct');
+                const result = await instagramGetUrl(url);
+
+                if (result && result.url_list && result.url_list.length > 0) {
+                    return NextResponse.json({
+                        download_url: result.url_list[0]
+                    });
+                } else {
+                    throw new Error("Bu gönderide indirilebilir fotoğraf bulunamadı.");
+                }
+            } catch (err: any) {
+                // Fallback: loader.to ile dene
+                try {
+                    const res = await fetch(`https://loader.to/ajax/download.php?format=jpg&url=${encodeURIComponent(url)}`);
+                    const data = await res.json();
+
+                    if (data.success && data.progress_url) {
+                        return NextResponse.json({
+                            progress_url: data.progress_url
+                        });
+                    }
+                } catch { /* fallback da başarısız */ }
+
+                return NextResponse.json({ error: 'Instagram fotoğrafı alınamadı: ' + err.message }, { status: 500 });
+            }
+        }
+
+        // FACEBOOK FOTO - loader.to API ile
+        if (platform === 'facebook-photo') {
+            try {
+                const res = await fetch(`https://loader.to/ajax/download.php?format=jpg&url=${encodeURIComponent(url)}`);
+                const data = await res.json();
+
+                if (data.success && data.progress_url) {
+                    return NextResponse.json({
+                        progress_url: data.progress_url
+                    });
+                } else {
+                    throw new Error("Bu gönderide indirilebilir fotoğraf bulunamadı veya gönderi gizli.");
+                }
+            } catch (err: any) {
+                return NextResponse.json({ error: 'Facebook fotoğrafı alınamadı: ' + err.message }, { status: 500 });
+            }
         }
 
         return NextResponse.json({ error: 'Desteklenmeyen platform.' }, { status: 400 });
