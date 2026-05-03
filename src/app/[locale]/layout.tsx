@@ -139,6 +139,24 @@ export default async function RootLayout({
             `
           }} />
 
+          {/* SEO: JSON-LD Structured Data */}
+          <script type="application/ld+json" dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebApplication",
+              "name": "Zypio",
+              "url": `https://zypio.online/${locale}`,
+              "description": "Ücretsiz ve sınırsız video/dosya indirme aracı. YouTube, Instagram, TikTok ve daha fazlası.",
+              "applicationCategory": "MultimediaApplication",
+              "operatingSystem": "All",
+              "offers": {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "USD"
+              }
+            })
+          }} />
+
           <div className="flex flex-col min-h-screen w-full relative">
             <Header />
             <div className="pt-20 flex-1 flex flex-col">

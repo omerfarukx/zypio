@@ -32,5 +32,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     }))
   );
 
-  return [...routes, ...platformRoutes];
+  // Yasal sayfalar ve Blog
+  const extraRoutes = locales.flatMap((locale) => [
+    { url: `${baseUrl}/${locale}/blog`, lastModified: new Date(), changeFrequency: 'weekly' as const, priority: 0.8 },
+    { url: `${baseUrl}/${locale}/legal/privacy`, lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.5 },
+    { url: `${baseUrl}/${locale}/legal/terms`, lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.5 },
+    { url: `${baseUrl}/${locale}/legal/dmca`, lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.5 },
+  ]);
+
+  return [...routes, ...platformRoutes, ...extraRoutes];
 }
