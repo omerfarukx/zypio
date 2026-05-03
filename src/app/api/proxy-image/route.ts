@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
     const imageUrl = searchParams.get('url');
+    const downloadMode = searchParams.get('download') === 'true';
 
     if (!imageUrl) {
         return new NextResponse('URL eksik', { status: 400 });
@@ -25,15 +26,21 @@ export async function GET(req: Request) {
 
         // Resmin formatını al (yoksa jpeg varsay)
         const contentType = response.headers.get('content-type') || 'image/jpeg';
+        const ext = contentType.includes('png') ? 'png' : contentType.includes('webp') ? 'webp' : 'jpg';
+
+        const headers: Record<string, string> = {
+            'Content-Type': contentType,
+            'Cache-Control': 'public, max-age=86400', // 1 gün önbellekte tut
+            'Access-Control-Allow-Origin': '*'
+        };
+
+        // İndirme modu: tarayıcı dosyayı kaydetsin
+        if (downloadMode) {
+            headers['Content-Disposition'] = `attachment; filename="zypio_photo.${ext}"`;
+        }
 
         // Orijinal resmi proxy üzerinden kendi sunucumuzdan dönüyoruz
-        return new NextResponse(arrayBuffer, {
-            headers: {
-                'Content-Type': contentType,
-                'Cache-Control': 'public, max-age=86400', // 1 gün önbellekte tut
-                'Access-Control-Allow-Origin': '*'
-            },
-        });
+        return new NextResponse(arrayBuffer, { headers });
     } catch (error) {
         console.error('Thumbnail Proxy Hatası:', error);
         // Hata olursa varsayılan bir resme yönlendir (redirect)

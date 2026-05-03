@@ -176,7 +176,7 @@ export async function POST(req: Request) {
             });
         }
 
-        // INSTAGRAM FOTO - instagram-url-direct ile önizleme bilgisi
+        // INSTAGRAM FOTO - instagram-url-direct ile önizleme bilgisi (çoklu fotoğraf)
         if (platform === 'instagram-photo') {
             try {
                 const { instagramGetUrl } = await import('instagram-url-direct');
@@ -185,7 +185,8 @@ export async function POST(req: Request) {
                 if (result && result.url_list && result.url_list.length > 0) {
                     return NextResponse.json({
                         title: `Instagram Fotoğraf Gönderisi (${result.url_list.length} medya)`,
-                        thumbnail: result.url_list[0]
+                        thumbnail: result.url_list[0],
+                        thumbnails: result.url_list
                     });
                 }
             } catch { /* fallback'a düş */ }

@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Link2, ArrowRight, Loader2, Download, AlertCircle } from "lucide-react"
+import { Link2, ArrowRight, Loader2, Download, AlertCircle, Check, ImageIcon } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Input } from "./ui/input"
 import { Button } from "./ui/button"
@@ -17,6 +17,8 @@ export function ConverterForm({ activeContext, initialUrl }: { activeContext?: s
   const [error, setError] = useState("")
   const [videoInfo, setVideoInfo] = useState<{ title: string, thumbnail: string } | null>(null)
   const [showAdLayer, setShowAdLayer] = useState(false) // Reklam/İndirme overlay'i
+  const [galleryImages, setGalleryImages] = useState<string[]>([])
+  const [selectedImages, setSelectedImages] = useState<Set<number>>(new Set())
 
   // URL değiştiğinde platformu otomatik tanı
   useEffect(() => {
@@ -88,6 +90,8 @@ export function ConverterForm({ activeContext, initialUrl }: { activeContext?: s
     setIsProcessing(true)
     setError("")
     setVideoInfo(null)
+    setGalleryImages([])
+    setSelectedImages(new Set())
 
     try {
       const response = await fetch('/api/info', {
@@ -107,6 +111,13 @@ export function ConverterForm({ activeContext, initialUrl }: { activeContext?: s
         thumbnail: data.thumbnail
       })
 
+      // Çoklu fotoğraf desteği (Instagram carousel)
+      if (data.thumbnails && data.thumbnails.length > 1) {
+        setGalleryImages(data.thumbnails)
+        // Tümünü seçili olarak başlat
+        setSelectedImages(new Set(data.thumbnails.map((_: string, i: number) => i)))
+      }
+
     } catch (err: any) {
       setError(err.message)
     } finally {
@@ -114,8 +125,55 @@ export function ConverterForm({ activeContext, initialUrl }: { activeContext?: s
     }
   }
 
+  // Galeri toggle fonksiyonu
+  const toggleImageSelection = (index: number) => {
+    setSelectedImages(prev => {
+      const next = new Set(prev)
+      if (next.has(index)) {
+        next.delete(index)
+      } else {
+        next.add(index)
+      }
+      return next
+    })
+  }
+
+  const toggleSelectAll = () => {
+    if (selectedImages.size === galleryImages.length) {
+      setSelectedImages(new Set())
+    } else {
+      setSelectedImages(new Set(galleryImages.map((_, i) => i)))
+    }
+  }
+
+  // Seçili fotoğrafları tek tek indir
+  const handleGalleryDownload = () => {
+    const selected = Array.from(selectedImages)
+    if (selected.length === 0) {
+      setError("Lütfen en az bir fotoğraf seçiniz.")
+      return
+    }
+    selected.forEach((index, i) => {
+      setTimeout(() => {
+        const link = document.createElement('a')
+        link.href = `/api/proxy-image?url=${encodeURIComponent(galleryImages[index])}&download=true`
+        link.download = `instagram_photo_${index + 1}.jpg`
+        link.target = '_blank'
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+      }, i * 500) // Her 500ms'de bir tetikle, tarayıcı bloke etmesin
+    })
+  }
+
   // Yeni Adım 2: Format seçip İndir'e basınca (Mevcut mantık + Reklam Overlay)
   const handleDownload = async () => {
+    // Galeri modunda seçili fotoğrafları indir
+    if (galleryImages.length > 0) {
+      handleGalleryDownload()
+      return
+    }
+
     if (!url || platform === "unknown") return
 
     setIsProcessing(true)
@@ -135,6 +193,15 @@ export function ConverterForm({ activeContext, initialUrl }: { activeContext?: s
 
       if (!response.ok || data.error) {
         throw new Error(data.error || "Video işlenirken bir hata oluştu.")
+      }
+
+      // Çoklu fotoğraf geldi (Instagram carousel)
+      if (data.download_urls && data.download_urls.length > 0) {
+        setGalleryImages(data.download_urls)
+        setSelectedImages(new Set(data.download_urls.map((_: string, i: number) => i)))
+        setIsProcessing(false)
+        setShowAdLayer(false)
+        return
       }
 
       if (data.download_url) {
@@ -309,95 +376,175 @@ export function ConverterForm({ activeContext, initialUrl }: { activeContext?: s
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="flex flex-col md:flex-row gap-6 bg-[#0F0F13] p-5 rounded-2xl border border-white/10"
+              className="flex flex-col gap-6 bg-[#0F0F13] p-5 rounded-2xl border border-white/10"
             >
-              {/* Thumbnail */}
-              <div className="w-full md:w-48 aspect-video rounded-xl overflow-hidden bg-black relative flex-shrink-0 border border-white/5 flex items-center justify-center">
-                <Image
-                  src={videoInfo?.thumbnail?.includes("logo.clearbit.com") ? videoInfo.thumbnail : `/api/proxy-image?url=${encodeURIComponent(videoInfo?.thumbnail || '')}`}
-                  alt={videoInfo?.title || 'Video'}
-                  fill
-                  unoptimized={true}
-                  className={`${videoInfo?.thumbnail?.includes("logo.clearbit.com") ? "object-contain p-4 opacity-50" : "object-cover"}`}
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.src = "https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=600";
-                    target.onerror = null;
-                  }}
-                />
-              </div>
-
-              {/* Bilgiler ve Butonlar */}
-              <div className="flex flex-col justify-between flex-1 min-w-0">
-                <div className="mb-4">
-                  <h3 className="text-lg font-semibold text-white truncate leading-snug mb-1" title={videoInfo?.title}>
-                    {videoInfo?.title}
-                  </h3>
-                  <p className="text-sm text-gray-500 capitalize">
-                    Platform: <span className="text-blue-400 font-medium">{platform}</span>
-                  </p>
+              {/* Üst bilgi satırı */}
+              <div className="flex flex-col md:flex-row gap-5">
+                {/* Thumbnail */}
+                <div className="w-full md:w-48 aspect-video rounded-xl overflow-hidden bg-black relative flex-shrink-0 border border-white/5 flex items-center justify-center">
+                  <Image
+                    src={videoInfo?.thumbnail?.includes("logo.clearbit.com") ? videoInfo.thumbnail : `/api/proxy-image?url=${encodeURIComponent(videoInfo?.thumbnail || '')}`}
+                    alt={videoInfo?.title || 'Video'}
+                    fill
+                    unoptimized={true}
+                    className={`${videoInfo?.thumbnail?.includes("logo.clearbit.com") ? "object-contain p-4 opacity-50" : "object-cover"}`}
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.src = "https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=600";
+                      target.onerror = null;
+                    }}
+                  />
                 </div>
 
-                <div className="flex flex-col gap-3">
-                  {/* Dropdown ile Format/Kalite Seçimi */}
-                  <select
-                    className="w-full bg-[#1C1C1E] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all font-medium text-sm appearance-none cursor-pointer"
-                    value={format}
-                    onChange={(e) => setFormat(e.target.value)}
-                    disabled={isProcessing}
-                  >
-                    {platform === "youtube" ? (
-                      <>
-                      <optgroup label="Video (MP4)">
-                        <option value="1080">Ultra Kalite (1080p+)</option>
-                        <option value="720">Yüksek Kalite (720p)</option>
-                        <option value="480">Orta Kalite (480p)</option>
-                        <option value="360">Düşük Kalite (360p)</option>
-                      </optgroup>
-                      <optgroup label="Ses (MP3)">
-                        <option value="mp3">MP3 — Standart (128kbps)</option>
-                        <option value="mp3320">MP3 — Yüksek Kalite (320kbps)</option>
-                      </optgroup>
-                      </>
-                    ) : platform === "tiktok" ? (
-                      <optgroup label="Video">
-                        <option value="watermark_free">Ultra Kalite (Filigransız)</option>
-                        <option value="watermark">Orta Kalite (Filigranlı)</option>
-                      </optgroup>
-                    ) : platform.includes("-photo") || platform.includes("-dp") ? (
-                      <optgroup label="Fotoğraf / Görsel">
-                        <option value="jpg">Orijinal Kalite (JPG)</option>
-                        <option value="png">Yüksek Kalite (PNG)</option>
-                      </optgroup>
-                    ) : (
-                      <optgroup label="Video">
-                        <option value="1080">Ultra Kalite</option>
-                        <option value="720">Yüksek Kalite</option>
-                        <option value="480">Orta Kalite</option>
-                        <option value="360">Düşük Kalite</option>
-                      </optgroup>
+                {/* Bilgiler ve Butonlar */}
+                <div className="flex flex-col justify-between flex-1 min-w-0">
+                  <div className="mb-4">
+                    <h3 className="text-lg font-semibold text-white truncate leading-snug mb-1" title={videoInfo?.title}>
+                      {videoInfo?.title}
+                    </h3>
+                    <p className="text-sm text-gray-500 capitalize">
+                      Platform: <span className="text-blue-400 font-medium">{platform}</span>
+                    </p>
+                  </div>
+
+                  <div className="flex flex-col gap-3">
+                    {/* Galeri modunda format seçiciyi gizle */}
+                    {galleryImages.length === 0 && (
+                      <select
+                        className="w-full bg-[#1C1C1E] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all font-medium text-sm appearance-none cursor-pointer"
+                        value={format}
+                        onChange={(e) => setFormat(e.target.value)}
+                        disabled={isProcessing}
+                      >
+                        {platform === "youtube" ? (
+                          <>
+                          <optgroup label="Video (MP4)">
+                            <option value="1080">Ultra Kalite (1080p+)</option>
+                            <option value="720">Yüksek Kalite (720p)</option>
+                            <option value="480">Orta Kalite (480p)</option>
+                            <option value="360">Düşük Kalite (360p)</option>
+                          </optgroup>
+                          <optgroup label="Ses (MP3)">
+                            <option value="mp3">MP3 — Standart (128kbps)</option>
+                            <option value="mp3320">MP3 — Yüksek Kalite (320kbps)</option>
+                          </optgroup>
+                          </>
+                        ) : platform === "tiktok" ? (
+                          <optgroup label="Video">
+                            <option value="watermark_free">Ultra Kalite (Filigransız)</option>
+                            <option value="watermark">Orta Kalite (Filigranlı)</option>
+                          </optgroup>
+                        ) : platform.includes("-photo") || platform.includes("-dp") ? (
+                          <optgroup label="Fotoğraf / Görsel">
+                            <option value="jpg">Orijinal Kalite (JPG)</option>
+                            <option value="png">Yüksek Kalite (PNG)</option>
+                          </optgroup>
+                        ) : (
+                          <optgroup label="Video">
+                            <option value="1080">Ultra Kalite</option>
+                            <option value="720">Yüksek Kalite</option>
+                            <option value="480">Orta Kalite</option>
+                            <option value="360">Düşük Kalite</option>
+                          </optgroup>
+                        )}
+                      </select>
                     )}
-                  </select>
 
-                  <Button
-                    onClick={handleDownload}
+                    <Button
+                      onClick={handleDownload}
+                      disabled={isProcessing || (galleryImages.length > 0 && selectedImages.size === 0)}
+                      className="w-full bg-green-600 hover:bg-green-500 shadow-green-600/20 shadow-lg h-12"
+                    >
+                      <Download className="w-5 h-5 mr-2" />
+                      {galleryImages.length > 0
+                        ? `Seçilenleri İndir (${selectedImages.size}/${galleryImages.length})`
+                        : "Hemen İndir"}
+                    </Button>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => { setVideoInfo(null); setUrl(""); setGalleryImages([]); setSelectedImages(new Set()); }}
+                    className="mt-4 text-xs text-gray-500 hover:text-white transition-colors underline underline-offset-2 self-start"
                     disabled={isProcessing}
-                    className="w-full bg-green-600 hover:bg-green-500 shadow-green-600/20 shadow-lg h-12"
                   >
-                    <Download className="w-5 h-5 mr-2" />
-                    Hemen İndir
-                  </Button>
+                    Farklı bir içerik indir
+                  </button>
                 </div>
-
-                <button
-                  type="button"
-                  onClick={() => { setVideoInfo(null); setUrl(""); }}
-                  className="mt-4 text-xs text-gray-500 hover:text-white transition-colors underline underline-offset-2 self-start"
-                  disabled={isProcessing}
-                >
-                  Farklı bir video indir
-                </button>
               </div>
+
+              {/* GALERİ GRID — Çoklu fotoğraf seçimi */}
+              {galleryImages.length > 1 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="flex flex-col gap-3"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2 text-sm text-gray-400">
+                      <ImageIcon className="w-4 h-4" />
+                      <span>{galleryImages.length} fotoğraf bulundu</span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={toggleSelectAll}
+                      className="text-xs font-medium text-blue-400 hover:text-blue-300 transition-colors px-3 py-1.5 rounded-lg bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/20"
+                    >
+                      {selectedImages.size === galleryImages.length ? "Tümünü Kaldır" : "Tümünü Seç"}
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                    {galleryImages.map((imgUrl, index) => (
+                      <motion.button
+                        key={index}
+                        type="button"
+                        onClick={() => toggleImageSelection(index)}
+                        whileTap={{ scale: 0.95 }}
+                        className={`relative aspect-square rounded-xl overflow-hidden border-2 transition-all duration-200 group ${
+                          selectedImages.has(index)
+                            ? "border-blue-500 shadow-lg shadow-blue-500/20"
+                            : "border-white/10 hover:border-white/30"
+                        }`}
+                      >
+                        <Image
+                          src={`/api/proxy-image?url=${encodeURIComponent(imgUrl)}`}
+                          alt={`Fotoğraf ${index + 1}`}
+                          fill
+                          unoptimized={true}
+                          className="object-cover"
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.src = "https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=300";
+                            target.onerror = null;
+                          }}
+                        />
+
+                        {/* Seçim overlay */}
+                        <div className={`absolute inset-0 transition-all duration-200 ${
+                          selectedImages.has(index)
+                            ? "bg-blue-500/20"
+                            : "bg-black/0 group-hover:bg-black/30"
+                        }`} />
+
+                        {/* Checkbox */}
+                        <div className={`absolute top-2 right-2 w-7 h-7 rounded-lg flex items-center justify-center transition-all duration-200 ${
+                          selectedImages.has(index)
+                            ? "bg-blue-500 text-white shadow-lg"
+                            : "bg-black/50 backdrop-blur-sm border border-white/30 text-transparent group-hover:text-white/50"
+                        }`}>
+                          <Check className="w-4 h-4" />
+                        </div>
+
+                        {/* Numara */}
+                        <div className="absolute bottom-2 left-2 px-2 py-0.5 rounded-md bg-black/60 backdrop-blur-sm text-[10px] font-bold text-white/70">
+                          {index + 1}
+                        </div>
+                      </motion.button>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
             </motion.div>
           )}
 

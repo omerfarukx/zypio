@@ -175,21 +175,22 @@ export async function POST(req: Request) {
             }
         }
 
-        // INSTAGRAM FOTO - instagram-url-direct paketi ile
+        // INSTAGRAM FOTO - instagram-url-direct paketi ile (çoklu fotoğraf desteği)
         if (platform === 'instagram-photo') {
             try {
                 const { instagramGetUrl } = await import('instagram-url-direct');
                 const result = await instagramGetUrl(url);
 
                 if (result && result.url_list && result.url_list.length > 0) {
+                    // Tüm medya URL'lerini döndür (carousel desteği)
                     return NextResponse.json({
-                        download_url: result.url_list[0]
+                        download_urls: result.url_list
                     });
                 } else {
                     throw new Error("Bu gönderide indirilebilir fotoğraf bulunamadı.");
                 }
             } catch (err: any) {
-                // Fallback: loader.to ile dene
+                // Fallback: loader.to ile dene (tek dosya)
                 try {
                     const res = await fetch(`https://loader.to/ajax/download.php?format=jpg&url=${encodeURIComponent(url)}`);
                     const data = await res.json();
