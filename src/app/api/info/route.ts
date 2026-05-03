@@ -165,15 +165,11 @@ export async function POST(req: Request) {
                         thumbnail: hdUrl
                     });
                 }
+                throw new Error("Profil resmi bulunamadı.");
             } catch (err: any) {
                 console.error("IG DP Error:", err.message);
+                return NextResponse.json({ error: 'Kullanıcı bulunamadı veya profil gizli.' }, { status: 404 });
             }
-
-            // Fallback
-            return NextResponse.json({
-                title: `Instagram Profil Fotoğrafı`,
-                thumbnail: `https://logo.clearbit.com/www.instagram.com?size=256`
-            });
         }
 
         // INSTAGRAM FOTO - instagram-url-direct ile önizleme bilgisi (çoklu fotoğraf)
@@ -189,12 +185,10 @@ export async function POST(req: Request) {
                         thumbnails: result.url_list
                     });
                 }
-            } catch { /* fallback'a düş */ }
-
-            return NextResponse.json({
-                title: 'Instagram Fotoğraf Gönderisi',
-                thumbnail: `https://logo.clearbit.com/www.instagram.com?size=256`
-            });
+                throw new Error("Gönderi bulunamadı.");
+            } catch (err: any) { 
+                return NextResponse.json({ error: 'Instagram gönderisi bulunamadı veya gizli.' }, { status: 404 });
+            }
         }
 
         // FACEBOOK FOTO - loader.to ile info
@@ -209,12 +203,10 @@ export async function POST(req: Request) {
                         thumbnail: data.info.image || `https://logo.clearbit.com/www.facebook.com?size=256`
                     });
                 }
-            } catch { /* fallback'a düş */ }
-
-            return NextResponse.json({
-                title: 'Facebook Fotoğraf Gönderisi',
-                thumbnail: `https://logo.clearbit.com/www.facebook.com?size=256`
-            });
+                throw new Error("Gönderi bulunamadı.");
+            } catch (err: any) {
+                return NextResponse.json({ error: 'Facebook gönderisi bulunamadı veya gizli.' }, { status: 404 });
+            }
         }
 
         return NextResponse.json({ error: 'Desteklenmeyen platform.' }, { status: 400 });
