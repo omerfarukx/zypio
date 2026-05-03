@@ -1,5 +1,6 @@
 import { Globe, Video, FileText, Music, Image as ImageIcon } from "lucide-react"
 import { useTranslations } from "next-intl"
+import { Link } from "@/i18n/routing"
 
 export function Footer() {
   const t = useTranslations("Footer")
@@ -17,24 +18,24 @@ export function Footer() {
               {t("desc")}
             </p>
           </div>
-          
+
           <div>
             <h4 className="text-white font-semibold mb-4">{t("tools")}</h4>
             <ul className="space-y-3">
-              <li><a href="#" className="text-gray-400 hover:text-white transition-colors flex items-center gap-2"><Video className="w-4 h-4" /> Video Dönüştürücü</a></li>
-              <li><a href="#" className="text-gray-400 hover:text-white transition-colors flex items-center gap-2"><Music className="w-4 h-4" /> Ses Dönüştürücü</a></li>
-              <li><a href="#" className="text-gray-400 hover:text-white transition-colors flex items-center gap-2"><ImageIcon className="w-4 h-4" /> Görsel Dönüştürücü</a></li>
-              <li><a href="#" className="text-gray-400 hover:text-white transition-colors flex items-center gap-2"><FileText className="w-4 h-4" /> Belge Dönüştürücü</a></li>
+              <li><Link href="/tools/video-donusturucu" className="text-gray-400 hover:text-white transition-colors flex items-center gap-2"><Video className="w-4 h-4" /> Video Dönüştürücü</Link></li>
+              <li><Link href="/tools/ses-donusturucu" className="text-gray-400 hover:text-white transition-colors flex items-center gap-2"><Music className="w-4 h-4" /> Ses Dönüştürücü</Link></li>
+              <li><Link href="/tools/gorsel-donusturucu" className="text-gray-400 hover:text-white transition-colors flex items-center gap-2"><ImageIcon className="w-4 h-4" /> Görsel Dönüştürücü</Link></li>
+              <li><Link href="/tools/belge-donusturucu" className="text-gray-400 hover:text-white transition-colors flex items-center gap-2"><FileText className="w-4 h-4" /> Belge Dönüştürücü</Link></li>
             </ul>
           </div>
 
           <div>
             <h4 className="text-white font-semibold mb-4">{t("legal")}</h4>
             <ul className="space-y-3">
-              <li><a href="#" className="text-gray-400 hover:text-white transition-colors">{t("terms")}</a></li>
-              <li><a href="#" className="text-gray-400 hover:text-white transition-colors">{t("privacy")}</a></li>
-              <li><a href="#" className="text-gray-400 hover:text-white transition-colors">{t("dmca")}</a></li>
-              <li><a href="#" className="text-gray-400 hover:text-white transition-colors">{t("contact")}</a></li>
+              <li><Link href="/legal/terms" className="text-gray-400 hover:text-white transition-colors">{t("terms")}</Link></li>
+              <li><Link href="/legal/privacy" className="text-gray-400 hover:text-white transition-colors">{t("privacy")}</Link></li>
+              <li><Link href="/legal/dmca" className="text-gray-400 hover:text-white transition-colors">{t("dmca")}</Link></li>
+              <li><a href="mailto:contact@zypio.online" className="text-gray-400 hover:text-white transition-colors">{t("contact")}</a></li>
             </ul>
           </div>
         </div>

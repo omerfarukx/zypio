@@ -78,6 +78,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
         'max-snippet': -1,
       },
     },
+    manifest: '/manifest.json',
     alternates: {
       canonical: `https://zypio.online/${locale}`,
       languages: {

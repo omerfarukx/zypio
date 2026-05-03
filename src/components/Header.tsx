@@ -186,6 +186,7 @@ export function Header() {
           </div>
 
           <a href={`/${locale}/tools`} className="text-sm font-medium text-gray-300 hover:text-white transition-colors py-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded">Tüm Araçlar</a>
+          <a href={`/${locale}/blog`} className="text-sm font-medium text-gray-300 hover:text-white transition-colors py-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded">Blog</a>
           <a href="#features" className="text-sm font-medium text-gray-300 hover:text-white transition-colors py-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded">{t("features")}</a>
           <a href="#faq" className="text-sm font-medium text-gray-300 hover:text-white transition-colors py-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded">{t("faq")}</a>
 
