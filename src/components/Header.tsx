@@ -30,9 +30,9 @@ export function Header() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
-        ? "bg-[#0A0A0C]/90 backdrop-blur-lg border-b border-white/5 py-3 shadow-lg shadow-black/50"
-        : "bg-transparent py-5"
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled
+        ? "bg-[#0A0A0C]/80 backdrop-blur-2xl border-b border-blue-500/10 py-3 shadow-[0_4px_30px_rgba(0,0,0,0.5),0_1px_0_rgba(59,130,246,0.08)]"
+        : "bg-gradient-to-b from-[#0A0A0C]/60 to-transparent backdrop-blur-sm py-5"
         }`}
       aria-label="Main Navigation"
       role="banner"
