@@ -53,7 +53,7 @@ export function ConverterForm({ activeContext, initialUrl }: { activeContext?: s
       setPlatform("unknown")
       setVideoInfo(null)
     }
-  }, [url])
+  }, [url, activeContext])
 
   useEffect(() => {
     if (initialUrl && url === initialUrl && platform !== "unknown" && !videoInfo && !isProcessing && !error) {
@@ -82,8 +82,17 @@ export function ConverterForm({ activeContext, initialUrl }: { activeContext?: s
   // Yeni Adım 1: Analiz Et (Video bilgilerini getir)
   const handleGetInfo = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!url || platform === "unknown") {
-      setError("Lütfen desteklenen bir platformdan geçerli bir URL giriniz (YouTube, Instagram, TikTok).")
+    
+    let processedUrl = url.trim()
+    
+    // Eğer -dp modunda değilse ve http ile başlamıyorsa https ekle
+    if (!activeContext?.includes("-dp") && processedUrl && !processedUrl.startsWith("http")) {
+      processedUrl = `https://${processedUrl}`
+      setUrl(processedUrl) // Input'taki değeri de güncelle
+    }
+
+    if (!processedUrl || platform === "unknown") {
+      setError("Lütfen desteklenen bir platformdan geçerli bir URL giriniz (YouTube, Instagram, TikTok, Facebook, X).")
       return
     }
 
@@ -97,7 +106,7 @@ export function ConverterForm({ activeContext, initialUrl }: { activeContext?: s
       const response = await fetch('/api/info', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url, platform })
+        body: JSON.stringify({ url: processedUrl, platform })
       })
 
       const data = await response.json()
@@ -225,10 +234,24 @@ export function ConverterForm({ activeContext, initialUrl }: { activeContext?: s
   }
 
   const pollProgress = async (progressUrl: string) => {
+    const MAX_ATTEMPTS = 40 // Maksimum 40 deneme (~60 saniye)
+    let attempts = 0
     try {
-      while (true) {
-        const pRes = await fetch(progressUrl)
-        const pData = await pRes.json()
+      while (attempts < MAX_ATTEMPTS) {
+        attempts++
+        const controller = new AbortController()
+        const timeoutId = setTimeout(() => controller.abort(), 10000) // 10 saniyelik istek timeout
+        
+        let pData: any
+        try {
+          const pRes = await fetch(progressUrl, { signal: controller.signal })
+          clearTimeout(timeoutId)
+          pData = await pRes.json()
+        } catch {
+          clearTimeout(timeoutId)
+          await new Promise(r => setTimeout(r, 1500))
+          continue // Timeout'ta tekrar dene
+        }
 
         if (pData.progress) {
           setProgress(pData.progress / 10) // 1000'e kadar çıkıyor loader.to'da
@@ -238,11 +261,13 @@ export function ConverterForm({ activeContext, initialUrl }: { activeContext?: s
           setProgress(100)
           window.location.href = pData.download_url
           setTimeout(() => { setIsProcessing(false); setShowAdLayer(false); }, 1500)
-          break
+          return
         }
 
         await new Promise(r => setTimeout(r, 1500))
       }
+      // Maksimum deneme sayısına ulaşıldı
+      throw new Error("İşlem zaman aşımına uğradı. Lütfen tekrar deneyin.")
     } catch (err: any) {
       setError("İndirme bağlantısı alınırken bir sorun oluştu: " + err.message)
       setIsProcessing(false)
@@ -335,7 +360,7 @@ export function ConverterForm({ activeContext, initialUrl }: { activeContext?: s
                     <Link2 className="w-5 h-5 text-gray-500" />
                   </div>
                   <Input
-                    type={activeContext?.includes("-dp") ? "text" : "url"}
+                    type="text"
                     placeholder={
                       activeContext?.includes("-dp") ? "Profil linkini veya kullanıcı adını yapıştırın..." :
                         activeContext === "instagram-photo" ? "https://www.instagram.com/p/..." :
@@ -368,7 +393,7 @@ export function ConverterForm({ activeContext, initialUrl }: { activeContext?: s
 
                 <Button
                   type="submit"
-                  disabled={isProcessing || !url || platform === "unknown"}
+                  disabled={isProcessing || !url}
                   className="sm:w-auto w-full h-14 px-8 rounded-2xl bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold text-lg group transition-all shadow-lg shadow-blue-600/20 hover:shadow-blue-500/30 active:scale-[0.98]"
                 >
                   {isProcessing ? (
