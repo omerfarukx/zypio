@@ -16,7 +16,7 @@ export async function POST(req: Request) {
         if (platform === 'tiktok-dp') {
             try {
                 let uniqueId = url;
-                if (url.includes('tiktok.com')) {
+                if (url.toLowerCase().includes('tiktok.com')) {
                     const match = url.match(/@([a-zA-Z0-9_.-]+)/);
                     if (match) uniqueId = match[1];
                 }
@@ -43,9 +43,10 @@ export async function POST(req: Request) {
         if (platform === 'twitter-dp') {
             try {
                 let username = url;
-                if (url.includes('twitter.com') || url.includes('x.com')) {
+                const lowerUrl = url.toLowerCase();
+                if (lowerUrl.includes('twitter.com') || lowerUrl.includes('x.com')) {
                     const parts = url.split('/');
-                    username = parts[parts.findIndex((p: string) => p === 'twitter.com' || p === 'x.com') + 1];
+                    username = parts[parts.findIndex((p: string) => p.toLowerCase() === 'twitter.com' || p.toLowerCase() === 'x.com') + 1];
                     username = username.split('?')[0];
                 }
                 username = username.replace('@', '');
@@ -95,7 +96,7 @@ export async function POST(req: Request) {
         if (platform === 'twitter' || platform === 'twitter-photo') {
             try {
                 // url: https://twitter.com/user/status/123 -> https://api.vxtwitter.com/user/status/123
-                const vxUrl = url.replace('twitter.com', 'api.vxtwitter.com').replace('x.com', 'api.vxtwitter.com');
+                const vxUrl = url.replace(/twitter\.com/i, 'api.vxtwitter.com').replace(/x\.com/i, 'api.vxtwitter.com');
                 const res = await fetch(vxUrl);
                 const data = await res.json();
 
@@ -140,8 +141,8 @@ export async function POST(req: Request) {
         if (platform === 'instagram-dp') {
             try {
                 let username = url;
-                if (username.includes('instagram.com')) {
-                    const match = username.match(/instagram\.com\/([^/?]+)/);
+                if (username.toLowerCase().includes('instagram.com')) {
+                    const match = username.match(/instagram\.com\/([^/?]+)/i);
                     if (match) username = match[1];
                 }
                 username = username.replace('@', '').trim();

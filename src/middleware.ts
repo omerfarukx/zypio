@@ -5,11 +5,13 @@ import type { NextRequest } from 'next/server';
 
 const intlMiddleware = createMiddleware(routing);
 
-export default function middleware(req: NextRequest) {
 // Basit In-Memory Rate Limiting (Vercel instance başına çalışır)
+// Module scope'ta tanımlanmalı — her istekte sıfırlanmaması için
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
 const RATE_LIMIT_WINDOW = 60 * 1000; // 1 dakika
 const MAX_REQUESTS = 15; // 1 dakikada maks 15 işlem isteği
+
+export default function middleware(req: NextRequest) {
 
   if (req.nextUrl.pathname.startsWith('/api/')) {
     if (req.method === 'OPTIONS') {

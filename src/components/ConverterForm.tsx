@@ -28,25 +28,27 @@ export function ConverterForm({ activeContext, initialUrl }: { activeContext?: s
       return
     }
 
-    if (activeContext?.includes("-dp") && url && !url.startsWith("http")) {
+    const lowerUrl = url.toLowerCase()
+
+    if (activeContext?.includes("-dp") && url && !lowerUrl.startsWith("http")) {
       setPlatform(activeContext)
       setFormat("jpg")
       return
     }
 
-    if (url.includes("youtube.com") || url.includes("youtu.be")) {
+    if (lowerUrl.includes("youtube.com") || lowerUrl.includes("youtu.be")) {
       setPlatform("youtube")
       setFormat("720")
-    } else if (url.includes("instagram.com")) {
+    } else if (lowerUrl.includes("instagram.com")) {
       setPlatform(activeContext === "instagram-photo" ? "instagram-photo" : activeContext === "instagram-dp" ? "instagram-dp" : "instagram")
       setFormat(activeContext === "instagram-photo" || activeContext === "instagram-dp" ? "jpg" : "720")
-    } else if (url.includes("tiktok.com")) {
+    } else if (lowerUrl.includes("tiktok.com")) {
       setPlatform(activeContext === "tiktok-photo" ? "tiktok-photo" : activeContext === "tiktok-dp" ? "tiktok-dp" : "tiktok")
       setFormat(activeContext === "tiktok-photo" || activeContext === "tiktok-dp" ? "jpg" : "watermark_free")
-    } else if (url.includes("facebook.com") || url.includes("fb.watch")) {
+    } else if (lowerUrl.includes("facebook.com") || lowerUrl.includes("fb.watch")) {
       setPlatform(activeContext === "facebook-photo" ? "facebook-photo" : "facebook")
       setFormat(activeContext === "facebook-photo" ? "jpg" : "720")
-    } else if (url.includes("twitter.com") || url.includes("x.com")) {
+    } else if (lowerUrl.includes("twitter.com") || lowerUrl.includes("x.com")) {
       setPlatform(activeContext === "twitter-photo" ? "twitter-photo" : activeContext === "twitter-dp" ? "twitter-dp" : "twitter")
       setFormat(activeContext === "twitter-photo" || activeContext === "twitter-dp" ? "jpg" : "720")
     } else {
@@ -84,18 +86,37 @@ export function ConverterForm({ activeContext, initialUrl }: { activeContext?: s
     e.preventDefault()
     
     let processedUrl = url.trim()
+    const lowerUrl = processedUrl.toLowerCase()
     
     // Eğer -dp modunda değilse ve http ile başlamıyorsa https ekle
-    if (!activeContext?.includes("-dp") && processedUrl && !processedUrl.startsWith("http")) {
+    if (!activeContext?.includes("-dp") && processedUrl && !lowerUrl.startsWith("http")) {
       processedUrl = `https://${processedUrl}`
       setUrl(processedUrl) // Input'taki değeri de güncelle
     }
 
-    if (!processedUrl || platform === "unknown") {
+    let currentPlatform = platform;
+    
+    // Eğer platform hala unknown ise veya URL değişip render yetişemediyse anlık hesapla
+    if (lowerUrl.includes("youtube.com") || lowerUrl.includes("youtu.be")) {
+      currentPlatform = "youtube";
+    } else if (lowerUrl.includes("instagram.com")) {
+      currentPlatform = activeContext === "instagram-photo" ? "instagram-photo" : activeContext === "instagram-dp" ? "instagram-dp" : "instagram";
+    } else if (lowerUrl.includes("tiktok.com")) {
+      currentPlatform = activeContext === "tiktok-photo" ? "tiktok-photo" : activeContext === "tiktok-dp" ? "tiktok-dp" : "tiktok";
+    } else if (lowerUrl.includes("facebook.com") || lowerUrl.includes("fb.watch")) {
+      currentPlatform = activeContext === "facebook-photo" ? "facebook-photo" : "facebook";
+    } else if (lowerUrl.includes("twitter.com") || lowerUrl.includes("x.com")) {
+      currentPlatform = activeContext === "twitter-photo" ? "twitter-photo" : activeContext === "twitter-dp" ? "twitter-dp" : "twitter";
+    } else if (activeContext?.includes("-dp") && processedUrl && !lowerUrl.startsWith("http")) {
+      currentPlatform = activeContext;
+    }
+
+    if (!processedUrl || currentPlatform === "unknown") {
       setError("Lütfen desteklenen bir platformdan geçerli bir URL giriniz (YouTube, Instagram, TikTok, Facebook, X).")
       return
     }
 
+    setPlatform(currentPlatform);
     setIsProcessing(true)
     setError("")
     setVideoInfo(null)
@@ -106,7 +127,7 @@ export function ConverterForm({ activeContext, initialUrl }: { activeContext?: s
       const response = await fetch('/api/info', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url: processedUrl, platform })
+        body: JSON.stringify({ url: processedUrl, platform: currentPlatform })
       })
 
       const data = await response.json()
