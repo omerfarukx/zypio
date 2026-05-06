@@ -84,15 +84,18 @@ export function ConverterForm({ activeContext, initialUrl }: { activeContext?: s
   // Yeni Adım 1: Analiz Et (Video bilgilerini getir)
   const handleGetInfo = async (e: React.FormEvent) => {
     e.preventDefault()
+    e.stopPropagation()
     
     let processedUrl = url.trim()
-    const lowerUrl = processedUrl.toLowerCase()
     
     // Eğer -dp modunda değilse ve http ile başlamıyorsa https ekle
-    if (!activeContext?.includes("-dp") && processedUrl && !lowerUrl.startsWith("http")) {
+    if (!activeContext?.includes("-dp") && processedUrl && !processedUrl.toLowerCase().startsWith("http")) {
       processedUrl = `https://${processedUrl}`
       setUrl(processedUrl) // Input'taki değeri de güncelle
     }
+
+    // CRITICAL: lowerUrl must be recalculated AFTER https:// prefix is added
+    const lowerUrl = processedUrl.toLowerCase()
 
     let currentPlatform = platform;
     
@@ -297,7 +300,7 @@ export function ConverterForm({ activeContext, initialUrl }: { activeContext?: s
   }
 
   return (
-    <div className="w-full max-w-2xl mx-auto relative z-20">
+    <div className="w-full max-w-2xl mx-auto relative z-20" style={{ isolation: 'isolate' }}>
 
       {/* REKLAM VE İNDİRME EKRANI (Overlay) */}
       <AnimatePresence>
@@ -370,7 +373,7 @@ export function ConverterForm({ activeContext, initialUrl }: { activeContext?: s
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         className="glass-strong rounded-3xl p-6 sm:p-8 shadow-2xl shimmer gradient-border"
       >
-        <form onSubmit={!videoInfo ? handleGetInfo : (e) => e.preventDefault()} className="flex flex-col gap-6">
+        <form onSubmit={!videoInfo ? handleGetInfo : (e) => e.preventDefault()} className="flex flex-col gap-6" style={{ position: 'relative', zIndex: 9990, pointerEvents: 'auto' }}>
 
           {/* 1. ADIM: LİNK GİRME EKRANI */}
           {!videoInfo ? (
@@ -415,6 +418,7 @@ export function ConverterForm({ activeContext, initialUrl }: { activeContext?: s
                 <Button
                   type="submit"
                   disabled={isProcessing || !url}
+                  onClick={(e: React.MouseEvent) => { e.stopPropagation(); }}
                   className="sm:w-auto w-full h-14 px-8 rounded-2xl bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold text-lg group transition-all shadow-lg shadow-blue-600/20 hover:shadow-blue-500/30 active:scale-[0.98]"
                 >
                   {isProcessing ? (

@@ -380,3 +380,25 @@ body {
   background: rgba(59, 130, 246, 0.3);
   color: #bfdbfe;
 }
+
+/* ========== AD OVERLAY PROTECTION ========== */
+/* Prevent ad network overlay scripts from blocking form interactions */
+/* Adsterra popunder/social bar creates invisible full-screen click layers */
+body > div[id^="ad"],
+body > div[class*="popunder"],
+body > div[style*="z-index: 2147483647"],
+body > div[style*="z-index:2147483647"],
+body > div[style*="position: fixed"][style*="inset: 0"],
+body > div[style*="position:fixed"][style*="top:0"][style*="left:0"][style*="width:100%"][style*="height:100%"],
+body > iframe[style*="z-index: 2147483647"],
+body > iframe[style*="z-index:2147483647"] {
+  pointer-events: none !important;
+}
+
+/* Re-enable pointer events specifically for visible ad containers */
+aside[aria-label*="Advertisement"] {
+  pointer-events: auto !important;
+}
+aside[aria-label*="Advertisement"] * {
+  pointer-events: auto !important;
+}

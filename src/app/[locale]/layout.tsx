@@ -128,6 +128,29 @@ export default async function RootLayout({
           {/* Adsterra Social Bar */}
           <script type='text/javascript' src='//pl29311912.profitablecpmratenetwork.com/82/a3/60/82a360ad42f680ed03447b9f22f5df83.js' async></script>
 
+          {/* Ad Overlay Protection — Prevent invisible click-stealing layers from blocking the converter form */}
+          <script dangerouslySetInnerHTML={{
+            __html: `
+              (function(){
+                function neutralizeOverlays(){
+                  var els=document.querySelectorAll('body > div, body > iframe');
+                  for(var i=0;i<els.length;i++){
+                    var s=els[i].style;
+                    var cs=window.getComputedStyle(els[i]);
+                    if(cs.position==='fixed'&&cs.zIndex>9999&&
+                       parseInt(cs.width)>=window.innerWidth*0.9&&
+                       parseInt(cs.height)>=window.innerHeight*0.9&&
+                       (cs.opacity==='0'||cs.background==='transparent'||cs.backgroundColor==='transparent'||cs.background==='')){
+                      s.pointerEvents='none';
+                    }
+                  }
+                }
+                setInterval(neutralizeOverlays,2000);
+                setTimeout(neutralizeOverlays,3000);
+              })();
+            `
+          }} />
+
           {/* Google Analytics */}
           <script async src="https://www.googletagmanager.com/gtag/js?id=G-DCCRH80TXT"></script>
           <script dangerouslySetInnerHTML={{
