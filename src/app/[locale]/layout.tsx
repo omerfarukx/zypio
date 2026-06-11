@@ -7,6 +7,9 @@ import { headers } from 'next/headers';
 import { routing } from '@/i18n/routing';
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { StructuredData } from "@/components/seo/StructuredData";
+import { graph, organizationSchema, websiteSchema } from "@/lib/seo/structured-data";
+import { SITE_URL, alternates, ogLocale } from "@/lib/seo/site";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -31,7 +34,11 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const t = await getTranslations({ locale, namespace: 'SEO' });
 
   return {
-    title: t('title'),
+    metadataBase: new URL(SITE_URL),
+    title: {
+      default: t('title'),
+      template: '%s | Zypio',
+    },
     description: t('description'),
     keywords: t('keywords'),
     authors: [{ name: "Zypio Team" }],
@@ -48,24 +55,16 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     openGraph: {
       title: t('ogTitle'),
       description: t('ogDesc'),
-      url: `https://zypio.online/${locale}`,
+      url: `${SITE_URL}/${locale}`,
       siteName: "Zypio",
-      locale: locale === 'tr' ? "tr_TR" : "en_US",
+      locale: ogLocale(locale),
       type: "website",
-      images: [
-        {
-          url: "https://zypio.online/og-image.jpg",
-          width: 1200,
-          height: 630,
-          alt: "Zypio Platform",
-        }
-      ],
+      // Image supplied by the file-based convention (app/[locale]/opengraph-image.tsx)
     },
     twitter: {
       card: "summary_large_image",
       title: t('twTitle'),
       description: t('twDesc'),
-      images: ["https://zypio.online/og-image.jpg"],
     },
     robots: {
       index: true,
@@ -79,13 +78,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
       },
     },
     manifest: '/manifest.json',
-    alternates: {
-      canonical: `https://zypio.online/${locale}`,
-      languages: {
-        'en-US': 'https://zypio.online/en',
-        'tr-TR': 'https://zypio.online/tr',
-      },
-    },
+    alternates: alternates(locale),
   };
 }
 
@@ -162,23 +155,8 @@ export default async function RootLayout({
             `
           }} />
 
-          {/* SEO: JSON-LD Structured Data */}
-          <script type="application/ld+json" dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "WebApplication",
-              "name": "Zypio",
-              "url": `https://zypio.online/${locale}`,
-              "description": "Ücretsiz ve sınırsız video/dosya indirme aracı. YouTube, Instagram, TikTok ve daha fazlası.",
-              "applicationCategory": "MultimediaApplication",
-              "operatingSystem": "All",
-              "offers": {
-                "@type": "Offer",
-                "price": "0",
-                "priceCurrency": "USD"
-              }
-            })
-          }} />
+          {/* SEO: JSON-LD Structured Data — Organization + WebSite (brand graph) */}
+          <StructuredData data={graph(organizationSchema(), websiteSchema(locale))} />
 
           <div className="flex flex-col min-h-screen w-full relative">
             <Header />

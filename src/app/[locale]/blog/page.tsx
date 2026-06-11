@@ -1,5 +1,21 @@
 import { Link } from '@/i18n/routing';
 import { blogPosts } from '@/lib/blog';
+import { Metadata } from 'next';
+import { SITE_URL, alternates } from '@/lib/seo/site';
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  const title = locale === 'tr' ? 'Blog & Rehberler — Medya İndirme İpuçları' : 'Blog & Guides — Media Download Tips';
+  const description = locale === 'tr'
+    ? 'YouTube MP3 dönüştürme, TikTok filigransız indirme, Instagram Reels kaydetme ve daha fazlası hakkında pratik rehberler.'
+    : 'Practical guides on converting YouTube to MP3, downloading TikTok without watermark, saving Instagram Reels and more.';
+  return {
+    title,
+    description,
+    alternates: alternates(locale, '/blog'),
+    openGraph: { title: `${title} | Zypio`, description, url: `${SITE_URL}/${locale}/blog`, type: 'website' },
+  };
+}
 
 export default async function BlogPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;

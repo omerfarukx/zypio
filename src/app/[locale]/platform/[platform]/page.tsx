@@ -8,6 +8,9 @@ import { getTranslations } from 'next-intl/server';
 import Ad728x90 from '@/components/Ad728x90';
 import AdNative from '@/components/AdNative';
 import AdBanner from '@/components/AdBanner';
+import { StructuredData } from '@/components/seo/StructuredData';
+import { webApplicationSchema, howToSchema } from '@/lib/seo/structured-data';
+import { SITE_URL, alternates } from '@/lib/seo/site';
 
 export async function generateMetadata({
     params
@@ -26,17 +29,19 @@ export async function generateMetadata({
     const description = t.has(`${platform}Desc`) ? t(`${platform}Desc`) : data.description;
 
     return {
-        title: `${title} | Zypio Convert`,
+        title: title,
         description: description,
         keywords: `${data.name} video downloader, ${data.name} mp4, ${data.name} mp3, free ${data.name} converter, ${data.name} indir, ${data.name} video dönüştürücü`,
+        alternates: alternates(locale, `/platform/${platform}`),
         openGraph: {
-            title: `${title} | Zypio Convert`,
+            title: `${title} | Zypio`,
             description: description,
+            url: `${SITE_URL}/${locale}/platform/${platform}`,
             type: 'website',
         },
         twitter: {
             card: 'summary_large_image',
-            title: `${title} | Zypio Convert`,
+            title: `${title} | Zypio`,
             description: description,
         }
     };
@@ -67,24 +72,21 @@ export default async function PlatformPage({
 
     return (
         <div className="flex flex-col flex-1 items-center justify-center font-sans w-full overflow-hidden">
-            {/* Schema Markup for SEO */}
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{
-                    __html: JSON.stringify({
-                        "@context": "https://schema.org",
-                        "@type": "SoftwareApplication",
-                        "name": localizedTitle,
-                        "description": localizedDesc,
-                        "applicationCategory": "MultimediaApplication",
-                        "operatingSystem": "All",
-                        "offers": {
-                            "@type": "Offer",
-                            "price": "0",
-                            "priceCurrency": "USD"
-                        }
-                    })
-                }}
+            {/* Schema Markup for SEO — WebApplication + HowTo (from real usage steps) */}
+            <StructuredData
+                data={[
+                    webApplicationSchema({
+                        locale,
+                        name: localizedTitle,
+                        description: localizedDesc,
+                        url: `${SITE_URL}/${locale}/platform/${platform}`,
+                    }),
+                    howToSchema({
+                        name: localizedTitle,
+                        description: localizedDesc,
+                        steps: data.usage,
+                    }),
+                ]}
             />
 
             <main className="relative flex flex-1 w-full flex-col items-center justify-start pt-28 pb-16 px-4 sm:px-8 bg-gradient-to-b from-[#0A0A0C] to-[#0F0F13]">

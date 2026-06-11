@@ -1,6 +1,16 @@
 import { Link } from '@/i18n/routing';
+import { Metadata } from 'next';
 import Ad728x90 from '@/components/Ad728x90';
 import AdBanner from '@/components/AdBanner';
+
+// These are placeholder "coming soon" pages — keep them out of the index to
+// avoid thin-content / soft-404 signals until the real tool ships.
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: 'Çok Yakında',
+    robots: { index: false, follow: true },
+  };
+}
 
 export default async function ComingSoonPage({ params }: { params: Promise<{ locale: string, slug: string }> }) {
   const { locale, slug } = await params;

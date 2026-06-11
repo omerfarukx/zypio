@@ -1,5 +1,7 @@
 import { ChevronRight, Home } from "lucide-react"
 import Link from "next/link"
+import { StructuredData } from "./seo/StructuredData"
+import { breadcrumbSchema } from "@/lib/seo/structured-data"
 
 export function Breadcrumbs({
     items
@@ -8,6 +10,9 @@ export function Breadcrumbs({
 }) {
     return (
         <nav className="flex items-center space-x-2 text-sm text-gray-500 mb-8" aria-label="Breadcrumb">
+            <StructuredData
+                data={breadcrumbSchema([{ name: "Home", url: "/" }, ...items])}
+            />
             <Link href="/" className="hover:text-white transition-colors flex items-center">
                 <Home className="w-4 h-4" />
             </Link>

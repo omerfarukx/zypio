@@ -10,13 +10,33 @@ import Ad728x90 from '@/components/Ad728x90';
 import Ad160x600 from '@/components/Ad160x600';
 import AdNative from '@/components/AdNative';
 import AdBanner from '@/components/AdBanner';
+import { StructuredData } from '@/components/seo/StructuredData';
+import { webApplicationSchema, faqPageSchema } from '@/lib/seo/structured-data';
+import { SITE_URL } from '@/lib/seo/site';
 
 export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'Index' });
+  const tf = await getTranslations({ locale, namespace: 'FAQ' });
+
+  // Homepage FAQ (mirrors the visible FAQSection content) for FAQPage schema
+  const homeFaqs = [1, 2, 3, 4, 5].map((i) => ({
+    question: tf(`q${i}`),
+    answer: tf(`a${i}`),
+  }));
 
   return (
     <div className="flex flex-col flex-1 items-center justify-center font-sans w-full overflow-hidden noise-overlay">
+      <StructuredData
+        data={[
+          webApplicationSchema({
+            locale,
+            description: t('description'),
+            url: `${SITE_URL}/${locale}`,
+          }),
+          faqPageSchema(homeFaqs),
+        ]}
+      />
       <main className="relative flex flex-1 w-full flex-col items-center justify-center pt-28 pb-16 px-4 sm:px-8 mesh-gradient">
         {/* Animated Orbs */}
         <div className="orb orb-blue" aria-hidden="true"></div>

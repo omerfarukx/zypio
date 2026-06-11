@@ -1,33 +1,28 @@
 import { getTranslations } from 'next-intl/server';
 import { ToolsGrid } from '@/components/ToolsGrid';
 import { Metadata } from 'next';
+import { SITE_URL, alternates } from '@/lib/seo/site';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
     const { locale } = await params;
 
     const title = locale === 'tr'
-        ? "Tüm Ücretsiz Dosya Dönüştürücü Araçlar | Zypio"
-        : "All Free File Converter Tools | Zypio";
+        ? "Tüm Ücretsiz Medya İndirme ve Dönüştürme Araçları"
+        : "All Free Media Download & Conversion Tools";
 
     const description = locale === 'tr'
-        ? "Video, Ses, PDF, Görüntü ve GIF dönüştürme araçları. MP4 ile MP3, PDF ile Word, YouTube İndirici gibi 40'tan fazla ücretsiz araç tek bir yerde."
-        : "Video, Audio, PDF, Image and GIF converter tools. More than 40 free tools like MP4 to MP3, PDF to Word, YouTube Downloader in one place.";
+        ? "YouTube, Instagram, TikTok, Facebook ve X için video, fotoğraf ve profil fotoğrafı indirme araçları — ücretsiz, kayıt gerektirmeden, tek bir yerde."
+        : "Video, photo and profile-picture download tools for YouTube, Instagram, TikTok, Facebook and X — free, no registration, all in one place.";
 
     return {
         title,
         description,
-        keywords: "ücretsiz dosya dönüştürücü, video mp3 çevirici, pdf word dönüştürücü, heic jpg çevirici, online converter, free file converter, mp4 mp3 dönüştür, gif yapıcı",
-        alternates: {
-            canonical: `https://zypio.vercel.app/${locale}/tools`,
-            languages: {
-                'en-US': `https://zypio.vercel.app/en/tools`,
-                'tr-TR': `https://zypio.vercel.app/tr/tools`,
-            },
-        },
+        keywords: "video indirici, youtube mp3 çevirici, tiktok filigransız indir, instagram reels indir, online converter, free video downloader, mp4 mp3",
+        alternates: alternates(locale, '/tools'),
         openGraph: {
             title,
             description,
-            url: `https://zypio.vercel.app/${locale}/tools`,
+            url: `${SITE_URL}/${locale}/tools`,
             type: "website",
         }
     };
@@ -43,7 +38,7 @@ export default async function ToolsPage({ params }: { params: Promise<{ locale: 
         "@type": "CollectionPage",
         "name": locale === 'tr' ? "Zypio Ücretsiz Araçlar Merkezi" : "Zypio Free Tools Hub",
         "description": locale === 'tr' ? "PDF, Video, Görüntü ve Ses dosyalarınızı saniyeler içinde dönüştürün." : "Convert PDF, Video, Image and Audio files in seconds.",
-        "url": `https://zypio.vercel.app/${locale}/tools`,
+        "url": `${SITE_URL}/${locale}/tools`,
         "about": {
             "@type": "SoftwareApplication",
             "name": "Zypio Converter Suite",
